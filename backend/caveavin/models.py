@@ -28,6 +28,7 @@ class Bottle(models.Model):
     name = models.CharField(max_length=200)
     year = models.IntegerField()
     productor = models.CharField(max_length=100)
+    country = models.CharField(max_length=50)
     region = models.CharField(max_length=100, blank=True, null=True)
     color = models.CharField(max_length=20, choices=COLOR_CHOICES, default=RED)
     quantity = models.PositiveIntegerField(default=1)
