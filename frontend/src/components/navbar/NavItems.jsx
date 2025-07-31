@@ -51,14 +51,6 @@ const NavItems = ({ isMobile = false, onClick }) => {
               <span className={isMobile ? "block" : "hidden sm:block"}>
                 {item.label}
               </span>
-              {isActive && !isMobile && (
-                <Badge
-                  variant="secondary"
-                  className="ml-auto bg-pink-100 text-pink-700 text-xs hidden lg:inline-flex"
-                >
-                  Active
-                </Badge>
-              )}
             </Button>
           </Link>
         );

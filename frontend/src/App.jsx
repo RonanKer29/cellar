@@ -3,6 +3,7 @@ import Navbar from "./layouts/Navbar";
 import Home from "./pages/Home";
 import AddWine from "./pages/AddWine";
 import AddWineFull from "./pages/AddWineFull";
+import BottleDetail from "./components/bottleView/BottleDetail";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/ajouter-vin" element={<AddWine />} />
           <Route path="/ajouter-vin/complet" element={<AddWineFull />} />
+          <Route path="/bouteille/:id" element={<BottleDetail />} />
           {/* Ajoute d'autres routes si besoin */}
         </Routes>
       </main>

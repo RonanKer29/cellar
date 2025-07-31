@@ -1,7 +1,7 @@
-import StatCard from "./dashboard/StatCard";
+import StatCard from "./StatCard";
 import { Wine, Warehouse, Globe, CheckCircle } from "lucide-react";
-import WineList from "./dashboard/WineList";
-import Intro from "./dashboard/Intro";
+import WineList from "./WineList";
+import Intro from "./Intro";
 
 const Dashboard = ({ bottles }) => {
   const total = bottles.reduce((acc, b) => acc + (b.quantity || 0), 0);
