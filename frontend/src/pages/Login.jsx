@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Page de connexion utilisateur avec authentification
+ * Interface de login sécurisée avec validation et gestion d'erreurs
+ */
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Wine, Eye, EyeOff } from "lucide-react";
@@ -6,6 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+/**
+ * Page de connexion utilisateur avec formulaire d'authentification
+ * Gère la saisie des identifiants, la validation et la redirection après connexion
+ * 
+ * @example
+ * // Rendu de la page de connexion
+ * <Login />
+ * 
+ * @returns {JSX.Element} Interface de connexion avec formulaire et validation
+ */
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

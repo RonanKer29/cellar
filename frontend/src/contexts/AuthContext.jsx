@@ -1,8 +1,46 @@
+/**
+ * Contexte d'authentification pour l'application Cave à Vin
+ * 
+ * Gère l'état global d'authentification de l'application avec :
+ * - Connexion/déconnexion des utilisateurs
+ * - Enregistrement de nouveaux comptes
+ * - Gestion automatique des tokens JWT
+ * - Persistance de la session utilisateur
+ * - Rafraîchissement automatique des données utilisateur
+ * 
+ * @module AuthContext
+ * @requires React
+ * @requires apiService
+ */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
+/**
+ * Contexte React pour l'authentification
+ * @type {React.Context}
+ */
 const AuthContext = createContext();
 
+/**
+ * Hook personnalisé pour accéder au contexte d'authentification
+ * 
+ * Doit être utilisé uniquement dans des composants enfants d'AuthProvider.
+ * Fournit accès à toutes les fonctions et états d'authentification.
+ * 
+ * @throws {Error} Si utilisé en dehors d'un AuthProvider
+ * @returns {Object} Contexte d'authentification complet
+ * @returns {Object|null} returns.user - Données de l'utilisateur connecté
+ * @returns {boolean} returns.isAuthenticated - Statut d'authentification
+ * @returns {boolean} returns.isLoading - Chargement initial
+ * @returns {Function} returns.login - Fonction de connexion
+ * @returns {Function} returns.register - Fonction d'enregistrement
+ * @returns {Function} returns.logout - Fonction de déconnexion
+ * @returns {Function} returns.refreshToken - Rafraîchissement du token
+ * @returns {Function} returns.refreshUserData - Rafraîchissement des données utilisateur
+ * 
+ * @example
+ * const { user, isAuthenticated, login, logout } = useAuth();
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -11,11 +49,29 @@ export const useAuth = () => {
   return context;
 };
 
+/**
+ * Fournisseur de contexte d'authentification
+ * 
+ * Composant wrapper qui fournit l'état d'authentification à tous ses enfants.
+ * Gère la logique métier de l'authentification et maintient la session utilisateur.
+ * 
+ * @param {Object} props - Props du composant
+ * @param {React.ReactNode} props.children - Composants enfants
+ * @returns {JSX.Element} Provider avec contexte d'authentification
+ */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  /**
+   * Vérifie le statut d'authentification au chargement de l'application
+   * 
+   * Tente de récupérer les données utilisateur avec le token stocké.
+   * En cas d'échec, effectue une déconnexion automatique.
+   * 
+   * @private
+   */
   const checkAuthStatus = async () => {
     const token = localStorage.getItem('access');
     if (!token) {
@@ -36,6 +92,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Connecte un utilisateur avec ses identifiants
+   * 
+   * Effectue l'authentification auprès de l'API et stocke les tokens JWT.
+   * Récupère automatiquement les données du profil utilisateur.
+   * 
+   * @param {string} username - Nom d'utilisateur
+   * @param {string} password - Mot de passe
+   * @returns {Promise<Object>} Résultat de la connexion
+   * @returns {boolean} returns.success - Succès de la connexion
+   * @returns {string} [returns.error] - Message d'erreur si échec
+   */
   const login = async (username, password) => {
     try {
       const response = await fetch(`${apiService.baseURL}/token/`, {
@@ -69,6 +137,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Enregistre un nouvel utilisateur
+   * 
+   * Crée un nouveau compte utilisateur avec les données fournies.
+   * N'effectue pas de connexion automatique après l'enregistrement.
+   * 
+   * @param {Object} userData - Données du nouvel utilisateur
+   * @param {string} userData.username - Nom d'utilisateur
+   * @param {string} userData.email - Adresse email
+   * @param {string} userData.password - Mot de passe
+   * @param {string} userData.password_confirm - Confirmation du mot de passe
+   * @param {string} [userData.first_name] - Prénom
+   * @param {string} [userData.last_name] - Nom de famille
+   * @returns {Promise<Object>} Résultat de l'enregistrement
+   * @returns {boolean} returns.success - Succès de l'enregistrement
+   * @returns {string} [returns.message] - Message de succès
+   * @returns {Object} [returns.errors] - Erreurs de validation
+   * @returns {string} [returns.error] - Erreur serveur
+   */
   const register = async (userData) => {
     try {
       const response = await fetch(`${apiService.baseURL}/register/`, {
@@ -89,6 +176,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Déconnecte l'utilisateur actuel
+   * 
+   * Supprime les tokens du stockage local et remet à zéro l'état d'authentification.
+   * Peut être appelée manuellement ou automatiquement en cas de token expiré.
+   */
   const logout = () => {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
@@ -96,6 +189,14 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  /**
+   * Rafraîchit le token d'accès JWT
+   * 
+   * Utilise le refresh token pour obtenir un nouveau token d'accès.
+   * En cas d'échec, effectue une déconnexion automatique.
+   * 
+   * @returns {Promise<boolean>} true si le rafraîchissement a réussi
+   */
   const refreshToken = async () => {
     const refresh = localStorage.getItem('refresh');
     if (!refresh) return false;
@@ -122,6 +223,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Rafraîchit les données du profil utilisateur
+   * 
+   * Récupère les dernières données utilisateur depuis l'API.
+   * Utile après des modifications de profil ou pour synchroniser les statistiques.
+   * 
+   * @returns {Promise<Object|null>} Données utilisateur mises à jour ou null en cas d'erreur
+   */
   const refreshUserData = async () => {
     try {
       const userData = await apiService.getUserProfile();
@@ -137,15 +246,16 @@ export const AuthProvider = ({ children }) => {
     checkAuthStatus();
   }, []);
 
+  // Valeur du contexte exposée aux composants enfants
   const value = {
-    user,
-    isAuthenticated,
-    isLoading,
-    login,
-    register,
-    logout,
-    refreshToken,
-    refreshUserData,
+    user,                // Données de l'utilisateur connecté
+    isAuthenticated,     // Statut d'authentification
+    isLoading,          // Indicateur de chargement initial
+    login,              // Fonction de connexion
+    register,           // Fonction d'enregistrement
+    logout,             // Fonction de déconnexion
+    refreshToken,       // Rafraîchissement du token
+    refreshUserData,    // Rafraîchissement des données utilisateur
   };
 
   return (

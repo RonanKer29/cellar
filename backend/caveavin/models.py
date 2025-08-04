@@ -1,11 +1,53 @@
+"""Modèles de données pour l'application Cave à Vin.
+
+Ce module définit les modèles Django pour la gestion de cave à vin.
+"""
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Bottle(models.Model):
-    # Propriétaire de la bouteille - null=True temporairement pour la migration
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bottles', null=True, blank=True)
+    """Modèle représentant une bouteille de vin dans la cave.
     
-    # Choix de couleur (menu déroulant)
+    Cette classe gère toutes les informations relatives à une bouteille de vin :
+    - Informations viticoles (nom, millésime, producteur, région, cépage)
+    - Informations commerciales (prix d'achat, valeur estimée, lieu d'achat)
+    - Informations personnelles (notes de dégustation, évaluation, photos)
+    - Gestion de l'inventaire (quantité, statut, propriétaire)
+    
+    Attributes:
+        owner (ForeignKey): Propriétaire de la bouteille (User)
+        name (CharField): Nom du vin
+        year (IntegerField): Millésime
+        productor (CharField): Producteur du vin
+        country (CharField): Pays d'origine
+        region (CharField): Région/Appellation d'origine
+        color (CharField): Couleur du vin (Rouge, Blanc, Rosé, Pétillant, Autre)
+        grape (CharField): Cépage(s) principal(aux) du vin
+        quantity (PositiveIntegerField): Quantité en stock
+        status (CharField): Statut (En cave, Bue)
+        date_added (DateField): Date d'ajout à la cave
+        purchase_date (DateField): Date d'achat de la bouteille
+        purchase_place (CharField): Lieu d'achat
+        price (DecimalField): Prix d'achat en euros
+        estimated_value (DecimalField): Valeur estimée actuelle en euros
+        description (TextField): Description générale et notes
+        tasting_note (TextField): Notes de dégustation détaillées
+        rating (PositiveIntegerField): Note personnelle sur 5
+        image (ImageField): Photo de la bouteille
+    """
+    # Propriétaire de la bouteille - null=True temporairement pour la migration
+    owner = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='bottles', 
+        null=True, 
+        blank=True,
+        verbose_name="Propriétaire",
+        help_text="Utilisateur propriétaire de cette bouteille"
+    )
+    
+    # Constantes pour les choix de couleur
     RED = 'Rouge'
     WHITE = 'Blanc'
     ROSE = 'Rosé'
@@ -47,4 +89,42 @@ class Bottle(models.Model):
     image = models.ImageField("Photo de la bouteille", upload_to='bottles/', blank=True, null=True)
 
     def __str__(self):
+        """Représentation textuelle de la bouteille.
+        
+        Returns:
+            str: Nom du vin suivi du millésime entre parenthèses
+        """
         return f"{self.name} ({self.year})"
+    
+    class Meta:
+        """Métadonnées du modèle Bottle."""
+        verbose_name = "Bouteille"
+        verbose_name_plural = "Bouteilles"
+        ordering = ['-date_added', 'name']
+        
+    def get_age(self):
+        """Calcule l'âge du vin en années.
+        
+        Returns:
+            int: Nombre d'années depuis le millésime
+        """
+        from datetime import datetime
+        return datetime.now().year - self.year
+    
+    def is_drinkable(self):
+        """Vérifie si la bouteille est disponible pour dégustation.
+        
+        Returns:
+            bool: True si la bouteille est en cave et en stock
+        """
+        return self.status == self.IN_CELLAR and self.quantity > 0
+    
+    def total_value(self):
+        """Calcule la valeur totale basée sur la quantité.
+        
+        Returns:
+            Decimal: Valeur estimée multipliée par la quantité
+        """
+        if self.estimated_value and self.quantity:
+            return self.estimated_value * self.quantity
+        return None

@@ -1,6 +1,39 @@
+/**
+ * @fileoverview En-tête de page réutilisable avec navigation et icône
+ * Composant standardisé pour les en-têtes de toutes les pages de l'application
+ */
+
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * En-tête de page standardisé avec titre, sous-titre, icône et navigation
+ * Fournit une interface cohérente pour tous les en-têtes de pages
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {string} props.title - Titre principal de la page
+ * @param {string} [props.subtitle] - Sous-titre ou description de la page (optionnel)
+ * @param {React.Component} [props.icon] - Composant d'icône Lucide React à afficher (optionnel)
+ * @param {boolean} [props.showBackButton=false] - Afficher le bouton de retour
+ * @param {string} [props.backTo="/"] - URL de destination du bouton de retour
+ * @param {string} [props.className=""] - Classes CSS supplémentaires
+ * 
+ * @example
+ * // En-tête simple avec titre
+ * <PageHeader title="Ma Cave à Vin" />
+ * 
+ * @example
+ * // En-tête complet avec icône, sous-titre et bouton retour
+ * <PageHeader 
+ *   title="Ajouter un vin"
+ *   subtitle="Enrichissez votre collection"
+ *   icon={Wine}
+ *   showBackButton={true}
+ *   backTo="/ma-cave"
+ * />
+ * 
+ * @returns {JSX.Element} En-tête de page avec titre, icône optionnelle et navigation
+ */
 const PageHeader = ({ 
   title, 
   subtitle, 

@@ -1,8 +1,33 @@
+/**
+ * @fileoverview En-tête de la page Ma Cave avec navigation et contrôles d'affichage
+ * Affiche le titre, les statistiques de la collection et les options de vue
+ */
+
 import { Grid3X3, List, Wine, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Link } from "react-router-dom";
 
+/**
+ * En-tête principal de la page Ma Cave
+ * Fournit la navigation, les statistiques de filtrage et les contrôles de vue
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {number} props.totalBottles - Nombre total de bouteilles dans la collection
+ * @param {number} props.filteredBottles - Nombre de bouteilles correspondant aux filtres actuels
+ * @param {string} props.viewMode - Mode d'affichage actuel ("grid" ou "list")
+ * @param {Function} props.setViewMode - Fonction pour changer le mode d'affichage
+ * 
+ * @example
+ * <MaCaveHeader
+ *   totalBottles={150}
+ *   filteredBottles={25}
+ *   viewMode="grid"
+ *   setViewMode={setViewMode}
+ * />
+ * 
+ * @returns {JSX.Element} En-tête avec titre, bouton d'ajout, statistiques et sélecteur de vue
+ */
 const MaCaveHeader = ({ totalBottles, filteredBottles, viewMode, setViewMode }) => {
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden">

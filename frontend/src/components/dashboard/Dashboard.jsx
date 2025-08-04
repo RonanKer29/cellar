@@ -1,3 +1,15 @@
+/**
+ * Composant Dashboard - Page d'accueil de l'application Cave à Vin
+ * 
+ * Affiche une vue d'ensemble de la cave avec :
+ * - Statistiques générales (total, stock, consommation)
+ * - Filtres et recherche avancés
+ * - Liste des bouteilles filtrées
+ * 
+ * @param {Object} props - Props du composant
+ * @param {Array} props.bottles - Liste des bouteilles de l'utilisateur
+ * @returns {JSX.Element} Interface du dashboard avec statistiques et liste filtrée
+ */
 import { useState } from "react";
 import StatCard from "./StatCard";
 import { Wine, Warehouse, Globe, CheckCircle } from "lucide-react";
@@ -16,7 +28,7 @@ const Dashboard = ({ bottles }) => {
   const { total, inCellar, drunkThisYear, regionsCount, bottlesThisMonth } =
     calculateWineStats(bottles);
 
-  // Déduire toutes les couleurs, régions, producteurs présents
+  // Extraction des valeurs uniques pour les filtres
   const colors = ["Tous", ...Array.from(new Set(bottles.map((b) => b.color)))];
   const regions = [
     "Tous",
@@ -27,13 +39,15 @@ const Dashboard = ({ bottles }) => {
     ...Array.from(new Set(bottles.map((b) => b.productor).filter(Boolean))),
   ];
 
-  // Filtrage des bouteilles selon la recherche
+  // Logique de filtrage combinant recherche textuelle et filtres catégoriels
   const filteredBottles = bottles.filter((bottle) => {
+    // Recherche textuelle dans nom, producteur et région
     const matchesSearch = [bottle.name, bottle.productor, bottle.region]
       .join(" ")
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
+    // Filtres par catégories
     const matchesColor =
       selectedColor === "Tous" || bottle.color === selectedColor;
     const matchesRegion =
@@ -41,6 +55,7 @@ const Dashboard = ({ bottles }) => {
     const matchesProductor =
       selectedProductor === "Tous" || bottle.productor === selectedProductor;
 
+    // Tous les critères doivent être satisfaits
     return matchesSearch && matchesColor && matchesRegion && matchesProductor;
   });
 

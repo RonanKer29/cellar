@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Composant de filtrage et recherche pour la collection de vins de la cave
+ * Permet de filtrer les bouteilles par nom, type, région, producteur, prix et de trier les résultats
+ */
+
 import { useState } from "react";
 import { Search, X, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { Input } from "../ui/input";
@@ -11,6 +16,52 @@ import {
   SelectValue,
 } from "../ui/select";
 
+/**
+ * Composant de filtrage avancé pour la collection de vins
+ * Offre une interface complète de recherche et de tri pour naviguer dans la cave
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {string} props.searchTerm - Terme de recherche actuel
+ * @param {Function} props.setSearchTerm - Fonction pour modifier le terme de recherche
+ * @param {Array<string>} props.colors - Liste des types de vins disponibles
+ * @param {string} props.selectedColor - Type de vin sélectionné pour le filtre
+ * @param {Function} props.setSelectedColor - Fonction pour modifier le filtre par type
+ * @param {Array<string>} props.regions - Liste des régions disponibles
+ * @param {string} props.selectedRegion - Région sélectionnée pour le filtre
+ * @param {Function} props.setSelectedRegion - Fonction pour modifier le filtre par région
+ * @param {Array<string>} props.productors - Liste des producteurs disponibles
+ * @param {string} props.selectedProductor - Producteur sélectionné pour le filtre
+ * @param {Function} props.setSelectedProductor - Fonction pour modifier le filtre par producteur
+ * @param {string} props.sortBy - Critère de tri actuel (name, year, price, region, quantity)
+ * @param {Function} props.setSortBy - Fonction pour modifier le critère de tri
+ * @param {string} props.sortOrder - Ordre de tri actuel (asc/desc)
+ * @param {Function} props.setSortOrder - Fonction pour modifier l'ordre de tri
+ * @param {Array<number>} props.priceRange - Fourchette de prix [min, max]
+ * @param {Function} props.setPriceRange - Fonction pour modifier la fourchette de prix
+ * 
+ * @example
+ * <MaCaveFilters
+ *   searchTerm=""
+ *   setSearchTerm={setSearchTerm}
+ *   colors={["Tous", "Rouge", "Blanc", "Rosé"]}
+ *   selectedColor="Tous"
+ *   setSelectedColor={setSelectedColor}
+ *   regions={["Tous", "Bordeaux", "Bourgogne"]}
+ *   selectedRegion="Tous"
+ *   setSelectedRegion={setSelectedRegion}
+ *   productors={["Tous", "Château Margaux"]}
+ *   selectedProductor="Tous"
+ *   setSelectedProductor={setSelectedProductor}
+ *   sortBy="name"
+ *   setSortBy={setSortBy}
+ *   sortOrder="asc"
+ *   setSortOrder={setSortOrder}
+ *   priceRange={[0, 1000]}
+ *   setPriceRange={setPriceRange}
+ * />
+ * 
+ * @returns {JSX.Element} Interface de filtrage avec recherche textuelle, filtres rapides et options avancées
+ */
 const MaCaveFilters = ({
   searchTerm,
   setSearchTerm,
@@ -32,6 +83,10 @@ const MaCaveFilters = ({
 }) => {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
+  /**
+   * Réinitialise tous les filtres à leurs valeurs par défaut
+   * Efface la recherche, remet les sélections à "Tous" et la fourchette de prix au maximum
+   */
   const clearAllFilters = () => {
     setSearchTerm("");
     setSelectedColor("Tous");

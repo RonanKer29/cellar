@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Vue en liste des bouteilles de vin avec affichage tabulaire
+ * Interface responsive adaptée aux grands écrans avec version mobile compacte
+ */
+
 import { Wine, Edit, Trash2, Calendar, MapPin, Euro, Star, Package } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -6,9 +11,29 @@ import { Card, CardContent } from "../ui/card";
 import { getWineColorClass, getWineIconColor } from "../../utils/wineUtils";
 import { apiService } from "../../services/api";
 
+/**
+ * Affichage en liste responsive des bouteilles de vin
+ * Présente un tableau détaillé sur desktop et des cartes compactes sur mobile
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Array<Object>} props.bottles - Liste des bouteilles à afficher
+ * @param {Function} [props.onWineClick] - Fonction callback lors du clic sur une bouteille
+ * 
+ * @example
+ * <WineListView 
+ *   bottles={bottles}
+ *   onWineClick={(bottle) => console.log('Bouteille sélectionnée:', bottle)}
+ * />
+ * 
+ * @returns {JSX.Element} Vue liste avec tableau desktop et cartes mobiles
+ */
 const WineListView = ({ bottles, onWineClick }) => {
   const navigate = useNavigate();
   
+  /**
+   * Gère la suppression d'une bouteille avec confirmation
+   * @param {Object} bottle - La bouteille à supprimer
+   */
   const handleDelete = async (bottle) => {
     if (window.confirm(`Supprimer "${bottle.name}" de votre cave ?`)) {
       try {
@@ -21,10 +46,19 @@ const WineListView = ({ bottles, onWineClick }) => {
     }
   };
 
+  /**
+   * Navigue vers la page de détail d'une bouteille
+   * @param {Object} bottle - La bouteille sélectionnée
+   */
   const handleCardClick = (bottle) => {
     navigate(`/bouteille/${bottle.id}`);
   };
 
+  /**
+   * Retourne les classes de dégradé de couleur pour les icônes
+   * @param {string} color - Type de vin
+   * @returns {string} Classes CSS pour le dégradé
+   */
   const getColorGradient = (color) => {
     switch (color) {
       case "Rouge":
@@ -40,6 +74,11 @@ const WineListView = ({ bottles, onWineClick }) => {
     }
   };
 
+  /**
+   * Retourne les classes de couleur pour les badges
+   * @param {string} color - Type de vin
+   * @returns {string} Classes CSS pour le badge coloré
+   */
   const getColorClass = (color) => {
     switch (color) {
       case "Rouge":
@@ -55,6 +94,11 @@ const WineListView = ({ bottles, onWineClick }) => {
     }
   };
 
+  /**
+   * Affiche la notation en étoiles
+   * @param {number} rating - Note sur 5 étoiles
+   * @returns {JSX.Element|null} Composant d'étoiles ou null
+   */
   const renderStarRating = (rating) => {
     if (!rating) return null;
     return (

@@ -1,6 +1,33 @@
+/**
+ * @fileoverview Composant d'affichage des statistiques de la collection de vins
+ * Calcule et présente les métriques importantes de la cave (valeur, millésimes, régions, etc.)
+ */
+
 import { Wine, Calendar, MapPin, Euro, TrendingUp } from "lucide-react";
 import { Badge } from "../ui/badge";
 
+/**
+ * Panneau de statistiques détaillées de la collection de vins
+ * Calcule automatiquement les métriques financières, temporelles et géographiques
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Array<Object>} props.bottles - Liste complète des bouteilles de la collection
+ * @param {number} props.bottles[].price - Prix unitaire d'une bouteille
+ * @param {number} props.bottles[].quantity - Quantité en stock
+ * @param {number} props.bottles[].year - Millésime du vin
+ * @param {string} props.bottles[].region - Région viticole
+ * @param {string} props.bottles[].color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+ * 
+ * @example
+ * <MaCaveStats 
+ *   bottles={[
+ *     { price: 25, quantity: 2, year: 2018, region: "Bordeaux", color: "Rouge" },
+ *     { price: 15, quantity: 1, year: 2020, region: "Loire", color: "Blanc" }
+ *   ]}
+ * />
+ * 
+ * @returns {JSX.Element} Panneau avec statistiques financières, temporelles et de distribution
+ */
 const MaCaveStats = ({ bottles }) => {
   // Calculate statistics
   const totalValue = bottles.reduce((sum, bottle) => sum + (bottle.price || 0) * bottle.quantity, 0);
@@ -54,6 +81,11 @@ const MaCaveStats = ({ bottles }) => {
     }
   ];
 
+  /**
+   * Retourne les classes CSS appropriées pour chaque couleur de statistique
+   * @param {string} color - Couleur de la statistique (green, blue, purple, orange)
+   * @returns {string} Classes CSS pour l'icône colorée
+   */
   const getColorClasses = (color) => {
     const colors = {
       green: "bg-green-100 text-green-600",

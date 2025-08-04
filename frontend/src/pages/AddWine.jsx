@@ -1,4 +1,8 @@
-// src/pages/AddWine.jsx
+/**
+ * @fileoverview Page d'ajout d'un nouveau vin à la collection
+ * Formulaire complet avec validation et intégration API pour enrichir la cave
+ */
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,6 +18,10 @@ import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
 import { apiService } from "../services/api";
 
+/**
+ * Structure par défaut du formulaire d'ajout de vin
+ * Définit les valeurs initiales pour tous les champs obligatoires
+ */
 const defaultForm = {
   name: "",
   year: "",
@@ -26,6 +34,16 @@ const defaultForm = {
   status: "En cave",
 };
 
+/**
+ * Page d'ajout d'un nouveau vin à la collection personnelle
+ * Fournit un formulaire complet avec sélection de pays/régions et gestion des cépages
+ * 
+ * @example
+ * // Navigation vers la page d'ajout
+ * <Link to="/ajouter-vin">Ajouter un vin</Link>
+ * 
+ * @returns {JSX.Element} Formulaire d'ajout de vin avec validation et soumission
+ */
 const AddWine = () => {
   const [form, setForm] = useState(defaultForm);
   const [loading, setLoading] = useState(false);

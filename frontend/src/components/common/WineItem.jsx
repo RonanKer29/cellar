@@ -1,14 +1,61 @@
+/**
+ * @fileoverview Composant d'affichage d'une bouteille dans une liste
+ * Version responsive adaptée aux différentes tailles d'écran (desktop, tablet, mobile)
+ */
+
 import { Eye, Edit, Trash2, Wine } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getWineColorClass, getWineIconColor } from "../../utils/wineUtils";
 
+/**
+ * Élément de liste responsive pour l'affichage d'une bouteille de vin
+ * S'adapte automatiquement au mode d'affichage (desktop, tablet, mobile)
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Object} props.bottle - Données de la bouteille à afficher
+ * @param {number} props.bottle.id - Identifiant unique de la bouteille
+ * @param {string} props.bottle.name - Nom du vin
+ * @param {string} props.bottle.color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+ * @param {number} props.bottle.year - Millésime
+ * @param {string} props.bottle.country - Pays d'origine
+ * @param {string} props.bottle.region - Région viticole
+ * @param {number} props.bottle.quantity - Quantité en stock
+ * @param {number} props.bottle.price - Prix unitaire
+ * @param {Function} props.onDelete - Fonction de callback pour la suppression
+ * @param {string} [props.viewMode="desktop"] - Mode d'affichage ("desktop", "tablet", "mobile")
+ * 
+ * @example
+ * // Affichage desktop
+ * <WineItem 
+ *   bottle={wineData}
+ *   onDelete={(id) => handleDelete(id)}
+ *   viewMode="desktop"
+ * />
+ * 
+ * @example
+ * // Affichage mobile
+ * <WineItem 
+ *   bottle={wineData}
+ *   onDelete={(id) => handleDelete(id)}
+ *   viewMode="mobile"
+ * />
+ * 
+ * @returns {JSX.Element} Ligne de tableau ou carte selon le mode d'affichage
+ */
 const WineItem = ({ bottle, onDelete, viewMode = "desktop" }) => {
+  /**
+   * Gère la suppression d'une bouteille avec confirmation utilisateur
+   */
   const handleDelete = () => {
     if (window.confirm("Supprimer ce vin ?")) {
       onDelete(bottle.id);
     }
   };
 
+  /**
+   * Composant des boutons d'action (voir, éditer, supprimer)
+   * @returns {JSX.Element} Groupe de boutons d'action
+   */
   const ActionButtons = () => (
     <div className="flex space-x-2 text-gray-600">
       <Link to={`/bouteille/${bottle.id}`} title="Voir">

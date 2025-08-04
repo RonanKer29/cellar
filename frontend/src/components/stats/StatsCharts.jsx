@@ -1,8 +1,30 @@
+/**
+ * @fileoverview Composant de visualisation des données de la cave à vin
+ * Fournit des graphiques interactifs pour analyser la collection par différents critères
+ */
+
 import { useState } from "react";
 import { BarChart, PieChart, TrendingUp, Calendar } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 
+/**
+ * Composant de graphiques statistiques interactifs pour l'analyse de la cave
+ * Offre plusieurs vues de données avec graphiques en barres horizontales
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Array<Object>} props.bottles - Collection complète des bouteilles
+ * @param {string} props.bottles[].color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+ * @param {string} props.bottles[].region - Région viticole
+ * @param {number} props.bottles[].year - Millésime
+ * @param {number} props.bottles[].price - Prix unitaire
+ * @param {number} props.bottles[].quantity - Quantité en stock
+ * 
+ * @example
+ * <StatsCharts bottles={bottlesData} />
+ * 
+ * @returns {JSX.Element} Interface de graphiques avec sélecteur de vue et visualisations
+ */
 const StatsCharts = ({ bottles }) => {
   const [activeChart, setActiveChart] = useState("colors");
 
@@ -86,7 +108,14 @@ const StatsCharts = ({ bottles }) => {
   const currentChart = charts[activeChart];
   const totalBottles = bottles.reduce((sum, bottle) => sum + bottle.quantity, 0);
 
-  // Simple horizontal bar chart component
+  /**
+   * Composant de graphique en barres horizontales
+   * Affiche les données sous forme de barres avec pourcentages et valeurs
+   * @param {Object} data - Données à afficher (clé: valeur)
+   * @param {Object} colors - Mapping des couleurs par clé
+   * @param {number} total - Total pour calcul des pourcentages
+   * @returns {JSX.Element} Graphique en barres horizontales
+   */
   const HorizontalBarChart = ({ data, colors = {}, total }) => {
     const sortedData = Object.entries(data)
       .sort(([,a], [,b]) => b - a)
@@ -94,6 +123,12 @@ const StatsCharts = ({ bottles }) => {
 
     const maxValue = Math.max(...sortedData.map(([,value]) => value));
 
+    /**
+     * Détermine la couleur de la barre selon la clé ou l'index
+     * @param {string} key - Clé de la donnée
+     * @param {number} index - Index dans la liste
+     * @returns {string} Classe CSS de couleur
+     */
     const getBarColor = (key, index) => {
       if (colors[key]) return colors[key];
       const defaultColors = [

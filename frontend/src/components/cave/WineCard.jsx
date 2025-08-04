@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Carte d'affichage individuelle d'une bouteille de vin
+ * Présente les informations essentielles avec design interactif et actions rapides
+ */
+
 import { Wine, MapPin, Calendar, Euro, Edit, Trash2, Star, Package } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -6,9 +11,53 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { getWineColorClass, getWineIconColor } from "../../utils/wineUtils";
 import { apiService } from "../../services/api";
 
+/**
+ * Carte interactive d'affichage d'une bouteille de vin
+ * Affiche les informations clés avec animations et actions (voir, modifier, supprimer)
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Object} props.bottle - Données de la bouteille à afficher
+ * @param {number} props.bottle.id - Identifiant unique de la bouteille
+ * @param {string} props.bottle.name - Nom du vin
+ * @param {string} props.bottle.color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+ * @param {number} props.bottle.year - Millésime
+ * @param {string} props.bottle.productor - Nom du producteur
+ * @param {string} props.bottle.region - Région viticole
+ * @param {string} props.bottle.country - Pays d'origine
+ * @param {number} props.bottle.price - Prix unitaire
+ * @param {number} props.bottle.quantity - Quantité en stock
+ * @param {string} props.bottle.status - Statut (En cave, Bue, etc.)
+ * @param {number} props.bottle.rating - Note sur 5 étoiles
+ * @param {string} props.bottle.description - Description du vin
+ * @param {string} props.bottle.tasting_note - Notes de dégustation
+ * @param {Function} [props.onClick] - Fonction callback lors du clic sur la carte
+ * 
+ * @example
+ * <WineCard 
+ *   bottle={{
+ *     id: 1,
+ *     name: "Château Margaux",
+ *     color: "Rouge",
+ *     year: 2015,
+ *     productor: "Château Margaux",
+ *     region: "Margaux",
+ *     price: 500,
+ *     quantity: 1,
+ *     status: "En cave",
+ *     rating: 5
+ *   }}
+ *   onClick={() => console.log('Carte cliquée')}
+ * />
+ * 
+ * @returns {JSX.Element} Carte interactive avec informations du vin et boutons d'action
+ */
 const WineCard = ({ bottle, onClick }) => {
   const navigate = useNavigate();
 
+  /**
+   * Gère la suppression d'une bouteille avec confirmation utilisateur
+   * @param {Event} e - Événement de clic pour éviter la propagation
+   */
   const handleDelete = async (e) => {
     e.stopPropagation();
     if (window.confirm(`Supprimer "${bottle.name}" de votre cave ?`)) {
@@ -22,10 +71,18 @@ const WineCard = ({ bottle, onClick }) => {
     }
   };
 
+  /**
+   * Navigue vers la page de détail de la bouteille
+   */
   const handleCardClick = () => {
     navigate(`/bouteille/${bottle.id}`);
   };
 
+  /**
+   * Retourne les classes de dégradé de couleur selon le type de vin
+   * @param {string} color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+   * @returns {string} Classes CSS pour le dégradé de couleur
+   */
   const getColorGradient = (color) => {
     switch (color) {
       case "Rouge":
@@ -41,6 +98,11 @@ const WineCard = ({ bottle, onClick }) => {
     }
   };
 
+  /**
+   * Retourne les classes de fond coloré pour l'en-tête de la carte
+   * @param {string} color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+   * @returns {string} Classes CSS pour le fond coloré avec bordure
+   */
   const getColorBg = (color) => {
     switch (color) {
       case "Rouge":
@@ -56,6 +118,11 @@ const WineCard = ({ bottle, onClick }) => {
     }
   };
 
+  /**
+   * Affiche la notation en étoiles d'un vin
+   * @param {number} rating - Note sur 5 étoiles
+   * @returns {JSX.Element|null} Composant d'étoiles ou null si pas de note
+   */
   const renderStarRating = (rating) => {
     if (!rating) return null;
     return (
@@ -213,6 +280,11 @@ const WineCard = ({ bottle, onClick }) => {
   );
 };
 
+/**
+ * Utilitaire pour obtenir les classes de couleur des badges
+ * @param {string} color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
+ * @returns {string} Classes CSS pour le badge coloré
+ */
 const getColorClass = (color) => {
   switch (color) {
     case "Rouge":

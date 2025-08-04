@@ -1,9 +1,17 @@
+/**
+ * @fileoverview Composant de navigation principale de l'application Cave à Vin
+ * Affiche les éléments de menu avec état actif et adaptation mobile/desktop
+ */
+
 import { Link, useLocation } from "react-router-dom";
 import { Wine, BarChart3, Plus, FileText, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-// Définis tes routes ici
+/**
+ * Configuration des éléments de menu de l'application
+ * Chaque élément contient un libellé, une icône et un chemin de navigation
+ */
 const menuItems = [
   { label: "Tableau de bord", icon: BarChart3, path: "/" },
   { label: "Ma cave", icon: Wine, path: "/ma-cave" },
@@ -12,6 +20,27 @@ const menuItems = [
   { label: "Statistiques", icon: CheckCircle, path: "/stats" },
 ];
 
+/**
+ * Composant de navigation responsive avec éléments de menu interactifs
+ * S'adapte automatiquement aux interfaces mobile et desktop
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {boolean} [props.isMobile=false] - Mode d'affichage mobile avec espacement adapté
+ * @param {Function} [props.onClick] - Fonction callback lors du clic sur un élément (utile pour fermer les menus mobiles)
+ * 
+ * @example
+ * // Navigation desktop
+ * <NavItems />
+ * 
+ * @example
+ * // Navigation mobile avec callback de fermeture
+ * <NavItems 
+ *   isMobile={true}
+ *   onClick={() => setMobileMenuOpen(false)}
+ * />
+ * 
+ * @returns {JSX.Element} Navigation avec éléments de menu stylisés et état actif
+ */
 const NavItems = ({ isMobile = false, onClick }) => {
   const location = useLocation();
 

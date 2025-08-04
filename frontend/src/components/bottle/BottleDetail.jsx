@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Page de détail d'une bouteille de vin
+ * Affichage complet des informations d'une bouteille avec actions de gestion
+ */
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {

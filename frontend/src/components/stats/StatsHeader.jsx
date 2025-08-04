@@ -1,8 +1,29 @@
+/**
+ * @fileoverview En-tête de la page des statistiques avec actions et informations
+ * Affiche le titre, les métriques principales et les boutons d'action
+ */
+
 import { BarChart3, TrendingUp, Download, Calendar } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 
+/**
+ * En-tête principal de la page des statistiques
+ * Fournit le contexte, les actions et un résumé de la collection analysée
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {number} props.totalBottles - Nombre total de bouteilles dans la collection
+ * 
+ * @example
+ * <StatsHeader totalBottles={150} />
+ * 
+ * @returns {JSX.Element} En-tête avec titre, badges informatifs et boutons d'action
+ */
 const StatsHeader = ({ totalBottles }) => {
+  /**
+   * Gère l'export des données statistiques (fonctionnalité future)
+   * @todo Implémenter l'export réel des données en CSV/PDF
+   */  
   const handleExportData = () => {
     // Placeholder for future export functionality
     alert("Fonctionnalité d'export à venir !");

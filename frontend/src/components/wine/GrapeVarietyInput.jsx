@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Composant de saisie avancée des cépages avec pourcentages
+ * Permet la gestion dynamique des assemblages de vins avec validation des pourcentages
+ */
+
 import React, { useState, useEffect } from "react";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,8 +12,37 @@ import { Combobox } from "@/components/ui/combobox";
 import { Card, CardContent } from "@/components/ui/card";
 import { GRAPE_VARIETIES } from "@/data/wine-data";
 
+/**
+ * Composant avancé de saisie des cépages avec gestion des pourcentages
+ * Permet d'ajouter/supprimer des cépages et de définir leur proportion dans l'assemblage
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {string} [props.value=""] - Valeur actuelle au format string "Cépage1 (50%), Cépage2 (30%)"
+ * @param {Function} props.onChange - Fonction de callback lors du changement de valeur
+ * 
+ * @example
+ * // Utilisation basique
+ * <GrapeVarietyInput 
+ *   value="Cabernet Sauvignon (60%), Merlot (40%)"
+ *   onChange={(value) => setFormData({...formData, grapes: value})}
+ * />
+ * 
+ * @example  
+ * // Assemblage complexe
+ * <GrapeVarietyInput 
+ *   value="Chardonnay (70%), Pinot Noir (20%), Pinot Meunier (10%)"
+ *   onChange={handleGrapesChange}
+ * />
+ * 
+ * @returns {JSX.Element} Interface dynamique de saisie des cépages avec validation
+ */
 const GrapeVarietyInput = ({ value = "", onChange }) => {
-  // Parse existing string value into array format
+  /**
+   * Parse une chaîne de caractères de cépages en tableau d'objets
+   * Gère les formats: "Cépage", "Cépage (X%)", "Cépage1, Cépage2 (X%)"
+   * @param {string} str - Chaîne à parser
+   * @returns {Array<Object>} Tableau d'objets {variety, percentage}
+   */
   const parseGrapeString = (str) => {
     if (!str || typeof str !== 'string') {
       return [{ variety: "", percentage: "" }];
@@ -40,6 +74,11 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
     setGrapeVarieties(parseGrapeString(value));
   }, [value]);
 
+  /**
+   * Met à jour la liste des cépages et synchronise avec le parent
+   * Convertit le format objet en string pour la compatibilité backend
+   * @param {Array<Object>} newVarieties - Nouvelle liste des cépages
+   */
   const updateGrapeVarieties = (newVarieties) => {
     setGrapeVarieties(newVarieties);
     
@@ -57,11 +96,18 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
     onChange(grapeString);
   };
 
+  /**
+   * Ajoute un nouveau cépage vide à la liste
+   */
   const addGrapeVariety = () => {
     const newVarieties = [...grapeVarieties, { variety: "", percentage: "" }];
     updateGrapeVarieties(newVarieties);
   };
 
+  /**
+   * Supprime un cépage de la liste (au minimum 1 cépage doit rester)
+   * @param {number} index - Index du cépage à supprimer
+   */
   const removeGrapeVariety = (index) => {
     if (grapeVarieties.length > 1) {
       const newVarieties = grapeVarieties.filter((_, i) => i !== index);
@@ -69,6 +115,12 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
     }
   };
 
+  /**
+   * Met à jour un champ spécifique d'un cépage
+   * @param {number} index - Index du cépage à modifier
+   * @param {string} field - Champ à modifier ('variety' ou 'percentage')
+   * @param {string} value - Nouvelle valeur
+   */
   const updateVariety = (index, field, value) => {
     const newVarieties = grapeVarieties.map((grape, i) => {
       if (i === index) {
@@ -79,6 +131,10 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
     updateGrapeVarieties(newVarieties);
   };
 
+  /**
+   * Calcule le pourcentage total de tous les cépages
+   * @returns {number} Somme des pourcentages (0-100+)
+   */
   const getTotalPercentage = () => {
     return grapeVarieties.reduce((total, grape) => {
       const percentage = parseFloat(grape.percentage) || 0;

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Page principale de gestion de la cave à vin personnelle
+ * Interface complète avec filtres, tri, statistiques et modes d'affichage
+ */
+
 import { useState } from "react";
 import { useWines } from "../hooks/useWines";
 import LoadingState from "../components/common/LoadingState";
@@ -7,6 +12,16 @@ import MaCaveFilters from "../components/cave/MaCaveFilters";
 import MaCaveGrid from "../components/cave/MaCaveGrid";
 import MaCaveStats from "../components/cave/MaCaveStats";
 
+/**
+ * Page principale de la cave à vin avec gestion complète de la collection
+ * Centralise l'affichage, le filtrage, le tri et les statistiques des bouteilles
+ * 
+ * @example
+ * // Navigation vers Ma Cave
+ * <Link to="/ma-cave">Ma Cave</Link>
+ * 
+ * @returns {JSX.Element} Interface complète de gestion de la cave avec filtres et statistiques
+ */
 const MaCave = () => {
   const { bottles, loading, error, refetch } = useWines();
   

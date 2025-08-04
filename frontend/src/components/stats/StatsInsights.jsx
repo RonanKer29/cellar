@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Composant d'analyse intelligente et de recommandations pour la cave
+ * Génère des conseils personnalisés basés sur l'analyse de la collection
+ */
+
 import { 
   Lightbulb, 
   AlertTriangle, 
@@ -10,6 +15,23 @@ import {
 } from "lucide-react";
 import { Badge } from "../ui/badge";
 
+/**
+ * Composant d'insights et recommandations intelligentes pour la cave
+ * Analyse la collection pour fournir des conseils personnalisés et un score de santé
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Array<Object>} props.bottles - Collection complète des bouteilles à analyser
+ * @param {number} props.bottles[].price - Prix unitaire
+ * @param {number} props.bottles[].quantity - Quantité en stock
+ * @param {number} props.bottles[].year - Millésime
+ * @param {string} props.bottles[].color - Type de vin
+ * @param {string} props.bottles[].region - Région viticole
+ * 
+ * @example
+ * <StatsInsights bottles={bottlesData} />
+ * 
+ * @returns {JSX.Element} Panneau avec score de santé et recommandations personnalisées
+ */
 const StatsInsights = ({ bottles }) => {
   // Calculate insights and recommendations
   const totalBottles = bottles.reduce((sum, bottle) => sum + bottle.quantity, 0);
@@ -34,7 +56,11 @@ const StatsInsights = ({ bottles }) => {
     return acc;
   }, {});
 
-  // Generate dynamic insights based on data
+  /**
+   * Génère des insights personnalisés basés sur l'analyse de la collection
+   * Évalue différents aspects (taille, prix, diversité, âge) pour proposer des conseils
+   * @returns {Array<Object>} Liste des insights avec type, icône, titre et description
+   */
   const generateInsights = () => {
     const insights = [];
     
@@ -151,6 +177,11 @@ const StatsInsights = ({ bottles }) => {
 
   const insights = generateInsights();
 
+  /**
+   * Retourne les styles CSS appropriés selon le type d'insight
+   * @param {string} type - Type d'insight (achievement, recommendation, warning, info)
+   * @returns {Object} Objet contenant les classes CSS pour le fond, l'icône et le badge
+   */
   const getInsightStyle = (type) => {
     const styles = {
       achievement: {
@@ -177,6 +208,11 @@ const StatsInsights = ({ bottles }) => {
     return styles[type] || styles.info;
   };
 
+  /**
+   * Convertit le niveau de priorité en libellé français
+   * @param {string} priority - Niveau de priorité (high, medium, low)
+   * @returns {string} Libellé français de la priorité
+   */
   const getPriorityLabel = (priority) => {
     const labels = {
       high: "Important",
@@ -186,7 +222,11 @@ const StatsInsights = ({ bottles }) => {
     return labels[priority] || "Info";
   };
 
-  // Collection health score
+  /**
+   * Calcule le score de santé global de la collection (0-100)
+   * Évalue la diversité, l'équilibre des âges, la taille et les prix
+   * @returns {number} Score de santé entre 0 et 100
+   */
   const calculateHealthScore = () => {
     let score = 0;
     let maxScore = 0;
@@ -219,6 +259,12 @@ const StatsInsights = ({ bottles }) => {
   };
 
   const healthScore = calculateHealthScore();
+  
+  /**
+   * Retourne les classes de couleur selon le score de santé
+   * @param {number} score - Score de santé (0-100)
+   * @returns {string} Classes CSS de couleur
+   */
   const getHealthColor = (score) => {
     if (score >= 80) return "text-green-600 bg-green-100";
     if (score >= 60) return "text-yellow-600 bg-yellow-100";

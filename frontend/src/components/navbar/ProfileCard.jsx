@@ -1,13 +1,31 @@
+/**
+ * @fileoverview Carte de profil utilisateur avec avatar, niveau et statistiques
+ * Affiche les informations de l'utilisateur connecté avec son niveau d'expertise
+ */
+
 import Avatar from "../ui/avatar";
 import { Wine, Crown, Award } from "lucide-react";
 import { useUser } from "../../hooks/useUser";
 
+/**
+ * Carte de profil utilisateur interactive avec système de niveaux
+ * Affiche l'avatar, le nom, le niveau d'expertise et le nombre de bouteilles
+ * 
+ * @example
+ * <ProfileCard />
+ * 
+ * @returns {JSX.Element|null} Carte de profil stylisée ou null si utilisateur non connecté
+ */
 const ProfileCard = () => {
   const { user, displayName, level } = useUser();
 
   if (!user) return null;
 
-  // Déterminer l'icône basé sur le niveau
+  /**
+   * Détermine l'icône appropriée selon le niveau d'expertise de l'utilisateur
+   * @param {string} levelName - Nom du niveau d'expertise
+   * @returns {React.Component} Composant d'icône correspondant au niveau
+   */
   const getLevelIcon = (levelName) => {
     if (levelName === "Maître Sommelier") return Crown;
     if (levelName === "Expert") return Award;

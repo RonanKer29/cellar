@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Vue d'ensemble statistique complète de la collection de vins
+ * Fournit un tableau de bord détaillé avec métriques principales et analyses approfondies
+ */
+
 import { 
   Euro, 
   Wine, 
@@ -10,6 +15,25 @@ import {
 } from "lucide-react";
 import { Badge } from "../ui/badge";
 
+/**
+ * Composant de vue d'ensemble statistique complète de la cave
+ * Affiche les métriques principales et les analyses détaillées de la collection
+ * 
+ * @param {Object} props - Les propriétés du composant
+ * @param {Array<Object>} props.bottles - Collection complète des bouteilles
+ * @param {number} props.bottles[].price - Prix unitaire
+ * @param {number} props.bottles[].quantity - Quantité en stock
+ * @param {number} props.bottles[].year - Millésime
+ * @param {string} props.bottles[].color - Type de vin
+ * @param {string} props.bottles[].region - Région viticole
+ * @param {string} props.bottles[].productor - Nom du producteur
+ * @param {string} props.bottles[].name - Nom du vin
+ * 
+ * @example
+ * <StatsOverview bottles={bottlesData} />
+ * 
+ * @returns {JSX.Element} Tableau de bord complet avec statistiques principales et détaillées
+ */
 const StatsOverview = ({ bottles }) => {
   // Calculate comprehensive statistics
   const totalBottles = bottles.reduce((sum, bottle) => sum + bottle.quantity, 0);
@@ -111,6 +135,11 @@ const StatsOverview = ({ bottles }) => {
     }
   ];
 
+  /**
+   * Retourne les classes CSS appropriées pour chaque couleur de statistique
+   * @param {string} color - Couleur de la statistique
+   * @returns {string} Classes CSS pour l'icône colorée
+   */
   const getColorClasses = (color) => {
     const colors = {
       green: "bg-green-100 text-green-600",
@@ -124,6 +153,11 @@ const StatsOverview = ({ bottles }) => {
     return colors[color] || "bg-gray-100 text-gray-600";
   };
 
+  /**
+   * Retourne l'icône de tendance appropriée selon l'état
+   * @param {string} trend - Type de tendance (up, down, stable)
+   * @returns {JSX.Element} Composant d'icône avec couleur appropriée
+   */
   const getTrendIcon = (trend) => {
     switch(trend) {
       case "up": return <TrendingUp className="w-3 h-3 text-green-500" />;
