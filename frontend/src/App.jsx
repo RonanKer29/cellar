@@ -3,7 +3,7 @@ import Navbar from "./layouts/Navbar";
 import Home from "./pages/Home";
 import AddWine from "./pages/AddWine";
 import AddWineFull from "./pages/AddWineFull";
-import BottleDetail from "./components/bottleView/BottleDetail";
+import BottleDetail from "./components/bottle/BottleDetail";
 
 const App = () => {
   return (

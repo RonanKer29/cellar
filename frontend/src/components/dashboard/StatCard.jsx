@@ -1,23 +1,7 @@
-const colorMapping = {
-  purple: {
-    iconColor: "text-purple-600",
-    bgColor: "bg-purple-100",
-  },
-  green: {
-    iconColor: "text-green-600",
-    bgColor: "bg-green-100",
-  },
-  pink: {
-    iconColor: "text-[#DB2777]",
-    bgColor: "bg-[#FCE7F3]",
-  },
-  blue: {
-    iconColor: "text-blue-600",
-    bgColor: "bg-blue-100",
-  },
-};
+import { getStatCardColorMapping } from "../../utils/wineUtils";
 
 const StatCard = ({ title, value, subtitle, icon: Icon, color = "purple" }) => {
+  const colorMapping = getStatCardColorMapping();
   const { iconColor, bgColor } = colorMapping[color] || colorMapping["purple"];
 
   return (

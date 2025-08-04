@@ -1,39 +1,7 @@
-import { Eye, Edit, Trash2, Wine } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-
-const getColorClass = (color) => {
-  switch (color) {
-    case "Rouge":
-      return "bg-[#FEE2E2]";
-    case "Blanc":
-      return "bg-[#FEF9C3]";
-    case "Rosé":
-      return "bg-pink-200";
-    case "Pétillant":
-      return "bg-[#DCFCE7]";
-    default:
-      return "bg-gray-300";
-  }
-};
-
-const getIconColor = (color) => {
-  switch (color) {
-    case "Rouge":
-      return "text-[#DC2626]";
-    case "Blanc":
-      return "text-[#CA8A04]";
-    case "Pétillant":
-      return "text-[#16A34A]";
-    case "Rosé":
-      return "text-pink-600";
-    default:
-      return "text-gray-400";
-  }
-};
+import WineItem from "../common/WineItem";
+import { apiService } from "../../services/api";
 
 const WineList = ({ bottles = [] }) => {
-  const navigate = useNavigate();
-
   if (!Array.isArray(bottles)) {
     return (
       <p className="text-center py-10 text-gray-600">
@@ -42,11 +10,13 @@ const WineList = ({ bottles = [] }) => {
     );
   }
 
-  const handleDelete = (id) => {
-    if (window.confirm("Supprimer ce vin ?")) {
-      fetch(`http://127.0.0.1:8000/api/bottles/${id}/`, {
-        method: "DELETE",
-      }).then(() => window.location.reload());
+  const handleDelete = async (id) => {
+    try {
+      await apiService.deleteBottle(id);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting bottle:", error);
+      alert("Erreur lors de la suppression");
     }
   };
 
@@ -76,49 +46,12 @@ const WineList = ({ bottles = [] }) => {
           </thead>
           <tbody>
             {bottles.map((bottle) => (
-              <tr key={bottle.id} className="border-b hover:bg-gray-50 text-sm">
-                <td className="px-6 py-4">
-                  <Link to={`/bouteille/${bottle.id}`}>
-                    <div className="flex items-center space-x-3 group cursor-pointer">
-                      <div
-                        className={`p-2 rounded-xl ${getColorClass(
-                          bottle.color
-                        )}`}
-                      >
-                        <Wine
-                          className={`w-6 h-6 ${getIconColor(bottle.color)}`}
-                        />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 group-hover:underline">
-                          {bottle.name}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </td>
-                <td className="px-6 py-4 text-gray-700">{bottle.year}</td>
-                <td className="px-6 py-4 text-gray-700">{bottle.country}</td>
-                <td className="px-6 py-4 text-gray-700">{bottle.region}</td>
-                <td className="px-6 py-4 text-gray-700">{bottle.quantity}</td>
-                <td className="px-6 py-4 text-gray-700">
-                  {bottle.price ? `${bottle.price} €` : "-"}
-                </td>
-                <td className="px-6 py-6 flex space-x-3 text-gray-600">
-                  <Link to={`/bouteille/${bottle.id}`} title="Voir">
-                    <Eye className="h-4 w-4 text-pink-700 hover:scale-110 transition" />
-                  </Link>
-                  <Link to={`/bouteille/${bottle.id}/edit`} title="Éditer">
-                    <Edit className="h-4 w-4 text-blue-700 hover:scale-110 transition" />
-                  </Link>
-                  <button
-                    title="Supprimer"
-                    onClick={() => handleDelete(bottle.id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500 hover:scale-110 transition" />
-                  </button>
-                </td>
-              </tr>
+              <WineItem
+                key={bottle.id}
+                bottle={bottle}
+                onDelete={handleDelete}
+                viewMode="desktop"
+              />
             ))}
           </tbody>
         </table>
@@ -138,53 +71,12 @@ const WineList = ({ bottles = [] }) => {
           </thead>
           <tbody>
             {bottles.map((bottle) => (
-              <tr key={bottle.id} className="border-b hover:bg-gray-50 text-sm">
-                <td className="px-4 py-4">
-                  <Link to={`/bouteille/${bottle.id}`}>
-                    <div className="flex items-start space-x-3 group cursor-pointer">
-                      <div
-                        className={`p-2 rounded-xl ${getColorClass(
-                          bottle.color
-                        )}`}
-                      >
-                        <Wine
-                          className={`w-5 h-5 ${getIconColor(bottle.color)}`}
-                        />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm group-hover:underline">
-                          {bottle.name}
-                        </p>
-                        <p className="text-gray-400 text-xs">
-                          {bottle.price ? `${bottle.price} €` : "-"}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </td>
-                <td className="px-4 py-4 text-gray-700">{bottle.year}</td>
-                <td className="px-4 py-4 text-gray-700">
-                  <div>
-                    <p className="text-sm">{bottle.country}</p>
-                    <p className="text-xs text-gray-500">{bottle.region}</p>
-                  </div>
-                </td>
-                <td className="px-4 py-4 text-gray-700">{bottle.quantity}</td>
-                <td className="px-4 py-6 flex space-x-2 text-gray-600">
-                  <Link to={`/bouteille/${bottle.id}`} title="Voir">
-                    <Eye className="h-4 w-4 text-pink-700 hover:scale-110 transition" />
-                  </Link>
-                  <Link to={`/bouteille/${bottle.id}/edit`} title="Éditer">
-                    <Edit className="h-4 w-4 text-blue-700 hover:scale-110 transition" />
-                  </Link>
-                  <button
-                    title="Supprimer"
-                    onClick={() => handleDelete(bottle.id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500 hover:scale-110 transition" />
-                  </button>
-                </td>
-              </tr>
+              <WineItem
+                key={bottle.id}
+                bottle={bottle}
+                onDelete={handleDelete}
+                viewMode="tablet"
+              />
             ))}
           </tbody>
         </table>
@@ -194,73 +86,12 @@ const WineList = ({ bottles = [] }) => {
       <div className="block md:hidden">
         <div className="divide-y divide-gray-200">
           {bottles.map((bottle) => (
-            <div key={bottle.id} className="p-4 hover:bg-gray-50">
-              <div className="flex items-start space-x-3">
-                <div
-                  className={`p-2 rounded-xl flex-shrink-0 ${getColorClass(
-                    bottle.color
-                  )}`}
-                >
-                  <Wine className={`w-6 h-6 ${getIconColor(bottle.color)}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <Link to={`/bouteille/${bottle.id}`}>
-                        <h3 className="font-semibold text-gray-900 text-base hover:underline">
-                          {bottle.name}
-                        </h3>
-                      </Link>
-                    </div>
-                    <div className="flex space-x-2 ml-2">
-                      <Link to={`/bouteille/${bottle.id}`} title="Voir">
-                        <Eye className="h-4 w-4 text-pink-700 hover:scale-110 transition" />
-                      </Link>
-                      <Link to={`/bouteille/${bottle.id}/edit`} title="Éditer">
-                        <Edit className="h-4 w-4 text-blue-700 hover:scale-110 transition" />
-                      </Link>
-                      <button
-                        title="Supprimer"
-                        onClick={() => handleDelete(bottle.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-500 hover:scale-110 transition" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-3 text-sm">
-                    <div>
-                      <span className="text-gray-500">Millésime:</span>
-                      <span className="ml-1 text-gray-700">{bottle.year}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500">Quantité:</span>
-                      <span className="ml-1 text-gray-700">
-                        {bottle.quantity}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500">Pays:</span>
-                      <span className="ml-1 text-gray-700">
-                        {bottle.country}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500">Valeur:</span>
-                      <span className="ml-1 text-gray-700">
-                        {bottle.price ? `${bottle.price} €` : "-"}
-                      </span>
-                    </div>
-                    <div className="col-span-2">
-                      <span className="text-gray-500">Région:</span>
-                      <span className="ml-1 text-gray-700">
-                        {bottle.region}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <WineItem
+              key={bottle.id}
+              bottle={bottle}
+              onDelete={handleDelete}
+              viewMode="mobile"
+            />
           ))}
         </div>
       </div>

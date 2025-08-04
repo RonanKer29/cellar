@@ -2,33 +2,16 @@ import StatCard from "./StatCard";
 import { Wine, Warehouse, Globe, CheckCircle } from "lucide-react";
 import WineList from "./WineList";
 import Intro from "./Intro";
+import { calculateWineStats } from "../../utils/wineUtils";
 
 const Dashboard = ({ bottles }) => {
-  const total = bottles.reduce((acc, b) => acc + (b.quantity || 0), 0);
-
-  const inCellar = bottles
-    .filter((b) => b.status === "En cave")
-    .reduce((acc, b) => acc + (b.quantity || 0), 0);
-
-  const drunkThisYear = bottles
-    .filter((b) => {
-      const year = new Date(b.date_added).getFullYear();
-      return b.status === "Bue" && year === new Date().getFullYear();
-    })
-    .reduce((acc, b) => acc + (b.quantity || 0), 0);
-
-  const regions = [...new Set(bottles.map((b) => b.region))].filter(Boolean);
-
-  const now = new Date();
-  const bottlesThisMonth = bottles
-    .filter((b) => {
-      const added = new Date(b.date_added);
-      return (
-        added.getMonth() === now.getMonth() &&
-        added.getFullYear() === now.getFullYear()
-      );
-    })
-    .reduce((acc, b) => acc + (b.quantity || 0), 0);
+  const {
+    total,
+    inCellar,
+    drunkThisYear,
+    regionsCount,
+    bottlesThisMonth,
+  } = calculateWineStats(bottles);
 
   return (
     <>
@@ -58,7 +41,7 @@ const Dashboard = ({ bottles }) => {
         />
         <StatCard
           title="Régions"
-          value={regions.length}
+          value={regionsCount}
           subtitle="Différentes appellations"
           icon={Globe}
           color="purple"

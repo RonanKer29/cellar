@@ -2,7 +2,12 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Wine, ArrowLeft, Upload, X, Star } from "lucide-react";
+import { Wine, Upload, X, Star } from "lucide-react";
+import PageHeader from "../components/common/PageHeader";
+import FormField from "../components/forms/FormField";
+import SelectField from "../components/forms/SelectField";
+import ErrorState from "../components/common/ErrorState";
+import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 
 const defaultForm = {
   name: "",
@@ -23,19 +28,6 @@ const defaultForm = {
   rating: "",
   image: null,
 };
-
-const colorOptions = [
-  { value: "Rouge", label: "Rouge" },
-  { value: "Blanc", label: "Blanc" },
-  { value: "Rosé", label: "Rosé" },
-  { value: "Pétillant", label: "Pétillant" },
-  { value: "Autre", label: "Autre" },
-];
-
-const statusOptions = [
-  { value: "En cave", label: "En cave" },
-  { value: "Bue", label: "Bue" },
-];
 
 const AddWineFull = () => {
   const [form, setForm] = useState(defaultForm);
@@ -216,7 +208,7 @@ const AddWineFull = () => {
                     onChange={handleChange}
                     className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   >
-                    {colorOptions.map((option) => (
+                    {WINE_COLORS.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
@@ -303,7 +295,7 @@ const AddWineFull = () => {
                     onChange={handleChange}
                     className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   >
-                    {statusOptions.map((option) => (
+                    {WINE_STATUS.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>

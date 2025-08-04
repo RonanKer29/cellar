@@ -1,43 +1,22 @@
-import { useEffect, useState } from "react";
 import Dashboard from "../components/dashboard/Dashboard";
+import LoadingState from "../components/common/LoadingState";
+import ErrorState from "../components/common/ErrorState";
+import { useWines } from "../hooks/useWines";
 
 const Home = () => {
-  const [bottles, setBottles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { bottles, loading, error, refetch } = useWines();
 
-  // Fetch data depuis Django API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://127.0.0.1:8000/api/bottles/");
-        if (!res.ok) {
-          throw new Error(`Erreur HTTP: ${res.status}`);
-        }
-        const data = await res.json();
-        setBottles(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // if loading
   if (loading) {
-    return <p className="text-center py-10 text-gray-600">Chargement...</p>;
+    return <LoadingState />;
   }
 
-  // if error
   if (error) {
     return (
-      <div className="text-center py-10 text-red-600">
-        <p>❌ Une erreur est survenue :</p>
-        <pre>{error}</pre>
-      </div>
+      <ErrorState 
+        message="Une erreur est survenue lors du chargement" 
+        error={error} 
+        onRetry={refetch}
+      />
     );
   }
 
