@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,42 +7,90 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
-import { Wine, Upload, X, Star, ArrowLeft, Calendar, MapPin, DollarSign, FileText, Camera } from "lucide-react";
+import { Wine, Upload, X, Star, ArrowLeft, Calendar, MapPin, DollarSign, FileText, Camera, Save } from "lucide-react";
 import ErrorState from "../components/common/ErrorState";
+import LoadingState from "../components/common/LoadingState";
 import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
 import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
 import { apiService } from "../services/api";
 
-const defaultForm = {
-  name: "",
-  year: "",
-  color: "Rouge",
-  quantity: 1,
-  productor: "",
-  country: "",
-  region: "",
-  grape: "",
-  status: "En cave",
-  price: "",
-  estimated_value: "",
-  purchase_place: "",
-  purchase_date: "",
-  description: "",
-  tasting_note: "",
-  rating: "",
-  image: null,
-};
-
-const AddWineFull = () => {
-  const [form, setForm] = useState(defaultForm);
-  const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState(null);
-  const [error, setError] = useState("");
+const EditWine = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const fileInput = useRef(null);
   
+  const [form, setForm] = useState({
+    name: "",
+    year: "",
+    color: "Rouge",
+    quantity: 1,
+    productor: "",
+    country: "",
+    region: "",
+    grape: "",
+    status: "En cave",
+    price: "",
+    estimated_value: "",
+    purchase_place: "",
+    purchase_date: "",
+    description: "",
+    tasting_note: "",
+    rating: "",
+    image: null,
+  });
+  
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const [error, setError] = useState("");
+  const [originalImage, setOriginalImage] = useState(null);
+  
   const availableRegions = form.country ? getRegionsByCountry(form.country) : getAllRegions();
+
+  // Charger les données de la bouteille
+  useEffect(() => {
+    const fetchBottle = async () => {
+      try {
+        const data = await apiService.getBottle(id);
+        
+        // Convertir les données pour le formulaire
+        setForm({
+          name: data.name || "",
+          year: data.year || "",
+          color: data.color || "Rouge",
+          quantity: data.quantity || 1,
+          productor: data.productor || "",
+          country: data.country || "",
+          region: data.region || "",
+          grape: data.grape || "",
+          status: data.status || "En cave",
+          price: data.price || "",
+          estimated_value: data.estimated_value || "",
+          purchase_place: data.purchase_place || "",
+          purchase_date: data.purchase_date || "",
+          description: data.description || "",
+          tasting_note: data.tasting_note || "",
+          rating: data.rating || "",
+          image: null, // L'image sera gérée séparément
+        });
+        
+        // Gérer l'image existante
+        if (data.image) {
+          setOriginalImage(data.image);
+          setPreview(data.image);
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching bottle:', err);
+        setError(err.message || "Erreur lors du chargement de la bouteille");
+        setLoading(false);
+      }
+    };
+
+    fetchBottle();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -53,17 +101,17 @@ const AddWineFull = () => {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
-  
+
   const handleSelectChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleGrapeChange = (grapeString) => {
     setForm((prev) => ({ ...prev, grape: grapeString }));
   };
 
   const removeImage = () => {
-    setPreview(null);
+    setPreview(originalImage); // Revenir à l'image originale
     setForm((prev) => ({ ...prev, image: null }));
     if (fileInput.current) {
       fileInput.current.value = "";
@@ -72,24 +120,31 @@ const AddWineFull = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
     setError("");
 
     try {
-      // Utilise FormData pour l'image
       const formData = new FormData();
+      
+      // Ajouter tous les champs du formulaire
       Object.entries(form).forEach(([key, value]) => {
-        if (value !== "" && value !== null) {
+        if (key === "image") {
+          // Seulement ajouter l'image si une nouvelle a été sélectionnée
+          if (value) {
+            formData.append(key, value);
+          }
+        } else if (value !== "" && value !== null && value !== undefined) {
           formData.append(key, value);
         }
       });
 
-      await apiService.createBottle(formData);
-      navigate("/");
+      await apiService.patchBottle(id, formData);
+      navigate(`/bouteille/${id}`);
     } catch (err) {
-      setError(err.message);
+      console.error('Error updating bottle:', err);
+      setError(err.message || "Erreur lors de la modification du vin");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -126,19 +181,33 @@ const AddWineFull = () => {
     );
   };
 
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (error && !form.name) {
+    return (
+      <ErrorState 
+        message="Erreur lors du chargement de la bouteille" 
+        error={error}
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate(`/bouteille/${id}`)}
             className="flex items-center space-x-3 text-slate-600 hover:text-slate-800 transition-colors group"
           >
             <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-slate-200 transition-colors">
               <ArrowLeft className="w-4 h-4" />
             </div>
-            <span className="font-medium">Retour à la collection</span>
+            <span className="font-medium">Retour à la fiche</span>
           </button>
         </div>
       </div>
@@ -146,14 +215,14 @@ const AddWineFull = () => {
       <div className="max-w-4xl mx-auto pt-8 pb-12 px-4">
         <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
           <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Wine className="w-8 h-8 text-white" />
             </div>
             <CardTitle className="text-3xl font-bold text-slate-900">
-              Ajouter un vin complet
+              Modifier le vin
             </CardTitle>
             <CardDescription className="text-slate-600">
-              Renseignez toutes les informations de votre bouteille
+              Modifiez les informations de votre bouteille
             </CardDescription>
           </CardHeader>
 
@@ -483,7 +552,7 @@ const AddWineFull = () => {
                           <Upload className="w-8 h-8 mb-2 text-purple-400" />
                           <p className="mb-2 text-sm text-purple-600">
                             <span className="font-semibold">
-                              Cliquez pour télécharger
+                              Cliquez pour changer l'image
                             </span>
                           </p>
                           <p className="text-xs text-purple-500">
@@ -512,7 +581,7 @@ const AddWineFull = () => {
                           type="button"
                           onClick={removeImage}
                           className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors shadow-lg"
-                          title="Supprimer l'image"
+                          title="Revenir à l'image originale"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -526,23 +595,26 @@ const AddWineFull = () => {
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <Button
                   type="submit"
-                  disabled={loading}
-                  className="flex-1 h-12 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl"
+                  disabled={saving}
+                  className="flex-1 h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl"
                 >
-                  {loading ? (
+                  {saving ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Ajout en cours...</span>
+                      <span>Sauvegarde en cours...</span>
                     </div>
                   ) : (
-                    "Ajouter le vin"
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Sauvegarder les modifications
+                    </>
                   )}
                 </Button>
 
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate(`/bouteille/${id}`)}
                   className="flex-1 h-12 border-2 border-slate-300 hover:border-purple-500 text-slate-700 hover:text-purple-600 font-medium rounded-xl transition-all hover:bg-purple-50"
                 >
                   Annuler
@@ -556,4 +628,4 @@ const AddWineFull = () => {
   );
 };
 
-export default AddWineFull;
+export default EditWine;

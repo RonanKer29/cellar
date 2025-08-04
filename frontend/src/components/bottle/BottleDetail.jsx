@@ -10,10 +10,15 @@ import {
   ShoppingCart,
   Grape,
   FileText,
-  Award,
+  Calendar,
   Minus,
   Eye,
   Clock,
+  Award,
+  Camera,
+  DollarSign,
+  Package,
+  TrendingUp,
 } from "lucide-react";
 import {
   Dialog,
@@ -26,19 +31,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { apiService } from "../../services/api";
 
 const getColorClass = (color) => {
   switch (color) {
     case "Rouge":
-      return "bg-gradient-to-b from-red-900 to-red-800";
+      return "bg-gradient-to-br from-red-100 to-red-200 border-red-300";
     case "Blanc":
-      return "bg-gradient-to-b from-yellow-50 to-yellow-100";
+      return "bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300";
     case "Rosé":
-      return "bg-gradient-to-b from-pink-200 to-pink-300";
+      return "bg-gradient-to-br from-pink-100 to-pink-200 border-pink-300";
     case "Pétillant":
-      return "bg-gradient-to-b from-green-100 to-green-200";
+      return "bg-gradient-to-br from-blue-100 to-blue-200 border-blue-300";
     default:
-      return "bg-gradient-to-b from-gray-800 to-gray-900";
+      return "bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300";
   }
 };
 
@@ -51,6 +65,7 @@ const getGrapeColor = (index) => {
     "bg-blue-500",
     "bg-orange-500",
     "bg-teal-500",
+    "bg-emerald-500",
   ];
   return colors[index % colors.length];
 };
@@ -65,13 +80,18 @@ const BottleDetail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/bottles/${id}/`)
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchBottle = async () => {
+      try {
+        const data = await apiService.getBottle(id);
         setBottle(data);
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      } catch (error) {
+        console.error('Error fetching bottle:', error);
+        setLoading(false);
+      }
+    };
+    
+    fetchBottle();
   }, [id]);
 
   const handleDelete = () => {
@@ -90,23 +110,11 @@ const BottleDetail = () => {
       const newQuantity = bottle.quantity - quantityToRemove;
 
       if (newQuantity === 0) {
-        await fetch(`http://127.0.0.1:8000/api/bottles/${id}/`, {
-          method: "DELETE",
-        });
+        await apiService.deleteBottle(id);
         navigate("/");
       } else {
-        const response = await fetch(
-          `http://127.0.0.1:8000/api/bottles/${id}/`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ quantity: newQuantity }),
-          }
-        );
-
-        if (response.ok) {
-          setBottle({ ...bottle, quantity: newQuantity });
-        }
+        await apiService.patchBottle(id, { quantity: newQuantity });
+        setBottle({ ...bottle, quantity: newQuantity });
       }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
@@ -116,12 +124,13 @@ const BottleDetail = () => {
     }
   };
 
-  const handleMarkAsDrunk = () => {
-    fetch(`http://127.0.0.1:8000/api/bottles/${id}/`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "Bue" }),
-    }).then(() => window.location.reload());
+  const handleMarkAsDrunk = async () => {
+    try {
+      await apiService.patchBottle(id, { status: "Bue" });
+      window.location.reload();
+    } catch (error) {
+      console.error("Erreur lors du marquage comme bu:", error);
+    }
   };
 
   const renderStarRating = (rating) => {
@@ -144,88 +153,90 @@ const BottleDetail = () => {
     );
   };
 
-  const renderPriceInfo = () => {
-    const hasPrice = bottle.price || bottle.estimated_value;
-    if (!hasPrice) return null;
+  const parseGrapeComposition = (grapeString) => {
+    if (!grapeString) return [];
 
-    return (
-      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg">
-        {bottle.price && (
-          <div className="text-center">
-            <p className="text-xs text-gray-500 uppercase tracking-wide">
-              Prix d'achat
-            </p>
-            <p className="text-lg font-bold text-gray-900">€{bottle.price}</p>
-          </div>
-        )}
-        {bottle.estimated_value && (
-          <div
-            className={`text-center ${
-              bottle.price ? "mt-2 pt-2 border-t border-gray-200" : ""
-            }`}
-          >
-            <p className="text-xs text-gray-500 uppercase tracking-wide">
-              Valeur estimée
-            </p>
-            <p className="text-lg font-bold text-green-600">
-              €{bottle.estimated_value}
-            </p>
-          </div>
-        )}
-      </div>
-    );
-  };
+    const grapes = grapeString
+      .split(",")
+      .map((grape) => {
+        const trimmed = grape.trim();
+        const percentageMatch = trimmed.match(/^(.+?)\s*\((\d+(?:\.\d+)?)%\)$/);
 
-  const renderRatingBadge = (rating) => {
-    if (!rating) return null;
-    return (
-      <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg">
-        <div className="text-center">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-            Note
-          </p>
-          <div className="flex items-center justify-center space-x-1">
-            <Star className="w-4 h-4 text-yellow-400 fill-current" />
-            <span className="text-lg font-bold text-gray-900">{rating}/5</span>
-          </div>
-        </div>
-      </div>
-    );
+        if (percentageMatch) {
+          return {
+            name: percentageMatch[1].trim(),
+            percentage: parseFloat(percentageMatch[2]),
+          };
+        } else {
+          return {
+            name: trimmed,
+            percentage: null,
+          };
+        }
+      })
+      .filter((grape) => grape.name);
+
+    // Si aucun pourcentage n'est spécifié, on répartit équitablement
+    const hasPercentages = grapes.some((grape) => grape.percentage !== null);
+    if (!hasPercentages && grapes.length > 0) {
+      const equalPercentage = Math.round(100 / grapes.length);
+      grapes.forEach((grape) => {
+        grape.percentage = equalPercentage;
+      });
+    }
+
+    return grapes;
   };
 
   const renderGrapeComposition = (grapeString) => {
-    if (!grapeString) return null;
+    const grapes = parseGrapeComposition(grapeString);
+    if (grapes.length === 0) return null;
 
-    const grapes = grapeString.split(",").map((g) => g.trim());
-    const percentage = Math.round(100 / grapes.length);
+    const totalPercentage = grapes.reduce(
+      (sum, grape) => sum + (grape.percentage || 0),
+      0
+    );
 
     return (
       <div className="space-y-4">
         {grapes.map((grape, index) => (
-          <div key={index} className="flex items-center justify-between">
-            <span className="text-gray-700 font-medium text-sm">{grape}</span>
-            <div className="flex items-center space-x-3 flex-1 max-w-32 ml-4">
-              <div className="flex-1 bg-gray-200 rounded-full h-2">
+          <div key={index} className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-800">
+                {grape.name}
+              </span>
+              <Badge variant="secondary" className="text-xs">
+                {grape.percentage ? `${grape.percentage}%` : "N/A"}
+              </Badge>
+            </div>
+            {grape.percentage && (
+              <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className={`${getGrapeColor(
                     index
                   )} h-2 rounded-full transition-all duration-700 ease-out`}
-                  style={{ width: `${percentage}%` }}
+                  style={{
+                    width: `${
+                      (grape.percentage / Math.max(totalPercentage, 100)) * 100
+                    }%`,
+                  }}
                 ></div>
               </div>
-              <span className="text-xs text-gray-500 w-8 text-right font-medium">
-                {percentage}%
-              </span>
-            </div>
+            )}
           </div>
         ))}
+        {totalPercentage > 0 && totalPercentage !== 100 && (
+          <div className="text-xs text-gray-500 mt-2">
+            Total: {totalPercentage}%
+          </div>
+        )}
       </div>
     );
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Wine className="w-8 h-8 text-white animate-pulse" />
@@ -238,316 +249,391 @@ const BottleDetail = () => {
 
   if (!bottle) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center py-20">
-          <Wine className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">
-            Vin non trouvé
-          </h2>
-          <p className="text-gray-500 mb-8">
-            Cette bouteille n'existe pas ou a été supprimée.
-          </p>
-          <button
-            onClick={() => navigate("/")}
-            className="px-6 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition-colors font-medium"
-          >
-            Retour à la collection
-          </button>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <Card className="max-w-md mx-auto">
+          <CardContent className="text-center py-12">
+            <Wine className="w-20 h-20 text-gray-300 mx-auto mb-6" />
+            <CardTitle className="text-2xl mb-4">Vin non trouvé</CardTitle>
+            <CardDescription className="mb-8">
+              Cette bouteille n'existe pas ou a été supprimée.
+            </CardDescription>
+            <Button onClick={() => navigate("/")} className="w-full">
+              Retour à la collection
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header Navigation */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <button
+          <Button
+            variant="ghost"
             onClick={() => navigate("/")}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors group"
+            className="flex items-center space-x-3 text-slate-600 hover:text-slate-800 transition-colors group"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-slate-200 transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+            </div>
             <span className="font-medium">Retour à la collection</span>
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Image Section */}
-          <div className="relative">
-            <div
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Image Section - Plus petite */}
+          <div className="lg:col-span-4">
+            <Card
               className={`${getColorClass(
                 bottle.color
-              )} rounded-3xl h-96 lg:h-[600px] flex items-center justify-center relative overflow-hidden shadow-xl`}
+              )} border-2 overflow-hidden`}
             >
-              {/* Prix et valeur */}
-              {renderPriceInfo()}
-
-              {/* Note */}
-              {renderRatingBadge(bottle.rating)}
-
-              {/* Wine Image or Placeholder */}
-              <div className="text-center h-full flex items-center justify-center p-8">
-                {bottle.image ? (
-                  <div className="relative group">
-                    <img
-                      src={bottle.image}
-                      alt={`Bouteille de ${bottle.name}`}
-                      className="max-h-80 lg:max-h-96 w-auto object-contain rounded-2xl shadow-2xl transition-all duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextElementSibling.style.display = "block";
-                      }}
-                    />
-                    <div className="hidden text-center">
-                      <Wine className="w-32 h-32 text-white/80 mx-auto mb-4" />
-                      <p className="text-white/60 text-sm">
-                        Image non disponible
-                      </p>
+              <CardContent className="p-6">
+                <div className="relative h-64 sm:h-80 flex items-center justify-center">
+                  {bottle.image ? (
+                    <div className="relative group">
+                      <img
+                        src={bottle.image}
+                        alt={`Bouteille de ${bottle.name}`}
+                        className="max-h-full w-auto object-contain rounded-lg shadow-lg transition-all duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.nextElementSibling.style.display = "block";
+                        }}
+                      />
+                      <div className="hidden text-center">
+                        <Wine className="w-24 h-24 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 text-sm">
+                          Image non disponible
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <Wine className="w-32 h-32 text-white/80 mx-auto mb-4" />
-                    <p className="text-white/60 text-sm">
-                      Aucune image disponible
-                    </p>
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <div className="text-center">
+                      <Camera className="w-24 h-24 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500 text-sm">Aucune image</p>
+                    </div>
+                  )}
 
-              {/* Status Badge */}
-              <div className="absolute bottom-4 left-4">
-                <span
-                  className={`px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm ${
-                    bottle.status === "Bue"
-                      ? "bg-red-500/90 text-white"
-                      : "bg-green-500/90 text-white"
-                  }`}
-                >
-                  {bottle.status}
-                </span>
-              </div>
-            </div>
+                  {/* Status Badge */}
+                  <div className="absolute top-2 right-2">
+                    <Badge
+                      variant={
+                        bottle.status === "Bue" ? "destructive" : "default"
+                      }
+                      className="shadow-lg"
+                    >
+                      {bottle.status}
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Content Section */}
-          <div className="space-y-8">
+          {/* Content Section - Plus d'espace */}
+          <div className="lg:col-span-8 space-y-6">
             {/* Title Section */}
-            <div className="space-y-4">
-              <div>
-                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-3 leading-tight">
-                  {bottle.name}
-                </h1>
-                <p className="text-xl text-gray-600 font-medium mb-2">
-                  {bottle.productor}
-                </p>
-                <div className="flex items-center text-gray-500 space-x-2">
-                  <MapPin className="w-4 h-4" />
-                  <span className="font-medium">
-                    {bottle.region && `${bottle.region}, `}
-                    {bottle.country}
-                  </span>
+            <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2 leading-tight">
+                      {bottle.name}
+                    </CardTitle>
+                    <CardDescription className="text-lg font-medium mb-2">
+                      {bottle.productor}
+                    </CardDescription>
+                    <div className="flex items-center text-gray-500 space-x-2">
+                      <MapPin className="w-4 h-4" />
+                      <span className="font-medium">
+                        {bottle.region && `${bottle.region}, `}
+                        {bottle.country}
+                      </span>
+                    </div>
+                  </div>
+                  {bottle.rating && (
+                    <div className="text-right">
+                      <div className="flex items-center justify-end mb-1">
+                        <Star className="w-5 h-5 text-yellow-400 fill-current mr-1" />
+                        <span className="text-2xl font-bold text-gray-900">
+                          {bottle.rating}
+                        </span>
+                        <span className="text-gray-500 ml-1">/5</span>
+                      </div>
+                      <p className="text-sm text-gray-500">Note</p>
+                    </div>
+                  )}
                 </div>
-              </div>
+              </CardHeader>
+            </Card>
+
+            {/* Quick Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                <CardContent className="p-4 text-center">
+                  <Calendar className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">
+                    {bottle.year}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium">Millésime</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                <CardContent className="p-4 text-center">
+                  <Wine className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">
+                    {bottle.color}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium">Type</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+                <CardContent className="p-4 text-center">
+                  <Package className="w-6 h-6 text-green-600 mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">
+                    {bottle.quantity}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium">Quantité</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+                <CardContent className="p-4 text-center">
+                  <Award className="w-6 h-6 text-amber-600 mx-auto mb-2" />
+                  <p className="text-2xl font-bold text-gray-900">750ml</p>
+                  <p className="text-xs text-gray-600 font-medium">Volume</p>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Quick Info Grid */}
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                <p className="text-gray-500 text-sm mb-1 font-medium">
-                  Millésime
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {bottle.year}
-                </p>
-              </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                <p className="text-gray-500 text-sm mb-1 font-medium">
-                  Couleur
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {bottle.color}
-                </p>
-              </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                <p className="text-gray-500 text-sm mb-1 font-medium">
-                  Quantité
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {bottle.quantity}
-                </p>
-              </div>
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                <p className="text-gray-500 text-sm mb-1 font-medium">Volume</p>
-                <p className="text-2xl font-bold text-gray-900">750ml</p>
-              </div>
-            </div>
+            {/* Prix et valeurs */}
+            {(bottle.price || bottle.estimated_value) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {bottle.price && (
+                  <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600 font-medium mb-1">
+                            Prix d'achat
+                          </p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            €{bottle.price}
+                          </p>
+                        </div>
+                        <DollarSign className="w-8 h-8 text-emerald-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
-            {/* Rating Section */}
-            {bottle.rating && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <Award className="w-5 h-5 mr-2 text-yellow-500" />
-                  Évaluation
-                </h3>
-                {renderStarRating(bottle.rating)}
+                {bottle.estimated_value && (
+                  <Card className="bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600 font-medium mb-1">
+                            Valeur estimée
+                          </p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            €{bottle.estimated_value}
+                          </p>
+                          {bottle.price && (
+                            <div className="flex items-center mt-1">
+                              <TrendingUp className="w-4 h-4 mr-1 text-teal-600" />
+                              <span
+                                className={`text-sm font-medium ${
+                                  bottle.estimated_value > bottle.price
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                                }`}
+                              >
+                                {bottle.estimated_value > bottle.price
+                                  ? "+"
+                                  : ""}
+                                €
+                                {(
+                                  bottle.estimated_value - bottle.price
+                                ).toFixed(2)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <TrendingUp className="w-8 h-8 text-teal-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
 
             {/* Grape Composition */}
             {bottle.grape && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <Grape className="w-5 h-5 mr-2 text-purple-600" />
-                  Composition des cépages
-                </h3>
-                {renderGrapeComposition(bottle.grape)}
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Grape className="w-5 h-5 text-purple-600" />
+                    Composition des cépages
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {renderGrapeComposition(bottle.grape)}
+                </CardContent>
+              </Card>
             )}
 
             {/* Purchase Information */}
             {(bottle.purchase_date || bottle.purchase_place) && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <ShoppingCart className="w-5 h-5 mr-2 text-blue-600" />
-                  Informations d'achat
-                </h3>
-                <div className="space-y-3">
-                  {bottle.purchase_place && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 font-medium">
-                        Lieu d'achat
-                      </span>
-                      <span className="text-gray-900 font-semibold">
-                        {bottle.purchase_place}
-                      </span>
-                    </div>
-                  )}
-                  {bottle.purchase_date && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 font-medium">
-                        Date d'achat
-                      </span>
-                      <span className="text-gray-900 font-semibold">
-                        {new Date(bottle.purchase_date).toLocaleDateString(
-                          "fr-FR"
-                        )}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5 text-blue-600" />
+                    Informations d'achat
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {bottle.purchase_place && (
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-gray-600 font-medium">
+                          Lieu d'achat
+                        </span>
+                        <span className="text-gray-900 font-semibold">
+                          {bottle.purchase_place}
+                        </span>
+                      </div>
+                    )}
+                    {bottle.purchase_date && (
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-gray-600 font-medium">
+                          Date d'achat
+                        </span>
+                        <span className="text-gray-900 font-semibold">
+                          {new Date(bottle.purchase_date).toLocaleDateString(
+                            "fr-FR"
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* Description */}
             {bottle.description && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <FileText className="w-5 h-5 mr-2 text-gray-600" />
-                  Description / Notes personnelles
-                </h3>
-                <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl">
-                  {bottle.description}
-                </p>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-gray-600" />
+                    Description / Notes personnelles
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <p className="text-gray-700 leading-relaxed">
+                      {bottle.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* Tasting Notes */}
             {bottle.tasting_note && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <Eye className="w-5 h-5 mr-2 text-pink-600" />
-                  Notes de dégustation
-                </h3>
-                <p className="text-gray-700 leading-relaxed bg-amber-50 p-4 rounded-xl border border-amber-100">
-                  {bottle.tasting_note}
-                </p>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-pink-600" />
+                    Notes de dégustation
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                    <p className="text-gray-700 leading-relaxed">
+                      {bottle.tasting_note}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
-            {/* Technical Specifications */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                <Clock className="w-5 h-5 mr-2 text-gray-600" />
-                Informations techniques
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-gray-600 font-medium">
-                    Date d'ajout
-                  </span>
-                  <span className="text-gray-900 font-semibold">
-                    {new Date(bottle.date_added).toLocaleDateString("fr-FR")}
-                  </span>
-                </div>
-                {bottle.region && (
-                  <div className="flex justify-between items-center py-1">
+            {/* Technical Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-gray-600" />
+                  Informations techniques
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <span className="text-gray-600 font-medium">
-                      Appellation
+                      Date d'ajout
                     </span>
                     <span className="text-gray-900 font-semibold">
-                      {bottle.region}
+                      {new Date(bottle.date_added).toLocaleDateString("fr-FR")}
                     </span>
                   </div>
-                )}
-                {bottle.estimated_value && bottle.price && (
-                  <div className="flex justify-between items-center py-1">
-                    <span className="text-gray-600 font-medium">
-                      Plus-value potentielle
-                    </span>
-                    <span
-                      className={`font-semibold ${
-                        bottle.estimated_value > bottle.price
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {bottle.estimated_value > bottle.price ? "+" : ""}€
-                      {(bottle.estimated_value - bottle.price).toFixed(2)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
+                  {bottle.region && (
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="text-gray-600 font-medium">
+                        Appellation
+                      </span>
+                      <span className="text-gray-900 font-semibold">
+                        {bottle.region}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button
-                onClick={() => navigate(`/bouteille/${id}/edit`)}
-                className="flex items-center justify-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-              >
-                <Edit className="w-4 h-4" />
-                <span>Modifier</span>
-              </button>
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button
+                    onClick={() => navigate(`/bouteille/${id}/edit`)}
+                    className="flex-1 h-12"
+                    variant="default"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Modifier
+                  </Button>
 
-              <button
-                onClick={handleMarkAsDrunk}
-                disabled={bottle.status === "Bue"}
-                className={`flex items-center justify-center space-x-2 px-6 py-3 rounded-xl transition-all font-medium shadow-lg ${
-                  bottle.status === "Bue"
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
-                    : "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-xl hover:-translate-y-0.5"
-                }`}
-              >
-                <Wine className="w-4 h-4" />
-                <span>
-                  {bottle.status === "Bue"
-                    ? "Déjà dégusté"
-                    : "Marquer comme bu"}
-                </span>
-              </button>
+                  <Button
+                    onClick={handleMarkAsDrunk}
+                    disabled={bottle.status === "Bue"}
+                    variant={bottle.status === "Bue" ? "secondary" : "default"}
+                    className="flex-1 h-12"
+                  >
+                    <Wine className="w-4 h-4 mr-2" />
+                    {bottle.status === "Bue"
+                      ? "Déjà dégusté"
+                      : "Marquer comme bu"}
+                  </Button>
 
-              <button
-                onClick={handleDelete}
-                className="flex items-center justify-center space-x-2 px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-              >
-                <Minus className="w-4 h-4" />
-                <span>Supprimer</span>
-              </button>
-            </div>
+                  <Button
+                    onClick={handleDelete}
+                    variant="destructive"
+                    className="flex-1 h-12"
+                  >
+                    <Minus className="w-4 h-4 mr-2" />
+                    Supprimer
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

@@ -1,6 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Bottle(models.Model):
+    # Propriétaire de la bouteille - null=True temporairement pour la migration
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bottles', null=True, blank=True)
+    
     # Choix de couleur (menu déroulant)
     RED = 'Rouge'
     WHITE = 'Blanc'

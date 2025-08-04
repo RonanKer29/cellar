@@ -1,17 +1,48 @@
+import { useState } from "react";
 import StatCard from "./StatCard";
 import { Wine, Warehouse, Globe, CheckCircle } from "lucide-react";
 import WineList from "./WineList";
 import Intro from "./Intro";
 import { calculateWineStats } from "../../utils/wineUtils";
+import FilterCategories from "./FilterCategories";
+import SearchCategories from "./SearchCategories";
 
 const Dashboard = ({ bottles }) => {
-  const {
-    total,
-    inCellar,
-    drunkThisYear,
-    regionsCount,
-    bottlesThisMonth,
-  } = calculateWineStats(bottles);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedColor, setSelectedColor] = useState("Tous");
+  const [selectedRegion, setSelectedRegion] = useState("Tous");
+  const [selectedProductor, setSelectedProductor] = useState("Tous");
+
+  const { total, inCellar, drunkThisYear, regionsCount, bottlesThisMonth } =
+    calculateWineStats(bottles);
+
+  // Déduire toutes les couleurs, régions, producteurs présents
+  const colors = ["Tous", ...Array.from(new Set(bottles.map((b) => b.color)))];
+  const regions = [
+    "Tous",
+    ...Array.from(new Set(bottles.map((b) => b.region).filter(Boolean))),
+  ];
+  const productors = [
+    "Tous",
+    ...Array.from(new Set(bottles.map((b) => b.productor).filter(Boolean))),
+  ];
+
+  // Filtrage des bouteilles selon la recherche
+  const filteredBottles = bottles.filter((bottle) => {
+    const matchesSearch = [bottle.name, bottle.productor, bottle.region]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchesColor =
+      selectedColor === "Tous" || bottle.color === selectedColor;
+    const matchesRegion =
+      selectedRegion === "Tous" || bottle.region === selectedRegion;
+    const matchesProductor =
+      selectedProductor === "Tous" || bottle.productor === selectedProductor;
+
+    return matchesSearch && matchesColor && matchesRegion && matchesProductor;
+  });
 
   return (
     <>
@@ -47,7 +78,19 @@ const Dashboard = ({ bottles }) => {
           color="purple"
         />
       </div>
-      <WineList bottles={bottles} />
+      <SearchCategories searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <FilterCategories
+        colors={colors}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        regions={regions}
+        selectedRegion={selectedRegion}
+        setSelectedRegion={setSelectedRegion}
+        productors={productors}
+        selectedProductor={selectedProductor}
+        setSelectedProductor={setSelectedProductor}
+      />
+      <WineList bottles={filteredBottles} />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Menu, Wine } from "lucide-react";
-import ProfileCard from "../components/navbar/ProfileCard"; // Ou intégré
+import { Menu, Wine, LogOut } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import ProfileCard from "../components/navbar/ProfileCard";
 import {
   Sheet,
   SheetContent,
@@ -13,6 +14,11 @@ import NavItems from "@/components/navbar/NavItems";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <>
@@ -48,6 +54,16 @@ const Navbar = () => {
               <div className="flex-1 p-6">
                 <ProfileCard />
                 <NavItems isMobile={true} onClick={() => setIsOpen(false)} />
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 hover:from-pink-100 hover:to-purple-100 text-gray-600 hover:text-gray-800 border border-pink-200/50 hover:border-pink-300/50 transition-all duration-200"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Se déconnecter
+                  </Button>
+                </div>
               </div>
               <div className="p-6 border-t bg-gray-50">
                 <p className="text-xs text-gray-500 text-center">
@@ -86,6 +102,14 @@ const Navbar = () => {
                 Upgrade Now
               </Button>
             </div>
+            <Button
+              onClick={handleLogout}
+              variant="ghost"
+              className="w-full flex items-center justify-center gap-2 mt-4 bg-gradient-to-r from-pink-50 to-purple-50 hover:from-pink-100 hover:to-purple-100 text-gray-600 hover:text-gray-800 border border-pink-200/50 hover:border-pink-300/50 transition-all duration-200"
+            >
+              <LogOut className="w-4 h-4" />
+              Se déconnecter
+            </Button>
           </div>
         </div>
       </aside>
