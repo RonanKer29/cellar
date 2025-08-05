@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Navbar from "./layouts/Navbar";
+import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import AddWine from "./pages/AddWine";
 import AddWineFull from "./pages/AddWineFull";
@@ -28,6 +29,18 @@ const AppContent = () => {
     );
   }
 
+  // Pour la landing page, on affiche en plein écran sans navbar
+  if (!isAuthenticated && (window.location.pathname === '/' || window.location.pathname === '/landing')) {
+    return (
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    );
+  }
+
   return (
     <div className="flex flex-col sm:flex-row h-screen">
       {isAuthenticated && <Navbar />}
@@ -37,9 +50,21 @@ const AppContent = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
-          {/* Toutes les autres routes protégées */}
+          {/* Landing page pour les utilisateurs non connectés */}
+          <Route 
+            path="/" 
+            element={isAuthenticated ? (
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            ) : (
+              <Landing />
+            )} 
+          />
+          
+          {/* Routes protégées - Dashboard */}
           <Route
-            path="/"
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Home />

@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
  * Chaque élément contient un libellé, une icône et un chemin de navigation
  */
 const menuItems = [
-  { label: "Tableau de bord", icon: BarChart3, path: "/" },
+  { label: "Tableau de bord", icon: BarChart3, path: "/dashboard" },
   { label: "Ma cave", icon: Wine, path: "/ma-cave" },
   { label: "Ajouter un cru", icon: Plus, path: "/ajouter-vin" },
   { label: "Notes de dégustation", icon: FileText, path: "/notes" },
