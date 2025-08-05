@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
-import { Wine, Upload, X, Star, ArrowLeft, Calendar, MapPin, DollarSign, FileText, Camera } from "lucide-react";
+import { Wine, Upload, X, Star, Calendar, MapPin, DollarSign, FileText, Camera, Zap } from "lucide-react";
 import ErrorState from "../components/common/ErrorState";
+import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
 import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
@@ -126,38 +127,36 @@ const AddWineFull = () => {
     );
   };
 
+  // Actions pour le header
+  const headerActions = (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => navigate("/ajouter-vin")}
+      className="flex items-center space-x-2"
+    >
+      <Zap className="w-4 h-4" />
+      <span>Mode rapide</span>
+    </Button>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center space-x-3 text-slate-600 hover:text-slate-800 transition-colors group"
-          >
-            <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-slate-200 transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-            </div>
-            <span className="font-medium">Retour à la collection</span>
-          </button>
-        </div>
-      </div>
+      <div className="max-w-7xl mx-auto pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+        <ColorfulPageHeader
+          title="Ajouter un vin complet"
+          subtitle="Renseignez toutes les informations de votre bouteille"
+          icon={Wine}
+          theme="purple"
+          showBackButton={true}
+          backTo="/"
+          actions={headerActions}
+        />
 
-      <div className="max-w-4xl mx-auto pt-8 pb-12 px-4">
-        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-          <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Wine className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-3xl font-bold text-slate-900">
-              Ajouter un vin complet
-            </CardTitle>
-            <CardDescription className="text-slate-600">
-              Renseignez toutes les informations de votre bouteille
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Formulaire principal - 3/4 de la largeur sur xl */}
+          <div className="xl:col-span-3">
+            <div className="space-y-8">
             {/* Error Message */}
             {error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
@@ -171,7 +170,7 @@ const AddWineFull = () => {
               encType="multipart/form-data"
             >
               {/* Section: Informations de base */}
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-md">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <Wine className="w-5 h-5 text-blue-600" />
@@ -179,9 +178,9 @@ const AddWineFull = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Nom du vin */}
-                    <div className="md:col-span-2 space-y-2">
+                    <div className="lg:col-span-2 space-y-2">
                       <Label htmlFor="name" className="text-sm font-medium text-slate-700">
                         Nom du vin *
                       </Label>
@@ -326,7 +325,7 @@ const AddWineFull = () => {
                   </div>
 
                   {/* Cépages avec système avancé */}
-                  <div className="md:col-span-2">
+                  <div className="lg:col-span-2">
                     <GrapeVarietyInput
                       value={form.grape}
                       onChange={handleGrapeChange}
@@ -336,7 +335,7 @@ const AddWineFull = () => {
               </Card>
 
               {/* Section: Informations d'achat */}
-              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-md">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <DollarSign className="w-5 h-5 text-green-600" />
@@ -344,7 +343,7 @@ const AddWineFull = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Prix d'achat */}
                     <div className="space-y-2">
                       <Label htmlFor="price" className="text-sm font-medium text-slate-700">
@@ -417,7 +416,7 @@ const AddWineFull = () => {
               </Card>
 
               {/* Section: Dégustation et notes */}
-              <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
+              <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200 shadow-md">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <FileText className="w-5 h-5 text-amber-600" />
@@ -468,7 +467,7 @@ const AddWineFull = () => {
               </Card>
 
               {/* Section: Photo */}
-              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200 shadow-md">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-xl flex items-center gap-2">
                     <Camera className="w-5 h-5 text-purple-600" />
@@ -523,34 +522,128 @@ const AddWineFull = () => {
               </Card>
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 h-12 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Ajout en cours...</span>
-                    </div>
-                  ) : (
-                    "Ajouter le vin"
-                  )}
-                </Button>
+              <Card className="bg-white shadow-md">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-1 h-12 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl"
+                    >
+                      {loading ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Ajout en cours...</span>
+                        </div>
+                      ) : (
+                        "Ajouter le vin complet"
+                      )}
+                    </Button>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate("/")}
-                  className="flex-1 h-12 border-2 border-slate-300 hover:border-purple-500 text-slate-700 hover:text-purple-600 font-medium rounded-xl transition-all hover:bg-purple-50"
-                >
-                  Annuler
-                </Button>
-              </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => navigate("/")}
+                      className="flex-1 h-12 border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-800 font-medium rounded-xl transition-all"
+                    >
+                      Annuler
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        {/* Panneau d'aide - 1/4 de la largeur sur xl */}
+        <div className="xl:col-span-1">
+          <div className="sticky top-6 space-y-8">
+            {/* Guide d'utilisation */}
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200/50 shadow-md">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold text-purple-800 flex items-center gap-2">
+                  <Wine className="w-5 h-5" />
+                  Mode complet
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm text-purple-700">
+                <div className="space-y-2">
+                  <p className="font-medium">📝 Informations détaillées</p>
+                  <p className="text-purple-600">Renseignez toutes les données pour un suivi précis de vos bouteilles.</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-medium">💰 Informations financières</p>
+                  <p className="text-purple-600">Prix d'achat et valeur estimée pour suivre l'évolution de votre collection.</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-medium">⭐ Notes de dégustation</p>
+                  <p className="text-purple-600">Notez vos impressions et évaluations pour vos futures dégustations.</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-medium">📸 Photo</p>
+                  <p className="text-purple-600">Ajoutez une photo pour identifier visuellement vos bouteilles.</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Conseils pratiques */}
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200/50 shadow-md">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold text-blue-800">
+                  Conseils pratiques
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-blue-700">
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <p>Utilisez des photos claires et bien éclairées</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <p>Les notes de dégustation vous aideront à vous souvenir</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <p>Conservez vos tickets d'achat pour les prix exacts</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-500 mt-0.5">•</span>
+                  <p>Tous les champs sont optionnels (sauf les requis *)</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Progression */}
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200/50 shadow-md">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold text-green-800">
+                  Progression
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-green-700">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span>Informations de base</span>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Requis</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Informations d'achat</span>
+                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Optionnel</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Notes de dégustation</span>
+                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Optionnel</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Photo</span>
+                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Optionnel</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        </div>
       </div>
     </div>
   );

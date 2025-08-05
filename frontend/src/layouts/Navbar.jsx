@@ -26,9 +26,12 @@ const Navbar = () => {
       {/* Mobile Header */}
       <div className="sm:hidden flex justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
         <div className="flex items-center space-x-3">
-          <div className="inline-flex bg-pink-600 p-2 rounded-lg">
-            <Wine className="text-white w-5 h-5" />
-          </div>
+          <Link to="/dashboard" aria-label="Retourner au tableau de bord">
+            <div className="inline-flex bg-pink-600 p-2 rounded-lg">
+              <Wine className="text-white w-5 h-5" />
+            </div>
+          </Link>
+
           <h1 className="text-lg font-bold text-gray-800">Ma Cave à vin</h1>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -40,8 +43,8 @@ const Navbar = () => {
           <SheetContent side="left" className="w-80 p-0">
             <div className="flex flex-col h-full">
               <SheetHeader className="p-6 border-b bg-gradient-to-r from-pink-50 to-purple-50">
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to="/dashboard"
                   className="flex items-center space-x-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 rounded-lg"
                   onClick={() => setIsOpen(false)}
                   aria-label="Retourner au tableau de bord"
@@ -85,9 +88,11 @@ const Navbar = () => {
       {/* Desktop Sidebar */}
       <aside className="hidden sm:flex flex-col w-[90px] lg:w-[240px] xl:w-[300px] px-4 py-6 bg-white border-r shadow-sm shrink-0 h-screen">
         <div className="mb-6 flex items-center justify-center lg:justify-start space-x-3">
-          <div className="inline-flex bg-pink-600 p-3 rounded-xl shadow-lg">
-            <Wine className="text-white w-8 h-8 lg:w-10 lg:h-10" />
-          </div>
+          <Link to="/dashboard" aria-label="Retourner au tableau de bord">
+            <div className="inline-flex bg-pink-600 p-3 rounded-xl shadow-lg">
+              <Wine className="text-white w-8 h-8 lg:w-10 lg:h-10" />
+            </div>
+          </Link>
           <div className="hidden lg:block">
             <h1 className="text-xl font-bold text-gray-800">Ma Cave à vin</h1>
             <p className="text-sm text-gray-500">Dashboard</p>

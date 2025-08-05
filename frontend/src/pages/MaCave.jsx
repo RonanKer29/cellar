@@ -7,10 +7,14 @@ import { useState } from "react";
 import { useWines } from "../hooks/useWines";
 import LoadingState from "../components/common/LoadingState";
 import ErrorState from "../components/common/ErrorState";
-import MaCaveHeader from "../components/cave/MaCaveHeader";
+import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import MaCaveFilters from "../components/cave/MaCaveFilters";
 import MaCaveGrid from "../components/cave/MaCaveGrid";
 import MaCaveStats from "../components/cave/MaCaveStats";
+import { Wine, Plus, Grid3X3, List } from "lucide-react";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Link } from "react-router-dom";
 
 /**
  * Page principale de la cave à vin avec gestion complète de la collection
@@ -100,13 +104,63 @@ const MaCave = () => {
     }
   });
 
+  // Actions pour le header
+  const headerActions = (
+    <Link to="/ajouter-vin">
+      <Button className="flex items-center space-x-2">
+        <Plus className="w-4 h-4" />
+        <span>Ajouter un vin</span>
+      </Button>
+    </Link>
+  );
+
+  // Contenu du bas du header
+  const headerBottomContent = (
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+      <div className="flex items-center space-x-4">
+        <Badge variant="secondary" className="text-sm">
+          {filteredBottles.length} sur {bottles.length} bouteilles
+        </Badge>
+        {filteredBottles.length !== bottles.length && (
+          <span className="text-sm text-emerald-600/70">
+            Filtres appliqués
+          </span>
+        )}
+      </div>
+      
+      <div className="flex items-center space-x-2">
+        <span className="text-sm text-emerald-600/70 mr-2">Affichage:</span>
+        <Button
+          variant={viewMode === "grid" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setViewMode("grid")}
+          className="flex items-center space-x-1"
+        >
+          <Grid3X3 className="w-4 h-4" />
+          <span className="hidden sm:inline">Grille</span>
+        </Button>
+        <Button
+          variant={viewMode === "list" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setViewMode("list")}
+          className="flex items-center space-x-1"
+        >
+          <List className="w-4 h-4" />
+          <span className="hidden sm:inline">Liste</span>
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="p-4 space-y-6">
-      <MaCaveHeader 
-        totalBottles={bottles.length}
-        filteredBottles={filteredBottles.length}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
+      <ColorfulPageHeader
+        title="Ma Cave"
+        subtitle="Gérez et explorez votre collection de vins"
+        icon={Wine}
+        theme="green"
+        actions={headerActions}
+        bottomContent={headerBottomContent}
       />
       
       <MaCaveStats bottles={filteredBottles} />

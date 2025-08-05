@@ -5,6 +5,7 @@
 
 import { Wine, Calendar, MapPin, Euro, TrendingUp } from "lucide-react";
 import { Badge } from "../ui/badge";
+import StatCard from "../dashboard/StatCard";
 
 /**
  * Panneau de statistiques détaillées de la collection de vins
@@ -53,89 +54,100 @@ const MaCaveStats = ({ bottles }) => {
   const stats = [
     {
       icon: Euro,
-      label: "Valeur totale",
+      title: "Valeur totale",
       value: `${Math.round(totalValue).toLocaleString()} €`,
       subtitle: `Prix moyen: ${Math.round(averagePrice)} €`,
       color: "green"
     },
     {
       icon: Calendar,
-      label: "Millésimes",
+      title: "Millésimes",
       value: oldestWine && newestWine ? `${oldestWine.year} - ${newestWine.year}` : "-",
       subtitle: `Étendue: ${newestWine && oldestWine ? newestWine.year - oldestWine.year : 0} ans`,
       color: "blue"
     },
     {
       icon: MapPin,
-      label: "Région principale",
+      title: "Région principale",
       value: topRegion ? topRegion[0] : "Aucune",
       subtitle: topRegion ? `${topRegion[1]} bouteilles` : "",
       color: "purple"
     },
     {
-      icon: TrendingUp,
-      label: "Collection",
-      value: `${bottles.reduce((sum, bottle) => sum + bottle.quantity, 0)} bouteilles`,
+      icon: Wine,
+      title: "Collection",
+      value: `${bottles.reduce((sum, bottle) => sum + bottle.quantity, 0)}`,
       subtitle: `${Object.keys(colorCounts).length} types de vins`,
-      color: "orange"
+      color: "pink"
     }
   ];
 
-  /**
-   * Retourne les classes CSS appropriées pour chaque couleur de statistique
-   * @param {string} color - Couleur de la statistique (green, blue, purple, orange)
-   * @returns {string} Classes CSS pour l'icône colorée
-   */
-  const getColorClasses = (color) => {
-    const colors = {
-      green: "bg-green-100 text-green-600",
-      blue: "bg-blue-100 text-blue-600", 
-      purple: "bg-purple-100 text-purple-600",
-      orange: "bg-orange-100 text-orange-600"
-    };
-    return colors[color] || "bg-gray-100 text-gray-600";
-  };
-
   return (
-    <div className="bg-white shadow-md rounded-xl overflow-hidden">
-      <div className="px-4 sm:px-6 py-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-800">Aperçu de votre collection</h2>
+    <div className="space-y-8">
+      {/* Header moderne */}
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Aperçu de votre collection</h2>
+        <p className="text-gray-600">Découvrez les statistiques détaillées de votre cave</p>
       </div>
       
-      <div className="p-4 sm:p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat, index) => (
-            <div key={index} className="flex items-start space-x-3 p-4 rounded-lg border hover:shadow-sm transition-shadow">
-              <div className={`p-2 rounded-xl ${getColorClasses(stat.color)}`}>
-                <stat.icon className="w-5 h-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-600">{stat.label}</p>
-                <p className="text-lg font-bold text-gray-900 truncate">{stat.value}</p>
-                {stat.subtitle && (
-                  <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Grid des StatCards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+          <StatCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            subtitle={stat.subtitle}
+            icon={stat.icon}
+            color={stat.color}
+          />
+        ))}
+      </div>
 
-        {/* Color distribution */}
-        {Object.keys(colorCounts).length > 0 && (
-          <div className="mt-6 pt-4 border-t">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Répartition par type</h3>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(colorCounts)
-                .sort(([,a], [,b]) => b - a)
-                .map(([color, count]) => (
-                  <Badge key={color} variant="outline" className="text-xs">
-                    {color}: {count}
-                  </Badge>
-                ))}
+      {/* Section répartition par couleur redesignée */}
+      {Object.keys(colorCounts).length > 0 && (
+        <div className="bg-white rounded-2xl shadow-lg p-6 border-0">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">Répartition par type</h3>
+              <p className="text-gray-600">Distribution de vos vins par couleur</p>
+            </div>
+            <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-indigo-600" />
             </div>
           </div>
-        )}
-      </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {Object.entries(colorCounts)
+              .sort(([,a], [,b]) => b - a)
+              .map(([color, count], index) => {
+                const colorThemes = {
+                  'Rouge': 'from-red-500 to-red-600',
+                  'Blanc': 'from-yellow-400 to-yellow-500',
+                  'Rosé': 'from-pink-400 to-pink-500',
+                  'Pétillant': 'from-purple-500 to-purple-600'
+                };
+                const gradient = colorThemes[color] || 'from-gray-400 to-gray-500';
+                
+                return (
+                  <div key={color} className="group relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 hover:shadow-md transition-all duration-300">
+                    {/* Barre colorée */}
+                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient}`}></div>
+                    
+                    <div className="text-center">
+                      <div className={`inline-flex w-10 h-10 rounded-full bg-gradient-to-r ${gradient} items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
+                        <Wine className="w-5 h-5 text-white" />
+                      </div>
+                      <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-1">{color}</p>
+                      <p className="text-2xl font-black text-gray-900">{count}</p>
+                      <p className="text-xs text-gray-500">bouteille{count > 1 ? 's' : ''}</p>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

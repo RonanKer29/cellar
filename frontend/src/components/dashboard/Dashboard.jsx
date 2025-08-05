@@ -14,7 +14,7 @@ import { useState } from "react";
 import StatCard from "./StatCard";
 import { Wine, Warehouse, Globe, CheckCircle } from "lucide-react";
 import WineList from "./WineList";
-import Intro from "./Intro";
+import ColorfulPageHeader from "../common/ColorfulPageHeader";
 import { calculateWineStats } from "../../utils/wineUtils";
 import FilterCategories from "./FilterCategories";
 import SearchCategories from "./SearchCategories";
@@ -61,7 +61,12 @@ const Dashboard = ({ bottles }) => {
 
   return (
     <>
-      <Intro />
+      <ColorfulPageHeader
+        title="Tableau de bord"
+        subtitle="Gérez et suivez votre collection de bouteilles"
+        icon={Wine}
+        theme="blue"
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Total bouteilles"

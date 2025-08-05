@@ -11,8 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
-import { Wine, ArrowLeft } from "lucide-react";
+import { Wine, Plus } from "lucide-react";
 import ErrorState from "../components/common/ErrorState";
+import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
 import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
@@ -79,38 +80,46 @@ const AddWine = () => {
     }
   };
 
+  // Actions pour le header
+  const headerActions = (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => navigate("/ajouter-vin/complet")}
+      className="flex items-center space-x-2"
+    >
+      <Plus className="w-4 h-4" />
+      <span>Mode complet</span>
+    </Button>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center space-x-3 text-slate-600 hover:text-slate-800 transition-colors group"
-          >
-            <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-slate-200 transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-            </div>
-            <span className="font-medium">Retour à la collection</span>
-          </button>
-        </div>
-      </div>
+      <div className="max-w-6xl mx-auto pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+        <ColorfulPageHeader
+          title="Ajouter un vin"
+          subtitle="Mode rapide – informations essentielles"
+          icon={Wine}
+          theme="purple"
+          showBackButton={true}
+          backTo="/"
+          actions={headerActions}
+        />
 
-      <div className="max-w-2xl mx-auto pt-8 pb-12 px-4">
-        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-          <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Wine className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-slate-900">
-              Ajouter un vin
-            </CardTitle>
-            <CardDescription className="text-slate-600">
-              Mode rapide – informations essentielles
-            </CardDescription>
-          </CardHeader>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Formulaire principal - 2/3 de la largeur sur desktop */}
+          <div className="lg:col-span-2">
+            <Card className="shadow-lg border-0 bg-white/95 backdrop-blur-sm">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-bold text-slate-900">
+                  Informations du vin
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Remplissez les champs essentiels pour ajouter rapidement une bouteille
+                </CardDescription>
+              </CardHeader>
 
-          <CardContent className="space-y-6">
+              <CardContent className="space-y-6">
             {error && (
               <ErrorState 
                 message="Une erreur est survenue" 
@@ -137,7 +146,7 @@ const AddWine = () => {
               </div>
 
               {/* Millésime et Producteur */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="year" className="text-sm font-medium text-slate-700">
                     Millésime *
@@ -173,7 +182,7 @@ const AddWine = () => {
               </div>
 
               {/* Pays et Région */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-slate-700">
                     Pays *
@@ -208,7 +217,7 @@ const AddWine = () => {
               </div>
 
               {/* Couleur et Quantité */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-slate-700">
                     Couleur *
@@ -282,7 +291,7 @@ const AddWine = () => {
               </div>
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-6">
+              <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-100">
                 <Button
                   type="submit"
                   disabled={loading}
@@ -301,15 +310,71 @@ const AddWine = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate("/ajouter-vin/complet")}
-                  className="flex-1 h-12 border-2 border-slate-300 hover:border-purple-500 text-slate-700 hover:text-purple-600 font-medium rounded-xl transition-all hover:bg-purple-50"
+                  onClick={() => navigate("/")}
+                  className="flex-1 h-12 border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-800 font-medium rounded-xl transition-all"
                 >
-                  Mode complet
+                  Annuler
                 </Button>
               </div>
             </form>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Panneau d'aide et conseils - 1/3 de la largeur sur desktop */}
+      <div className="lg:col-span-1">
+        <div className="sticky top-6 space-y-6">
+          {/* Conseils */}
+          <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-purple-800 flex items-center gap-2">
+                <Wine className="w-5 h-5" />
+                Conseils d'ajout
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm text-purple-700">
+              <div className="space-y-2">
+                <p className="font-medium">✨ Mode rapide</p>
+                <p className="text-purple-600">Parfait pour ajouter rapidement vos bouteilles avec les informations essentielles.</p>
+              </div>
+              <div className="space-y-2">
+                <p className="font-medium">🏷️ Informations importantes</p>
+                <p className="text-purple-600">Le nom, millésime et producteur sont requis. Le reste peut être ajouté plus tard.</p>
+              </div>
+              <div className="space-y-2">
+                <p className="font-medium">🌍 Pays et régions</p>
+                <p className="text-purple-600">Commencez par sélectionner le pays pour filtrer les régions disponibles.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Statistiques */}
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-blue-800">
+                Votre collection
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-blue-700">
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span>Bouteilles totales</span>
+                  <span className="font-semibold">-</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Dernière ajoutée</span>
+                  <span className="font-semibold">-</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Région favorite</span>
+                  <span className="font-semibold">-</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+        </div>
       </div>
     </div>
   );
