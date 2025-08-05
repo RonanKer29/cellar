@@ -50,5 +50,10 @@ urlpatterns = [
     path('api/health/', health_check, name='health_check'),
 ]
 
-# Ajout du service des fichiers média en mode développement
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Service des fichiers média (développement et production)
+if settings.DEBUG:
+    # En développement, Django sert les fichiers directement
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # En production, on ajoute aussi pour servir via Django/Gunicorn
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
