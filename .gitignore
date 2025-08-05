@@ -342,3 +342,13 @@ frontend/*.log
 # OS generated files
 .DS_Store?
 Icon?
+
+# Railway specific
+.railway/
+
+# Production environment files
+.env.production
+.env.staging
+
+# Vercel
+.vercel

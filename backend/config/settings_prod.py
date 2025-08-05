@@ -42,19 +42,44 @@ INSTALLED_APPS = [
     "caveavin",
 ]
 
+# CORS Configuration - Support both env vars and hardcoded domains
 CORS_ALLOWED_ORIGINS = [
-    os.getenv('FRONTEND_URL', ''),
-    os.getenv('VERCEL_URL', ''),
+    'http://localhost:5173',  # Development frontend
+    'http://127.0.0.1:5173',  # Development frontend alternative
 ]
 
-# Remove empty values and add https:// if needed
-CORS_ALLOWED_ORIGINS = [
-    origin if origin.startswith('http') else f"https://{origin}"
-    for origin in CORS_ALLOWED_ORIGINS if origin
+# Add production domains from environment variables
+frontend_url = os.getenv('FRONTEND_URL')
+vercel_url = os.getenv('VERCEL_URL')
+
+if frontend_url:
+    if not frontend_url.startswith('http'):
+        frontend_url = f"https://{frontend_url}"
+    CORS_ALLOWED_ORIGINS.append(frontend_url)
+
+if vercel_url:
+    if not vercel_url.startswith('http'):
+        vercel_url = f"https://{vercel_url}"
+    CORS_ALLOWED_ORIGINS.append(vercel_url)
+
+# Remove duplicates and empty values
+CORS_ALLOWED_ORIGINS = list(set([origin for origin in CORS_ALLOWED_ORIGINS if origin]))
+
+# Additional CORS settings for security
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 # Only allow secure cookies in production
-CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
