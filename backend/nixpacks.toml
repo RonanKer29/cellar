@@ -1,12 +1,13 @@
-[providers]
-python = "3.11"
+providers = ["python"]
 
-[build]
+[phases.setup]
+nixPkgs = ["python311"]
+
+[phases.install]
 cmd = "pip install -r requirements.txt"
+
+[phases.build]
+cmd = "chmod +x start.sh"
 
 [start]
 cmd = "./start.sh"
-
-[variables]
-PYTHONPATH = "/app"
-PORT = "8000"
