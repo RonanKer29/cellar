@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { getWineColorClass, getWineIconColor } from "../../utils/wineUtils";
+import { getWineColorClass } from "../../utils/wineUtils";
 import { apiService } from "../../services/api";
 
 /**

@@ -63,14 +63,6 @@ const AppContent = () => {
             }
           />
           <Route
-            path="/statistiques"
-            element={
-              <ProtectedRoute>
-                <Stats />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/ajouter-vin"
             element={
               <ProtectedRoute>

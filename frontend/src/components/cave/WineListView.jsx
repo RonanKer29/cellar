@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
-import { getWineColorClass, getWineIconColor } from "../../utils/wineUtils";
+// Removed unused imports - component has its own utility functions
 import { apiService } from "../../services/api";
 
 /**
