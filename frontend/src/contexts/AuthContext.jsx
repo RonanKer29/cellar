@@ -13,6 +13,7 @@
  * @requires apiService
  */
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
 
 /**
@@ -63,6 +64,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   /**
    * Vérifie le statut d'authentification au chargement de l'application
@@ -180,6 +182,7 @@ export const AuthProvider = ({ children }) => {
    * Déconnecte l'utilisateur actuel
    * 
    * Supprime les tokens du stockage local et remet à zéro l'état d'authentification.
+   * Redirige vers la page d'accueil (landing page).
    * Peut être appelée manuellement ou automatiquement en cas de token expiré.
    */
   const logout = () => {
@@ -187,6 +190,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('refresh');
     setIsAuthenticated(false);
     setUser(null);
+    // Rediriger vers la page d'accueil au lieu de /login
+    navigate('/');
   };
 
   /**
