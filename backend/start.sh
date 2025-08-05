@@ -25,4 +25,5 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "Starting Gunicorn..."
-gunicorn config.wsgi --bind 0.0.0.0:${PORT:-8000} --timeout 120 --workers 2 --worker-connections 1000
+echo "Port: ${PORT:-8000}"
+gunicorn config.wsgi --bind 0.0.0.0:${PORT:-8000} --timeout 120 --workers 2 --worker-connections 1000 --preload

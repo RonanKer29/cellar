@@ -111,6 +111,20 @@ def health_check(request):
     """Health check endpoint for deployment platforms.
     
     Returns:
-        JsonResponse: Simple health status
+        JsonResponse: Simple health status with database connectivity
     """
-    return JsonResponse({'status': 'healthy', 'service': 'caveavin-api'})
+    from django.db import connection
+    try:
+        # Test database connectivity
+        connection.ensure_connection()
+        return JsonResponse({
+            'status': 'healthy', 
+            'service': 'caveavin-api',
+            'database': 'connected'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'unhealthy', 
+            'service': 'caveavin-api',
+            'error': str(e)
+        }, status=503)
