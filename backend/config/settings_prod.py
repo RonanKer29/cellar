@@ -20,6 +20,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     os.getenv('RAILWAY_PUBLIC_DOMAIN', ''),
     os.getenv('DOMAIN_NAME', ''),
+    'cellar-production.up.railway.app',  # Your Railway domain
     'healthcheck.railway.app',  # Railway healthcheck
     'localhost',
     '127.0.0.1',
