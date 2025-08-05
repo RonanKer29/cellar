@@ -4,7 +4,7 @@
  */
 
 import { Link, useLocation } from "react-router-dom";
-import { Wine, BarChart3, Plus, FileText, CheckCircle } from "lucide-react";
+import { Wine, BarChart3, Plus, FileText, CheckCircle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -15,8 +15,8 @@ import { Badge } from "@/components/ui/badge";
 const menuItems = [
   { label: "Tableau de bord", icon: BarChart3, path: "/dashboard" },
   { label: "Ma cave", icon: Wine, path: "/ma-cave" },
+  { label: "Historique", icon: History, path: "/historique" },
   { label: "Ajouter un cru", icon: Plus, path: "/ajouter-vin" },
-  { label: "Notes de dégustation", icon: FileText, path: "/notes" },
   { label: "Statistiques", icon: CheckCircle, path: "/stats" },
 ];
 

@@ -10,6 +10,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { Wine, Upload, X, Star, ArrowLeft, Calendar, MapPin, DollarSign, FileText, Camera, Save } from "lucide-react";
 import ErrorState from "../components/common/ErrorState";
 import LoadingState from "../components/common/LoadingState";
+import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
 import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
@@ -37,6 +38,7 @@ const EditWine = () => {
     description: "",
     tasting_note: "",
     rating: "",
+    date_added: "",
     image: null,
   });
   
@@ -72,6 +74,7 @@ const EditWine = () => {
           description: data.description || "",
           tasting_note: data.tasting_note || "",
           rating: data.rating || "",
+          date_added: data.date_added || "",
           image: null, // L'image sera gérée séparément
         });
         
@@ -197,34 +200,28 @@ const EditWine = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <button
-            onClick={() => navigate(`/bouteille/${id}`)}
-            className="flex items-center space-x-3 text-slate-600 hover:text-slate-800 transition-colors group"
-          >
-            <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-slate-200 transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-            </div>
-            <span className="font-medium">Retour à la fiche</span>
-          </button>
-        </div>
-      </div>
+      <div className="max-w-6xl mx-auto pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+        <ColorfulPageHeader
+          title="Modifier le vin"
+          subtitle="Mettez à jour les informations de votre bouteille"
+          icon={Wine}
+          theme="blue"
+          showBackButton={true}
+          backTo={`/bouteille/${id}`}
+        />
 
-      <div className="max-w-4xl mx-auto pt-8 pb-12 px-4">
-        <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
-          <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Wine className="w-8 h-8 text-white" />
-            </div>
-            <CardTitle className="text-3xl font-bold text-slate-900">
-              Modifier le vin
-            </CardTitle>
-            <CardDescription className="text-slate-600">
-              Modifiez les informations de votre bouteille
-            </CardDescription>
-          </CardHeader>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Formulaire principal - 2/3 de la largeur sur desktop */}
+          <div className="lg:col-span-2">
+            <Card className="shadow-lg border-0 bg-white/95 backdrop-blur-sm">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-xl font-bold text-slate-900">
+                  Informations du vin
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Modifiez les détails de votre bouteille
+                </CardDescription>
+              </CardHeader>
 
           <CardContent>
             {/* Error Message */}
@@ -623,6 +620,91 @@ const EditWine = () => {
             </form>
           </CardContent>
         </Card>
+          </div>
+
+          {/* Sidebar - 1/3 de la largeur sur desktop */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-6">
+              {/* Conseils de modification */}
+              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200/50">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg font-semibold text-blue-800 flex items-center gap-2">
+                    <Wine className="w-5 h-5" />
+                    Conseils de modification
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm text-blue-700">
+                  <div className="space-y-2">
+                    <p className="font-medium">✏️ Mise à jour</p>
+                    <p className="text-blue-600">Modifiez uniquement les champs nécessaires. Les autres informations seront conservées.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-medium">🏷️ Informations importantes</p>
+                    <p className="text-blue-600">Le nom, millésime et producteur sont toujours requis pour identifier votre bouteille.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-medium">💡 Photo</p>
+                    <p className="text-blue-600">Vous pouvez changer la photo ou la supprimer si elle ne correspond plus.</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Informations sur la bouteille */}
+              <Card className="bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200/50">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg font-semibold text-emerald-800 flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Historique
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-emerald-700">
+                  <div className="flex justify-between items-center p-2 bg-emerald-100 rounded-lg">
+                    <span className="font-medium">Ajouté le</span>
+                    <span className="text-emerald-600">{form.date_added ? new Date(form.date_added).toLocaleDateString('fr-FR') : 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-emerald-100 rounded-lg">
+                    <span className="font-medium">Statut actuel</span>
+                    <span className="text-emerald-600">{form.status}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-emerald-100 rounded-lg">
+                    <span className="font-medium">Quantité</span>
+                    <span className="text-emerald-600">{form.quantity} bouteille{form.quantity > 1 ? 's' : ''}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Actions rapides */}
+              <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200/50">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg font-semibold text-amber-800 flex items-center gap-2">
+                    <Star className="w-5 h-5" />
+                    Actions rapides
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/bouteille/${id}`)}
+                    className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
+                  >
+                    Voir la fiche complète
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate('/ma-cave')}
+                    className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
+                  >
+                    Retour à ma cave
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

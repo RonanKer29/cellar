@@ -10,10 +10,10 @@ import { useUser } from "../../hooks/useUser";
 /**
  * Carte de profil utilisateur interactive avec système de niveaux
  * Affiche l'avatar, le nom, le niveau d'expertise et le nombre de bouteilles
- * 
+ *
  * @example
  * <ProfileCard />
- * 
+ *
  * @returns {JSX.Element|null} Carte de profil stylisée ou null si utilisateur non connecté
  */
 const ProfileCard = () => {
@@ -37,13 +37,15 @@ const ProfileCard = () => {
   return (
     <div className="flex w-full gap-4 mt-5 bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-2xl items-center border border-pink-100 shadow-sm hover:shadow-md transition-shadow duration-200">
       <div className="relative">
-        <Avatar 
+        <Avatar
           name={displayName}
           size={56}
           className="ring-2 ring-pink-200/50 hover:ring-pink-300/50 transition-all duration-200"
         />
         {/* Badge de niveau */}
-        <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white shadow-md border-2 border-white flex items-center justify-center`}>
+        <div
+          className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white shadow-md border-2 border-white flex items-center justify-center`}
+        >
           <LevelIcon className={`w-3 h-3 ${level.color}`} />
         </div>
       </div>
@@ -52,13 +54,15 @@ const ProfileCard = () => {
           {displayName}
         </p>
         <div className="flex items-center gap-1.5">
-          <LevelIcon className={`w-4 h-4 ${level.color}`} />
-          <p className={`text-sm font-medium ${level.color}`}>
-            {level.level}
-          </p>
-          <span className="text-xs text-gray-500 ml-1">
-            ({user.bottles_count || 0} bouteilles)
-          </span>
+          {/* <LevelIcon className={`w-4 h-4 ${level.color}`} /> */}
+          <div className="flex flex-col text-sm leading-tight text-start ">
+            <p className={`text-sm font-medium ${level.color}`}>
+              {level.level}
+            </p>
+            <span className="text-xs text-gray-500 ">
+              ({user.bottles_count || 0} bouteilles)
+            </span>
+          </div>
         </div>
       </div>
     </div>

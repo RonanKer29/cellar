@@ -18,6 +18,7 @@ import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
 import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
 import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
 import { apiService } from "../services/api";
+import { addHistoryEvent, EVENT_TYPES } from "../services/historyService";
 
 /**
  * Structure par défaut du formulaire d'ajout de vin
@@ -70,7 +71,19 @@ const AddWine = () => {
     setError("");
 
     try {
-      await apiService.createBottle(form);
+      const createdBottle = await apiService.createBottle(form);
+      
+      // Enregistrer l'événement d'ajout dans l'historique
+      addHistoryEvent({
+        type: EVENT_TYPES.ADDED,
+        bottleId: createdBottle.id,
+        bottleName: form.name,
+        bottleProductor: form.productor,
+        bottleYear: form.year,
+        bottleColor: form.color,
+        quantity: form.quantity
+      });
+      
       setForm(defaultForm);
       navigate("/");
     } catch (err) {

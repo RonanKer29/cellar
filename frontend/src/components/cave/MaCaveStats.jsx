@@ -6,6 +6,7 @@
 import { Wine, Calendar, MapPin, Euro, TrendingUp } from "lucide-react";
 import { Badge } from "../ui/badge";
 import StatCard from "../dashboard/StatCard";
+import { getWineColorClass } from "../../utils/wineColors";
 
 /**
  * Panneau de statistiques détaillées de la collection de vins
@@ -104,10 +105,10 @@ const MaCaveStats = ({ bottles }) => {
         ))}
       </div>
 
-      {/* Section répartition par couleur redesignée */}
+      {/* Section répartition par couleur compacte */}
       {Object.keys(colorCounts).length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-6 border-0">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-xl font-bold text-gray-900">Répartition par type</h3>
               <p className="text-gray-600">Distribution de vos vins par couleur</p>
@@ -117,30 +118,31 @@ const MaCaveStats = ({ bottles }) => {
             </div>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="space-y-3">
             {Object.entries(colorCounts)
               .sort(([,a], [,b]) => b - a)
               .map(([color, count], index) => {
-                const colorThemes = {
-                  'Rouge': 'from-red-500 to-red-600',
-                  'Blanc': 'from-yellow-400 to-yellow-500',
-                  'Rosé': 'from-pink-400 to-pink-500',
-                  'Pétillant': 'from-purple-500 to-purple-600'
-                };
-                const gradient = colorThemes[color] || 'from-gray-400 to-gray-500';
+                const bgColor = getWineColorClass(color, 'primary');
+                const totalBottles = bottles.reduce((sum, bottle) => sum + bottle.quantity, 0);
+                const percentage = Math.round((count / totalBottles) * 100);
                 
                 return (
-                  <div key={color} className="group relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 hover:shadow-md transition-all duration-300">
-                    {/* Barre colorée */}
-                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient}`}></div>
-                    
-                    <div className="text-center">
-                      <div className={`inline-flex w-10 h-10 rounded-full bg-gradient-to-r ${gradient} items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
-                        <Wine className="w-5 h-5 text-white" />
+                  <div key={color} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-4 h-4 rounded-full ${bgColor}`}></div>
+                      <span className="font-medium text-gray-900">{color}</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="flex-1 w-16 bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`${bgColor} h-2 rounded-full transition-all duration-500`}
+                          style={{ width: `${percentage}%` }}
+                        ></div>
                       </div>
-                      <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-1">{color}</p>
-                      <p className="text-2xl font-black text-gray-900">{count}</p>
-                      <p className="text-xs text-gray-500">bouteille{count > 1 ? 's' : ''}</p>
+                      <div className="text-right min-w-[60px]">
+                        <span className="font-bold text-gray-900">{count}</span>
+                        <span className="text-xs text-gray-500 ml-1">({percentage}%)</span>
+                      </div>
                     </div>
                   </div>
                 );

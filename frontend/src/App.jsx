@@ -8,6 +8,7 @@ import AddWineFull from "./pages/AddWineFull";
 import EditWine from "./pages/EditWine";
 import MaCave from "./pages/MaCave";
 import Stats from "./pages/Stats";
+import History from "./pages/History";
 import BottleDetail from "./components/bottle/BottleDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -84,6 +85,14 @@ const AppContent = () => {
             element={
               <ProtectedRoute>
                 <Stats />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/historique"
+            element={
+              <ProtectedRoute>
+                <History />
               </ProtectedRoute>
             }
           />

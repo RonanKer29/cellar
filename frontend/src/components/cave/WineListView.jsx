@@ -10,6 +10,7 @@ import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
 // Removed unused imports - component has its own utility functions
 import { apiService } from "../../services/api";
+import { getWineColorClass } from "../../utils/wineColors";
 
 /**
  * Affichage en liste responsive des bouteilles de vin
@@ -74,25 +75,7 @@ const WineListView = ({ bottles, onWineClick }) => {
     }
   };
 
-  /**
-   * Retourne les classes de couleur pour les badges
-   * @param {string} color - Type de vin
-   * @returns {string} Classes CSS pour le badge coloré
-   */
-  const getColorClass = (color) => {
-    switch (color) {
-      case "Rouge":
-        return "border-red-300 text-red-700 bg-red-50";
-      case "Blanc":
-        return "border-yellow-300 text-yellow-700 bg-yellow-50";
-      case "Rosé":
-        return "border-pink-300 text-pink-700 bg-pink-50";
-      case "Pétillant":
-        return "border-blue-300 text-blue-700 bg-blue-50";
-      default:
-        return "border-gray-300 text-gray-700 bg-gray-50";
-    }
-  };
+  // Utilisation du système unifié de couleurs de vin
 
   /**
    * Affiche la notation en étoiles
@@ -161,7 +144,7 @@ const WineListView = ({ bottles, onWineClick }) => {
                       <div className="flex items-center space-x-2 mt-2">
                         <Badge 
                           variant="outline" 
-                          className={`text-xs border-2 ${getColorClass(bottle.color)} font-medium group-hover:scale-105 transition-transform duration-200`}
+                          className={`text-xs border-2 ${getWineColorClass(bottle.color, 'badge')} font-medium group-hover:scale-105 transition-transform duration-200`}
                         >
                           {bottle.color}
                         </Badge>
@@ -284,7 +267,7 @@ const WineListView = ({ bottles, onWineClick }) => {
                       <div className="flex items-center space-x-2 mt-2 flex-wrap">
                         <Badge 
                           variant="outline" 
-                          className={`text-xs border-2 ${getColorClass(bottle.color)} font-medium group-hover:scale-105 transition-transform duration-200`}
+                          className={`text-xs border-2 ${getWineColorClass(bottle.color, 'badge')} font-medium group-hover:scale-105 transition-transform duration-200`}
                         >
                           {bottle.color}
                         </Badge>

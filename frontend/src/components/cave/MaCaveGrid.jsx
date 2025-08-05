@@ -1,20 +1,17 @@
 /**
  * @fileoverview Composant principal d'affichage de la collection de vins
- * Gère l'affichage en grille ou en liste selon le mode de vue sélectionné
+ * Affiche la collection en mode liste uniquement
  */
 
 import { useNavigate } from "react-router-dom";
-import WineCard from "./WineCard";
 import WineListView from "./WineListView";
 
 /**
- * Conteneur principal pour l'affichage de la collection de vins
- * Adapte automatiquement l'affichage selon le mode de vue (grille/liste)
- * et affiche un message approprié si aucune bouteille n'est trouvée
+ * Conteneur principal pour l'affichage de la collection de vins en mode liste
+ * Affiche un message approprié si aucune bouteille n'est trouvée
  * 
  * @param {Object} props - Les propriétés du composant
  * @param {Array<Object>} props.bottles - Liste des bouteilles à afficher
- * @param {string} props.viewMode - Mode d'affichage ("grid" pour grille, "list" pour liste)
  * 
  * @example
  * <MaCaveGrid 
@@ -22,12 +19,11 @@ import WineListView from "./WineListView";
  *     { id: 1, name: "Château Margaux", year: 2015, color: "Rouge" },
  *     { id: 2, name: "Sancerre", year: 2020, color: "Blanc" }
  *   ]}
- *   viewMode="grid"
  * />
  * 
- * @returns {JSX.Element} Grille de cartes de vins, vue liste ou message d'état vide
+ * @returns {JSX.Element} Vue liste des vins ou message d'état vide
  */
-const MaCaveGrid = ({ bottles, viewMode }) => {
+const MaCaveGrid = ({ bottles }) => {
   const navigate = useNavigate();
   
   /**
@@ -59,25 +55,11 @@ const MaCaveGrid = ({ bottles, viewMode }) => {
     );
   }
 
-  if (viewMode === "list") {
-    return (
-      <WineListView 
-        bottles={bottles} 
-        onWineClick={handleWineClick}
-      />
-    );
-  }
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {bottles.map((bottle) => (
-        <WineCard 
-          key={bottle.id} 
-          bottle={bottle} 
-          onClick={() => handleWineClick(bottle)}
-        />
-      ))}
-    </div>
+    <WineListView 
+      bottles={bottles} 
+      onWineClick={handleWineClick}
+    />
   );
 };
 

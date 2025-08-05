@@ -8,8 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { getWineColorClass } from "../../utils/wineUtils";
 import { apiService } from "../../services/api";
+import { getWineColorClass } from "../../utils/wineColors";
 
 /**
  * Carte interactive d'affichage d'une bouteille de vin
@@ -78,45 +78,7 @@ const WineCard = ({ bottle, onClick }) => {
     navigate(`/bouteille/${bottle.id}`);
   };
 
-  /**
-   * Retourne les classes de dégradé de couleur selon le type de vin
-   * @param {string} color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
-   * @returns {string} Classes CSS pour le dégradé de couleur
-   */
-  const getColorGradient = (color) => {
-    switch (color) {
-      case "Rouge":
-        return "from-red-500 to-red-600";
-      case "Blanc":
-        return "from-yellow-400 to-yellow-500";
-      case "Rosé":
-        return "from-pink-400 to-pink-500";
-      case "Pétillant":
-        return "from-blue-400 to-blue-500";
-      default:
-        return "from-gray-400 to-gray-500";
-    }
-  };
-
-  /**
-   * Retourne les classes de fond coloré pour l'en-tête de la carte
-   * @param {string} color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
-   * @returns {string} Classes CSS pour le fond coloré avec bordure
-   */
-  const getColorBg = (color) => {
-    switch (color) {
-      case "Rouge":
-        return "bg-gradient-to-br from-red-50 to-red-100 border-red-200";
-      case "Blanc":
-        return "bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200";
-      case "Rosé":
-        return "bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200";
-      case "Pétillant":
-        return "bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200";
-      default:
-        return "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200";
-    }
-  };
+  // Les fonctions de couleur sont maintenant gérées par le système unifié
 
   /**
    * Affiche la notation en étoiles d'un vin
@@ -155,12 +117,12 @@ const WineCard = ({ bottle, onClick }) => {
       aria-label={`Voir les détails de ${bottle.name}, ${bottle.color} ${bottle.year || ''} de ${bottle.productor || 'producteur inconnu'}`}
     >
       {/* Header avec gradient coloré */}
-      <CardHeader className={`relative p-0 h-32 ${getColorBg(bottle.color)} border-b-2 overflow-hidden`}>
+      <CardHeader className={`relative p-0 h-32 ${getWineColorClass(bottle.color, 'cardHeader')} border-b-2 overflow-hidden`}>
         <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent group-hover:from-white/30 transition-all duration-300"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
         <div className="relative p-4 h-full flex items-center justify-between">
           {/* Icône du vin */}
-          <div className={`p-3 rounded-2xl bg-gradient-to-br ${getColorGradient(bottle.color)} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}>
+          <div className={`p-3 rounded-2xl ${getWineColorClass(bottle.color, 'gradientFull')} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}>
             <Wine className="w-8 h-8 text-white drop-shadow-sm group-hover:rotate-12 transition-transform duration-300" />
           </div>
           
@@ -205,7 +167,7 @@ const WineCard = ({ bottle, onClick }) => {
             </div>
             <Badge 
               variant="outline" 
-              className={`text-xs border-2 ${getColorClass(bottle.color)} font-medium`}
+              className={`text-xs border-2 ${getWineColorClass(bottle.color, 'badge')} font-medium`}
               aria-label={`Vin ${bottle.color}`}
             >
               {bottle.color}
@@ -280,24 +242,6 @@ const WineCard = ({ bottle, onClick }) => {
   );
 };
 
-/**
- * Utilitaire pour obtenir les classes de couleur des badges
- * @param {string} color - Type de vin (Rouge, Blanc, Rosé, Pétillant)
- * @returns {string} Classes CSS pour le badge coloré
- */
-const getColorClass = (color) => {
-  switch (color) {
-    case "Rouge":
-      return "border-red-300 text-red-700 bg-red-50";
-    case "Blanc":
-      return "border-yellow-300 text-yellow-700 bg-yellow-50";
-    case "Rosé":
-      return "border-pink-300 text-pink-700 bg-pink-50";
-    case "Pétillant":
-      return "border-blue-300 text-blue-700 bg-blue-50";
-    default:
-      return "border-gray-300 text-gray-700 bg-gray-50";
-  }
-};
+// La fonction getColorClass a été remplacée par le système unifié wineColors
 
 export default WineCard;

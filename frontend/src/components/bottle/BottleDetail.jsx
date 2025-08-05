@@ -17,6 +17,7 @@ import {
   FileText,
   Calendar,
   Minus,
+  Plus,
   Eye,
   Clock,
   Award,
@@ -45,6 +46,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { apiService } from "../../services/api";
+import { addHistoryEvent, EVENT_TYPES, getBottleHistory } from "../../services/historyService";
 
 const getColorClass = (color) => {
   switch (color) {
@@ -82,6 +84,10 @@ const BottleDetail = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [quantityToRemove, setQuantityToRemove] = useState(1);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showConsumedModal, setShowConsumedModal] = useState(false);
+  const [quantityToConsume, setQuantityToConsume] = useState(1);
+  const [isConsuming, setIsConsuming] = useState(false);
+  const [bottleHistory, setBottleHistory] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,6 +95,11 @@ const BottleDetail = () => {
       try {
         const data = await apiService.getBottle(id);
         setBottle(data);
+        
+        // Charger l'historique de cette bouteille
+        const history = getBottleHistory(id);
+        setBottleHistory(history);
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching bottle:', error);
@@ -129,12 +140,59 @@ const BottleDetail = () => {
     }
   };
 
-  const handleMarkAsDrunk = async () => {
+  const handleMarkAsDrunk = () => {
+    if (bottle.quantity > 1) {
+      setQuantityToConsume(1);
+      setShowConsumedModal(true);
+    } else {
+      // Single bottle - mark directly as consumed
+      confirmMarkAsDrunk(1);
+    }
+  };
+
+  const confirmMarkAsDrunk = async (quantityConsumed = quantityToConsume) => {
+    if (quantityConsumed <= 0 || quantityConsumed > bottle.quantity) {
+      return;
+    }
+
+    setIsConsuming(true);
+
     try {
-      await apiService.patchBottle(id, { status: "Bue" });
-      window.location.reload();
+      const newQuantity = bottle.quantity - quantityConsumed;
+
+      // Enregistrer l'événement de consommation dans l'historique
+      addHistoryEvent({
+        type: EVENT_TYPES.CONSUMED,
+        bottleId: parseInt(id),
+        bottleName: bottle.name,
+        bottleProductor: bottle.productor,
+        bottleYear: bottle.year,
+        bottleColor: bottle.color,
+        quantity: quantityConsumed
+      });
+
+      if (newQuantity === 0) {
+        // All bottles consumed - mark as "Bue" and update quantity
+        await apiService.patchBottle(id, { 
+          status: "Bue", 
+          quantity: 0 
+        });
+        setBottle({ ...bottle, status: "Bue", quantity: 0 });
+      } else {
+        // Partial consumption - just reduce quantity, keep status as "En cave"
+        await apiService.patchBottle(id, { quantity: newQuantity });
+        setBottle({ ...bottle, quantity: newQuantity });
+      }
+
+      // Recharger l'historique
+      const updatedHistory = getBottleHistory(id);
+      setBottleHistory(updatedHistory);
+      
     } catch (error) {
       console.error("Erreur lors du marquage comme bu:", error);
+    } finally {
+      setIsConsuming(false);
+      setShowConsumedModal(false);
     }
   };
 
@@ -603,6 +661,77 @@ const BottleDetail = () => {
               </CardContent>
             </Card>
 
+            {/* Historique de la bouteille */}
+            {bottleHistory.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-indigo-600" />
+                    Historique
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {bottleHistory.map((event, index) => (
+                      <div key={event.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+                        <div className={`p-2 rounded-full ${
+                          event.type === EVENT_TYPES.CONSUMED 
+                            ? "bg-purple-100 text-purple-600" 
+                            : event.type === EVENT_TYPES.ADDED
+                            ? "bg-green-100 text-green-600"
+                            : "bg-red-100 text-red-600"
+                        }`}>
+                          {event.type === EVENT_TYPES.CONSUMED ? (
+                            <Wine className="w-4 h-4" />
+                          ) : event.type === EVENT_TYPES.ADDED ? (
+                            <Plus className="w-4 h-4" />
+                          ) : (
+                            <Minus className="w-4 h-4" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900">
+                            {event.type === EVENT_TYPES.CONSUMED 
+                              ? `${event.quantity} bouteille${event.quantity > 1 ? 's' : ''} dégustée${event.quantity > 1 ? 's' : ''}`
+                              : event.type === EVENT_TYPES.ADDED
+                              ? `${event.quantity} bouteille${event.quantity > 1 ? 's' : ''} ajoutée${event.quantity > 1 ? 's' : ''} en cave`
+                              : `${event.quantity} bouteille${event.quantity > 1 ? 's' : ''} supprimée${event.quantity > 1 ? 's' : ''}`
+                            }
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(event.date).toLocaleDateString('fr-FR', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                        <Badge 
+                          variant={
+                            event.type === EVENT_TYPES.CONSUMED 
+                              ? "destructive" 
+                              : event.type === EVENT_TYPES.ADDED 
+                              ? "default" 
+                              : "secondary"
+                          }
+                          className="text-xs"
+                        >
+                          {event.type === EVENT_TYPES.CONSUMED 
+                            ? "Consommé" 
+                            : event.type === EVENT_TYPES.ADDED 
+                            ? "Ajouté" 
+                            : "Supprimé"
+                          }
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Action Buttons */}
             <Card>
               <CardContent className="p-6">
@@ -618,14 +747,16 @@ const BottleDetail = () => {
 
                   <Button
                     onClick={handleMarkAsDrunk}
-                    disabled={bottle.status === "Bue"}
-                    variant={bottle.status === "Bue" ? "secondary" : "default"}
+                    disabled={bottle.status === "Bue" || bottle.quantity === 0}
+                    variant={bottle.status === "Bue" || bottle.quantity === 0 ? "secondary" : "default"}
                     className="flex-1 h-12"
                   >
                     <Wine className="w-4 h-4 mr-2" />
-                    {bottle.status === "Bue"
+                    {bottle.status === "Bue" || bottle.quantity === 0
                       ? "Déjà dégusté"
-                      : "Marquer comme bu"}
+                      : bottle.quantity > 1 
+                        ? "Marquer comme bu"
+                        : "Marquer comme bu"}
                   </Button>
 
                   <Button
@@ -753,6 +884,121 @@ const BottleDetail = () => {
                     {quantityToRemove === bottle?.quantity
                       ? "Supprimer tout"
                       : `Supprimer ${quantityToRemove}`}
+                  </span>
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de consommation */}
+      <Dialog open={showConsumedModal} onOpenChange={setShowConsumedModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <Wine className="w-5 h-5 text-purple-500" />
+              <span>Marquer comme bu</span>
+            </DialogTitle>
+            <DialogDescription>
+              Vous avez{" "}
+              <span className="font-semibold">
+                {bottle?.quantity} bouteille(s)
+              </span>{" "}
+              de {bottle?.name}. Combien souhaitez-vous marquer comme consommées ?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="consumedQuantity">Quantité consommée</Label>
+              <div className="flex items-center space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setQuantityToConsume(Math.max(1, quantityToConsume - 1))
+                  }
+                  disabled={quantityToConsume <= 1}
+                >
+                  -
+                </Button>
+                <Input
+                  id="consumedQuantity"
+                  type="number"
+                  min="1"
+                  max={bottle?.quantity || 1}
+                  value={quantityToConsume}
+                  onChange={(e) =>
+                    setQuantityToConsume(
+                      Math.min(
+                        bottle?.quantity || 1,
+                        Math.max(1, parseInt(e.target.value) || 1)
+                      )
+                    )
+                  }
+                  className="text-center w-20"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setQuantityToConsume(
+                      Math.min(bottle?.quantity || 1, quantityToConsume + 1)
+                    )
+                  }
+                  disabled={quantityToConsume >= (bottle?.quantity || 1)}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+
+            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+              {quantityToConsume === bottle?.quantity ? (
+                <p className="text-purple-600 font-medium">
+                  🍷 Toutes les bouteilles seront marquées comme dégustées.
+                </p>
+              ) : (
+                <p>
+                  Il restera{" "}
+                  <span className="font-semibold">
+                    {(bottle?.quantity || 1) - quantityToConsume} bouteille(s)
+                  </span>{" "}
+                  en cave après dégustation.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowConsumedModal(false)}
+              disabled={isConsuming}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="default"
+              onClick={() => confirmMarkAsDrunk()}
+              disabled={isConsuming}
+              className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700"
+            >
+              {isConsuming ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Marquage...</span>
+                </>
+              ) : (
+                <>
+                  <Wine className="w-4 h-4" />
+                  <span>
+                    Marquer {quantityToConsume} comme bu{quantityToConsume > 1 ? 'es' : 'e'}
                   </span>
                 </>
               )}
