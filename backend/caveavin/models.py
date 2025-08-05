@@ -4,6 +4,7 @@ Ce module définit les modèles Django pour la gestion de cave à vin.
 """
 from django.db import models
 from django.contrib.auth.models import User
+from .utils import compress_image, get_image_size_mb
 
 
 class Bottle(models.Model):
@@ -128,3 +129,20 @@ class Bottle(models.Model):
         if self.estimated_value and self.quantity:
             return self.estimated_value * self.quantity
         return None
+    
+    def save(self, *args, **kwargs):
+        """Override save pour compresser l'image automatiquement."""
+        if self.image:
+            # Vérifier la taille de l'image
+            image_size_mb = get_image_size_mb(self.image)
+            
+            # Compresser si l'image fait plus de 1MB
+            if image_size_mb > 1.0:
+                self.image = compress_image(
+                    self.image,
+                    max_width=800,
+                    max_height=600,
+                    quality=85
+                )
+        
+        super().save(*args, **kwargs)
