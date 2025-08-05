@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from caveavin.views import BottleViewSet, register_user, get_user_profile
+from caveavin.views import BottleViewSet, register_user, get_user_profile, health_check
 
 # Import des vues JWT pour l'authentification
 from rest_framework_simplejwt.views import (
@@ -45,6 +45,9 @@ urlpatterns = [
     # Endpoints de gestion utilisateur
     path('api/register/', register_user, name='register'),
     path('api/profile/', get_user_profile, name='user_profile'),
+    
+    # Health check endpoint
+    path('api/health/', health_check, name='health_check'),
 ]
 
 # Ajout du service des fichiers média en mode développement

@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.http import JsonResponse
 from .models import Bottle
 from .serializers import BottleSerializer, UserRegistrationSerializer, UserProfileSerializer
 
@@ -103,3 +104,13 @@ def get_user_profile(request):
     """
     serializer = UserProfileSerializer(request.user)
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def health_check(request):
+    """Health check endpoint for deployment platforms.
+    
+    Returns:
+        JsonResponse: Simple health status
+    """
+    return JsonResponse({'status': 'healthy', 'service': 'caveavin-api'})

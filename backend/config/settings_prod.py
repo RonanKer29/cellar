@@ -18,10 +18,14 @@ if not SECRET_KEY:
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    os.getenv('DOMAIN_NAME', 'yourdomain.com'),
-    'www.yourdomain.com',
-    os.getenv('SERVER_IP', ''),
+    os.getenv('RAILWAY_PUBLIC_DOMAIN', ''),
+    os.getenv('DOMAIN_NAME', ''),
+    'localhost',
+    '127.0.0.1',
 ]
+
+# Remove empty values from ALLOWED_HOSTS
+ALLOWED_HOSTS = [host for host in ALLOWED_HOSTS if host]
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,8 +41,14 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    f"https://{os.getenv('DOMAIN_NAME', 'yourdomain.com')}",
-    f"https://www.{os.getenv('DOMAIN_NAME', 'yourdomain.com')}",
+    os.getenv('FRONTEND_URL', ''),
+    os.getenv('VERCEL_URL', ''),
+]
+
+# Remove empty values and add https:// if needed
+CORS_ALLOWED_ORIGINS = [
+    origin if origin.startswith('http') else f"https://{origin}"
+    for origin in CORS_ALLOWED_ORIGINS if origin
 ]
 
 # Only allow secure cookies in production
