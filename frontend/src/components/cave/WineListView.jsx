@@ -12,6 +12,7 @@ import { Card, CardContent } from "../ui/card";
 import { apiService } from "../../services/api";
 import { getWineColorClass } from "../../utils/wineColors";
 import { getBottleDisplayStatus } from "../../utils/bottleFilters";
+import { addHistoryEvent, EVENT_TYPES } from "../../services/historyService";
 
 /**
  * Affichage en liste responsive des bouteilles de vin
@@ -39,6 +40,17 @@ const WineListView = ({ bottles, onWineClick }) => {
   const handleDelete = async (bottle) => {
     if (window.confirm(`Supprimer "${bottle.name}" de votre cave ?`)) {
       try {
+        // Enregistrer l'événement de suppression AVANT la suppression
+        addHistoryEvent({
+          type: EVENT_TYPES.DELETED,
+          bottleId: bottle.id,
+          bottleName: bottle.name,
+          bottleProductor: bottle.productor,
+          bottleYear: bottle.year,
+          bottleColor: bottle.color,
+          quantity: bottle.quantity // Suppression complète
+        });
+
         await apiService.deleteBottle(bottle.id);
         window.location.reload();
       } catch (error) {

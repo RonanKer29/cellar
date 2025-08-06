@@ -125,15 +125,35 @@ const BottleDetail = () => {
     try {
       const newQuantity = bottle.quantity - quantityToRemove;
 
+      // Enregistrer l'événement de suppression dans l'historique AVANT la suppression
+      addHistoryEvent({
+        type: EVENT_TYPES.DELETED,
+        bottleId: parseInt(id),
+        bottleName: bottle.name,
+        bottleProductor: bottle.productor,
+        bottleYear: bottle.year,
+        bottleColor: bottle.color,
+        quantity: quantityToRemove
+      });
+
       if (newQuantity === 0) {
+        // Suppression complète de la bouteille
         await apiService.deleteBottle(id);
+        console.log(`✅ Bouteille "${bottle.name}" supprimée définitivement de la collection.`);
         navigate("/");
       } else {
+        // Suppression partielle - réduction de la quantité
         await apiService.patchBottle(id, { quantity: newQuantity });
         setBottle({ ...bottle, quantity: newQuantity });
+        console.log(`✅ ${quantityToRemove} bouteille(s) de "${bottle.name}" supprimée(s). Il reste ${newQuantity} bouteille(s).`);
+        
+        // Recharger l'historique pour afficher l'événement de suppression
+        const updatedHistory = getBottleHistory(id);
+        setBottleHistory(updatedHistory);
       }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
+      alert("Une erreur s'est produite lors de la suppression. Veuillez réessayer.");
     } finally {
       setIsDeleting(false);
       setShowDeleteModal(false);
@@ -780,24 +800,32 @@ const BottleDetail = () => {
       {/* Modal de suppression */}
       <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <Minus className="w-5 h-5 text-red-500" />
-              <span>Supprimer des bouteilles</span>
+          <DialogHeader className="text-center sm:text-left">
+            <DialogTitle className="flex items-center justify-center sm:justify-start space-x-2">
+              <div className="p-2 bg-red-100 rounded-full">
+                <Trash2 className="w-5 h-5 text-red-600" />
+              </div>
+              <span className="text-xl font-bold">Supprimer des bouteilles</span>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-base pt-2">
               Vous avez{" "}
-              <span className="font-semibold">
+              <span className="font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded">
                 {bottle?.quantity} bouteille(s)
               </span>{" "}
-              de {bottle?.name}. Combien souhaitez-vous en supprimer ?
+              de{" "}
+              <span className="font-semibold text-gray-900">
+                {bottle?.name}
+              </span>
+              . Combien souhaitez-vous en supprimer de votre collection ?
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="quantity">Quantité à supprimer</Label>
-              <div className="flex items-center space-x-2">
+            <div className="space-y-3">
+              <Label htmlFor="quantity" className="text-sm font-semibold text-gray-700">
+                Quantité à supprimer
+              </Label>
+              <div className="flex items-center justify-center space-x-3 bg-gray-50 p-4 rounded-lg">
                 <Button
                   type="button"
                   variant="outline"
@@ -806,25 +834,31 @@ const BottleDetail = () => {
                     setQuantityToRemove(Math.max(1, quantityToRemove - 1))
                   }
                   disabled={quantityToRemove <= 1}
+                  className="w-10 h-10 rounded-full hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
                 >
-                  -
+                  <Minus className="w-4 h-4" />
                 </Button>
-                <Input
-                  id="quantity"
-                  type="number"
-                  min="1"
-                  max={bottle?.quantity || 1}
-                  value={quantityToRemove}
-                  onChange={(e) =>
-                    setQuantityToRemove(
-                      Math.min(
-                        bottle?.quantity || 1,
-                        Math.max(1, parseInt(e.target.value) || 1)
+                <div className="flex flex-col items-center space-y-1">
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    max={bottle?.quantity || 1}
+                    value={quantityToRemove}
+                    onChange={(e) =>
+                      setQuantityToRemove(
+                        Math.min(
+                          bottle?.quantity || 1,
+                          Math.max(1, parseInt(e.target.value) || 1)
+                        )
                       )
-                    )
-                  }
-                  className="text-center w-20"
-                />
+                    }
+                    className="text-center w-20 h-12 text-lg font-bold border-2 focus:border-red-300 focus:ring-red-100"
+                  />
+                  <span className="text-xs text-gray-500">
+                    sur {bottle?.quantity}
+                  </span>
+                </div>
                 <Button
                   type="button"
                   variant="outline"
@@ -835,37 +869,59 @@ const BottleDetail = () => {
                     )
                   }
                   disabled={quantityToRemove >= (bottle?.quantity || 1)}
+                  className="w-10 h-10 rounded-full hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
                 >
-                  +
+                  <Plus className="w-4 h-4" />
                 </Button>
               </div>
             </div>
 
-            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <div className="rounded-lg border-l-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100">
               {quantityToRemove === bottle?.quantity ? (
-                <p className="text-red-600 font-medium">
-                  ⚠️ Toute la bouteille sera supprimée définitivement de votre
-                  collection.
-                </p>
+                <div className="border-l-red-500 bg-gradient-to-r from-red-50 to-red-100">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1 bg-red-200 rounded-full">
+                      <Trash2 className="w-4 h-4 text-red-700" />
+                    </div>
+                    <div>
+                      <p className="text-red-800 font-semibold text-sm">
+                        Suppression définitive
+                      </p>
+                      <p className="text-red-700 text-xs">
+                        Toute la bouteille sera supprimée de votre collection.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <p>
-                  Il restera{" "}
-                  <span className="font-semibold">
-                    {(bottle?.quantity || 1) - quantityToRemove} bouteille(s)
-                  </span>{" "}
-                  dans votre collection.
-                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="p-1 bg-blue-200 rounded-full">
+                    <Package className="w-4 h-4 text-blue-700" />
+                  </div>
+                  <div>
+                    <p className="text-gray-800 font-semibold text-sm">Stock restant</p>
+                    <p className="text-gray-700 text-xs">
+                      Il restera{" "}
+                      <span className="font-bold text-blue-700">
+                        {(bottle?.quantity || 1) - quantityToRemove} bouteille(s)
+                      </span>{" "}
+                      dans votre collection.
+                    </p>
+                  </div>
+                </div>
               )}
             </div>
           </div>
 
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex flex-col sm:flex-row gap-3 pt-6">
             <Button
               type="button"
               variant="outline"
               onClick={() => setShowDeleteModal(false)}
               disabled={isDeleting}
+              className="flex-1 sm:flex-none hover:bg-gray-100 transition-colors"
             >
+              <ArrowLeft className="w-4 h-4 mr-2" />
               Annuler
             </Button>
             <Button
@@ -873,20 +929,20 @@ const BottleDetail = () => {
               variant="destructive"
               onClick={confirmDelete}
               disabled={isDeleting}
-              className="flex items-center space-x-2"
+              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 transition-colors"
             >
               {isDeleting ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Suppression...</span>
+                  <span>Suppression en cours...</span>
                 </>
               ) : (
                 <>
                   <Trash2 className="w-4 h-4" />
-                  <span>
+                  <span className="font-semibold">
                     {quantityToRemove === bottle?.quantity
-                      ? "Supprimer tout"
-                      : `Supprimer ${quantityToRemove}`}
+                      ? "Supprimer définitivement"
+                      : `Supprimer ${quantityToRemove} bouteille${quantityToRemove > 1 ? 's' : ''}`}
                   </span>
                 </>
               )}
@@ -898,24 +954,32 @@ const BottleDetail = () => {
       {/* Modal de consommation */}
       <Dialog open={showConsumedModal} onOpenChange={setShowConsumedModal}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <Wine className="w-5 h-5 text-purple-500" />
-              <span>Marquer comme bu</span>
+          <DialogHeader className="text-center sm:text-left">
+            <DialogTitle className="flex items-center justify-center sm:justify-start space-x-2">
+              <div className="p-2 bg-purple-100 rounded-full">
+                <Wine className="w-5 h-5 text-purple-600" />
+              </div>
+              <span className="text-xl font-bold">Marquer comme bu</span>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-base pt-2">
               Vous avez{" "}
-              <span className="font-semibold">
+              <span className="font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded">
                 {bottle?.quantity} bouteille(s)
               </span>{" "}
-              de {bottle?.name}. Combien souhaitez-vous marquer comme consommées ?
+              de{" "}
+              <span className="font-semibold text-gray-900">
+                {bottle?.name}
+              </span>
+              . Combien souhaitez-vous marquer comme dégustées ?
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="consumedQuantity">Quantité consommée</Label>
-              <div className="flex items-center space-x-2">
+            <div className="space-y-3">
+              <Label htmlFor="consumedQuantity" className="text-sm font-semibold text-gray-700">
+                Quantité à déguster
+              </Label>
+              <div className="flex items-center justify-center space-x-3 bg-purple-50 p-4 rounded-lg">
                 <Button
                   type="button"
                   variant="outline"
@@ -924,25 +988,31 @@ const BottleDetail = () => {
                     setQuantityToConsume(Math.max(1, quantityToConsume - 1))
                   }
                   disabled={quantityToConsume <= 1}
+                  className="w-10 h-10 rounded-full hover:bg-purple-100 hover:border-purple-200 hover:text-purple-600 transition-colors"
                 >
-                  -
+                  <Minus className="w-4 h-4" />
                 </Button>
-                <Input
-                  id="consumedQuantity"
-                  type="number"
-                  min="1"
-                  max={bottle?.quantity || 1}
-                  value={quantityToConsume}
-                  onChange={(e) =>
-                    setQuantityToConsume(
-                      Math.min(
-                        bottle?.quantity || 1,
-                        Math.max(1, parseInt(e.target.value) || 1)
+                <div className="flex flex-col items-center space-y-1">
+                  <Input
+                    id="consumedQuantity"
+                    type="number"
+                    min="1"
+                    max={bottle?.quantity || 1}
+                    value={quantityToConsume}
+                    onChange={(e) =>
+                      setQuantityToConsume(
+                        Math.min(
+                          bottle?.quantity || 1,
+                          Math.max(1, parseInt(e.target.value) || 1)
+                        )
                       )
-                    )
-                  }
-                  className="text-center w-20"
-                />
+                    }
+                    className="text-center w-20 h-12 text-lg font-bold border-2 focus:border-purple-300 focus:ring-purple-100"
+                  />
+                  <span className="text-xs text-gray-500">
+                    sur {bottle?.quantity}
+                  </span>
+                </div>
                 <Button
                   type="button"
                   variant="outline"
@@ -953,36 +1023,59 @@ const BottleDetail = () => {
                     )
                   }
                   disabled={quantityToConsume >= (bottle?.quantity || 1)}
+                  className="w-10 h-10 rounded-full hover:bg-purple-100 hover:border-purple-200 hover:text-purple-600 transition-colors"
                 >
-                  +
+                  <Plus className="w-4 h-4" />
                 </Button>
               </div>
             </div>
 
-            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+            <div className="rounded-lg border-l-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100">
               {quantityToConsume === bottle?.quantity ? (
-                <p className="text-purple-600 font-medium">
-                  🍷 Toutes les bouteilles seront marquées comme dégustées.
-                </p>
+                <div className="border-l-purple-500 bg-gradient-to-r from-purple-50 to-purple-100">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1 bg-purple-200 rounded-full">
+                      <Wine className="w-4 h-4 text-purple-700" />
+                    </div>
+                    <div>
+                      <p className="text-purple-800 font-semibold text-sm">
+                        Dégustation complète
+                      </p>
+                      <p className="text-purple-700 text-xs">
+                        Toutes les bouteilles seront marquées comme dégustées.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <p>
-                  Il restera{" "}
-                  <span className="font-semibold">
-                    {(bottle?.quantity || 1) - quantityToConsume} bouteille(s)
-                  </span>{" "}
-                  en cave après dégustation.
-                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="p-1 bg-green-200 rounded-full">
+                    <Package className="w-4 h-4 text-green-700" />
+                  </div>
+                  <div>
+                    <p className="text-gray-800 font-semibold text-sm">Stock restant</p>
+                    <p className="text-gray-700 text-xs">
+                      Il restera{" "}
+                      <span className="font-bold text-green-700">
+                        {(bottle?.quantity || 1) - quantityToConsume} bouteille(s)
+                      </span>{" "}
+                      en cave après dégustation.
+                    </p>
+                  </div>
+                </div>
               )}
             </div>
           </div>
 
-          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex flex-col sm:flex-row gap-3 pt-6">
             <Button
               type="button"
               variant="outline"
               onClick={() => setShowConsumedModal(false)}
               disabled={isConsuming}
+              className="flex-1 sm:flex-none hover:bg-gray-100 transition-colors"
             >
+              <ArrowLeft className="w-4 h-4 mr-2" />
               Annuler
             </Button>
             <Button
@@ -990,18 +1083,18 @@ const BottleDetail = () => {
               variant="default"
               onClick={() => confirmMarkAsDrunk()}
               disabled={isConsuming}
-              className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700"
+              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-700 transition-colors"
             >
               {isConsuming ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Marquage...</span>
+                  <span>Marquage en cours...</span>
                 </>
               ) : (
                 <>
                   <Wine className="w-4 h-4" />
-                  <span>
-                    Marquer {quantityToConsume} comme bu{quantityToConsume > 1 ? 'es' : 'e'}
+                  <span className="font-semibold">
+                    Marquer {quantityToConsume} bouteille{quantityToConsume > 1 ? 's' : ''} comme bu{quantityToConsume > 1 ? 'es' : 'e'}
                   </span>
                 </>
               )}
