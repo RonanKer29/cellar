@@ -160,7 +160,7 @@ const AddWineFull = () => {
           title="Ajouter un vin complet"
           subtitle="Renseignez toutes les informations de votre bouteille"
           icon={Wine}
-          theme="purple"
+          theme="green"
           showBackButton={true}
           backTo="/"
           actions={headerActions}

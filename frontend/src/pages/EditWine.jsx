@@ -205,7 +205,7 @@ const EditWine = () => {
           title="Modifier le vin"
           subtitle="Mettez à jour les informations de votre bouteille"
           icon={Wine}
-          theme="blue"
+          theme="green"
           showBackButton={true}
           backTo={`/bouteille/${id}`}
         />

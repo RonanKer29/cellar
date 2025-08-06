@@ -113,7 +113,7 @@ const AddWine = () => {
           title="Ajouter un vin"
           subtitle="Mode rapide – informations essentielles"
           icon={Wine}
-          theme="purple"
+          theme="green"
           showBackButton={true}
           backTo="/"
           actions={headerActions}

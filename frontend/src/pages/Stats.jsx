@@ -72,7 +72,7 @@ const Stats = () => {
         title="Statistiques"
         subtitle="Analysez votre collection de vins en détail"
         icon={BarChart3}
-        theme="indigo"
+        theme="green"
         actions={headerActions}
         bottomContent={headerBottomContent}
       />

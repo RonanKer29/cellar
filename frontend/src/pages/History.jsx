@@ -159,7 +159,7 @@ const History = () => {
         title="Historique"
         subtitle="Suivez l'évolution de votre cave à vin"
         icon={HistoryIcon}
-        theme="indigo"
+        theme="green"
       />
 
       {/* Statistiques principales */}

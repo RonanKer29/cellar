@@ -13,7 +13,7 @@
 import { useState } from "react";
 import StatCard from "./StatCard";
 import { Wine, Warehouse, Globe, CheckCircle } from "lucide-react";
-import WineList from "./WineList";
+import WineListView from "../cave/WineListView";
 import ColorfulPageHeader from "../common/ColorfulPageHeader";
 import { calculateWineStats } from "../../utils/wineUtils";
 import FilterCategories from "./FilterCategories";
@@ -65,7 +65,7 @@ const Dashboard = ({ bottles }) => {
         title="Tableau de bord"
         subtitle="Gérez et suivez votre collection de bouteilles"
         icon={Wine}
-        theme="blue"
+        theme="green"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
@@ -110,7 +110,13 @@ const Dashboard = ({ bottles }) => {
         selectedProductor={selectedProductor}
         setSelectedProductor={setSelectedProductor}
       />
-      <WineList bottles={filteredBottles} />
+      <WineListView 
+        bottles={filteredBottles} 
+        onWineClick={(bottle) => {
+          // Navigation vers le détail de la bouteille
+          window.location.href = `/bouteille/${bottle.id}`;
+        }}
+      />
     </>
   );
 };
