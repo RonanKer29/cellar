@@ -135,7 +135,7 @@ const MaCave = () => {
   );
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 pb-16 space-y-6">
       <ColorfulPageHeader
         title="Ma Cave"
         subtitle="Gérez et explorez votre collection de vins"

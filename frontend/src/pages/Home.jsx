@@ -21,7 +21,7 @@ const Home = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 pb-16">
       <Dashboard bottles={bottles} />
     </div>
   );

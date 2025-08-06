@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Navbar from "./layouts/Navbar";
+import Footer from "./components/common/Footer";
 import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import AddWine from "./pages/AddWine";
@@ -43,93 +44,96 @@ const AppContent = () => {
   }
 
   return (
-    <div className="flex flex-col sm:flex-row h-screen">
-      {isAuthenticated && <Navbar />}
-      <main className="flex-1 overflow-auto bg-[#F9FAFB]">
-        <Routes>
-          {/* Pages publiques */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+    <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col sm:flex-row flex-1">
+        {isAuthenticated && <Navbar />}
+        <main className="flex-1 overflow-auto bg-[#F9FAFB]">
+          <Routes>
+            {/* Pages publiques */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
 
-          {/* Landing page pour les utilisateurs non connectés */}
-          <Route 
-            path="/" 
-            element={isAuthenticated ? (
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            ) : (
-              <Landing />
-            )} 
-          />
-          
-          {/* Routes protégées - Dashboard */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ma-cave"
-            element={
-              <ProtectedRoute>
-                <MaCave />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/stats"
-            element={
-              <ProtectedRoute>
-                <Stats />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/historique"
-            element={
-              <ProtectedRoute>
-                <History />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ajouter-vin"
-            element={
-              <ProtectedRoute>
-                <AddWine />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ajouter-vin/complet"
-            element={
-              <ProtectedRoute>
-                <AddWineFull />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bouteille/:id"
-            element={
-              <ProtectedRoute>
-                <BottleDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bouteille/:id/edit"
-            element={
-              <ProtectedRoute>
-                <EditWine />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </main>
+            {/* Landing page pour les utilisateurs non connectés */}
+            <Route 
+              path="/" 
+              element={isAuthenticated ? (
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              ) : (
+                <Landing />
+              )} 
+            />
+            
+            {/* Routes protégées - Dashboard */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ma-cave"
+              element={
+                <ProtectedRoute>
+                  <MaCave />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stats"
+              element={
+                <ProtectedRoute>
+                  <Stats />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/historique"
+              element={
+                <ProtectedRoute>
+                  <History />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ajouter-vin"
+              element={
+                <ProtectedRoute>
+                  <AddWine />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ajouter-vin/complet"
+              element={
+                <ProtectedRoute>
+                  <AddWineFull />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bouteille/:id"
+              element={
+                <ProtectedRoute>
+                  <BottleDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bouteille/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <EditWine />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+      </div>
+      {isAuthenticated && <Footer />}
     </div>
   );
 };

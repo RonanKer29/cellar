@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Wine, LogOut } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
@@ -9,9 +9,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import NavItems from "@/components/navbar/NavItems";
+} from "../components/ui/sheet";
+import { Button } from "../components/ui/button";
+import NavItems from "../components/navbar/NavItems";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,15 +23,14 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Mobile Header */}
-      <div className="sm:hidden flex justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
+      {/* Mobile navbar sticky en haut */}
+      <div className="sm:hidden sticky top-0 z-50 flex justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
         <div className="flex items-center space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">
             <div className="inline-flex bg-pink-600 p-2 rounded-lg">
               <Wine className="text-white w-5 h-5" />
             </div>
           </Link>
-
           <h1 className="text-lg font-bold text-gray-800">Ma Cave à vin</h1>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -85,7 +84,7 @@ const Navbar = () => {
         </Sheet>
       </div>
 
-      {/* Desktop Sidebar */}
+      {/* Desktop sidebar */}
       <aside className="hidden sm:flex flex-col w-[90px] lg:w-[240px] xl:w-[300px] px-4 py-6 bg-white border-r shadow-sm shrink-0 h-screen">
         <div className="mb-6 flex items-center justify-center lg:justify-start space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">

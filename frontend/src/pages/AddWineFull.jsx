@@ -155,7 +155,7 @@ const AddWineFull = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-7xl mx-auto pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto pt-6 pb-28 px-4 sm:px-6 lg:px-8">
         <ColorfulPageHeader
           title="Ajouter un vin complet"
           subtitle="Renseignez toutes les informations de votre bouteille"

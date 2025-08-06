@@ -157,7 +157,7 @@ const History = () => {
   ];
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 pb-16 space-y-6">
       <ColorfulPageHeader
         title="Historique"
         subtitle="Suivez l'évolution de votre cave à vin"
