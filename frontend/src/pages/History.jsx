@@ -24,6 +24,8 @@ import {
   Minus,
   BarChart3,
   Package,
+  MapPin,
+  Eye,
 } from "lucide-react";
 import {
   Card,
@@ -32,6 +34,7 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
 import StatCard from "../components/dashboard/StatCard";
 
 /**
@@ -102,7 +105,7 @@ const History = () => {
     .filter((event) => event.type === EVENT_TYPES.CONSUMED)
     .reduce((sum, event) => sum + event.quantity, 0);
   const currentStock = bottles
-    .filter((bottle) => bottle.status === "En cave")
+    .filter((bottle) => (bottle.quantity || 0) > 0)
     .reduce((sum, bottle) => sum + bottle.quantity, 0);
 
   // Bouteilles ajoutées ce mois
@@ -269,80 +272,157 @@ const History = () => {
         </Card>
       </div>
 
-      {/* Timeline des événements récents */}
+      {/* Timeline détaillée des événements récents */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-600" />
-            Activité récente (30 derniers jours)
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-blue-600" />
+              Activité récente
+            </div>
+            <Badge variant="outline" className="text-xs">
+              {recentEvents.length} événement{recentEvents.length > 1 ? 's' : ''} (30j)
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           {recentEvents.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <Wine className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p>Aucune activité récente</p>
+            <div className="text-center py-12 text-gray-500">
+              <Wine className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Aucune activité récente</h3>
+              <p className="text-sm">Les ajouts et dégustations des 30 derniers jours s'afficheront ici</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {recentEvents.slice(0, 10).map((event, index) => (
-                <div
-                  key={event.id}
-                  className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div
-                    className={`p-2 rounded-full ${
-                      event.type === EVENT_TYPES.CONSUMED
-                        ? "bg-purple-100 text-purple-600"
-                        : event.type === EVENT_TYPES.ADDED
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {event.type === EVENT_TYPES.CONSUMED ? (
-                      <Wine className="w-4 h-4" />
-                    ) : event.type === EVENT_TYPES.ADDED ? (
-                      <Plus className="w-4 h-4" />
-                    ) : (
-                      <Minus className="w-4 h-4" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      {event.bottleName}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {event.bottleProductor} • {event.bottleYear}
-                    </p>
-                  </div>
-                  {event.quantity > 1 && (
-                    <Badge variant="secondary" className="text-xs">
-                      {event.quantity}x
-                    </Badge>
-                  )}
-                  <div className="text-right">
-                    <Badge
-                      variant={
-                        event.type === EVENT_TYPES.CONSUMED
-                          ? "destructive"
-                          : event.type === EVENT_TYPES.ADDED
-                          ? "default"
-                          : "secondary"
-                      }
-                      className="text-xs"
-                    >
-                      {event.type === EVENT_TYPES.CONSUMED
-                        ? "Dégusté"
-                        : event.type === EVENT_TYPES.ADDED
-                        ? "Ajouté"
-                        : "Supprimé"}
-                    </Badge>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {new Date(event.date).toLocaleDateString("fr-FR")}
-                    </p>
-                  </div>
+            <div className="relative">
+              {/* Ligne de timeline */}
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-green-200"></div>
+              
+              <div className="space-y-6">
+                {recentEvents.slice(0, 15).map((event, index) => {
+                  const eventDate = new Date(event.date);
+                  const isToday = eventDate.toDateString() === new Date().toDateString();
+                  const isYesterday = eventDate.toDateString() === new Date(Date.now() - 86400000).toDateString();
+                  
+                  let dateLabel = eventDate.toLocaleDateString("fr-FR");
+                  if (isToday) dateLabel = "Aujourd'hui";
+                  else if (isYesterday) dateLabel = "Hier";
+                  
+                  return (
+                    <div key={event.id} className="relative flex items-start space-x-4 group">
+                      {/* Icône de timeline */}
+                      <div className="relative z-10 flex-shrink-0">
+                        <div
+                          className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white transition-transform group-hover:scale-110 ${
+                            event.type === EVENT_TYPES.CONSUMED
+                              ? "bg-gradient-to-br from-purple-500 to-purple-600 text-white"
+                              : event.type === EVENT_TYPES.ADDED
+                              ? "bg-gradient-to-br from-green-500 to-green-600 text-white"
+                              : "bg-gradient-to-br from-red-500 to-red-600 text-white"
+                          }`}
+                        >
+                          {event.type === EVENT_TYPES.CONSUMED ? (
+                            <Wine className="w-5 h-5" />
+                          ) : event.type === EVENT_TYPES.ADDED ? (
+                            <Plus className="w-5 h-5" />
+                          ) : (
+                            <Minus className="w-5 h-5" />
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Contenu de l'événement */}
+                      <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-lg p-4 shadow-sm group-hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 min-w-0">
+                            {/* En-tête avec action et timestamp */}
+                            <div className="flex items-center space-x-2 mb-2">
+                              <Badge
+                                variant={
+                                  event.type === EVENT_TYPES.CONSUMED
+                                    ? "destructive"
+                                    : event.type === EVENT_TYPES.ADDED
+                                    ? "default"
+                                    : "secondary"
+                                }
+                                className="text-xs font-semibold"
+                              >
+                                {event.type === EVENT_TYPES.CONSUMED
+                                  ? "🍷 Dégusté"
+                                  : event.type === EVENT_TYPES.ADDED
+                                  ? "📦 Ajouté"
+                                  : "🗑️ Supprimé"}
+                              </Badge>
+                              <span className="text-xs text-gray-500 font-medium">
+                                {dateLabel} • {eventDate.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                            
+                            {/* Informations du vin */}
+                            <h4 className="text-base font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                              {event.bottleName}
+                            </h4>
+                            
+                            <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                              <span className="flex items-center space-x-1">
+                                <MapPin className="w-3 h-3" />
+                                <span>{event.bottleProductor}</span>
+                              </span>
+                              <span className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3" />
+                                <span>{event.bottleYear}</span>
+                              </span>
+                            </div>
+                            
+                            {/* Détails additionnels */}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <Badge 
+                                  variant="outline" 
+                                  className={`text-xs border-2 ${
+                                    event.bottleColor === 'Rouge' ? 'border-red-300 text-red-700 bg-red-50' :
+                                    event.bottleColor === 'Blanc' ? 'border-yellow-300 text-yellow-700 bg-yellow-50' :
+                                    event.bottleColor === 'Rosé' ? 'border-pink-300 text-pink-700 bg-pink-50' :
+                                    event.bottleColor === 'Pétillant' ? 'border-purple-300 text-purple-700 bg-purple-50' :
+                                    'border-gray-300 text-gray-700 bg-gray-50'
+                                  }`}
+                                >
+                                  {event.bottleColor}
+                                </Badge>
+                                {event.quantity > 1 && (
+                                  <Badge variant="secondary" className="text-xs font-semibold">
+                                    {event.quantity}x bouteille{event.quantity > 1 ? 's' : ''}
+                                  </Badge>
+                                )}
+                              </div>
+                              
+                              {/* Actions */}
+                              <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  className="h-7 px-2 text-xs"
+                                  onClick={() => window.location.href = `/bouteille/${event.bottleId}`}
+                                >
+                                  <Eye className="w-3 h-3 mr-1" />
+                                  Voir
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {recentEvents.length > 15 && (
+                <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                  <Badge variant="secondary" className="text-xs">
+                    +{recentEvents.length - 15} événement{recentEvents.length - 15 > 1 ? 's' : ''} de plus
+                  </Badge>
                 </div>
-              ))}
+              )}
             </div>
           )}
         </CardContent>

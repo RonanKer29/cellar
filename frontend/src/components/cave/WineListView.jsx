@@ -11,6 +11,7 @@ import { Card, CardContent } from "../ui/card";
 // Removed unused imports - component has its own utility functions
 import { apiService } from "../../services/api";
 import { getWineColorClass } from "../../utils/wineColors";
+import { getBottleDisplayStatus } from "../../utils/bottleFilters";
 
 /**
  * Affichage en liste responsive des bouteilles de vin
@@ -76,6 +77,27 @@ const WineListView = ({ bottles, onWineClick }) => {
   };
 
   // Utilisation du système unifié de couleurs de vin
+
+  /**
+   * Détermine le statut d'affichage basé sur la quantité réelle
+   * @param {Object} bottle - La bouteille
+   * @returns {Object} Informations de statut pour l'affichage
+   */
+  const getRealBottleStatus = (bottle) => {
+    const quantity = bottle.quantity || 0;
+    if (quantity === 0) {
+      return {
+        label: 'Consommée',
+        variant: 'destructive',
+        className: 'opacity-70'
+      };
+    }
+    return {
+      label: 'En cave',
+      variant: 'default',
+      className: 'opacity-100'
+    };
+  };
 
   /**
    * Affiche la notation en étoiles
@@ -149,10 +171,10 @@ const WineListView = ({ bottles, onWineClick }) => {
                           {bottle.color}
                         </Badge>
                         <Badge 
-                          variant={bottle.status === "Bue" ? "destructive" : "default"}
-                          className="text-xs font-medium group-hover:scale-105 transition-transform duration-200"
+                          variant={getRealBottleStatus(bottle).variant}
+                          className={`text-xs font-medium group-hover:scale-105 transition-transform duration-200 ${getRealBottleStatus(bottle).className}`}
                         >
-                          {bottle.status}
+                          {getRealBottleStatus(bottle).label}
                         </Badge>
                       </div>
                     </div>
@@ -272,10 +294,10 @@ const WineListView = ({ bottles, onWineClick }) => {
                           {bottle.color}
                         </Badge>
                         <Badge 
-                          variant={bottle.status === "Bue" ? "destructive" : "default"}
-                          className="text-xs font-medium group-hover:scale-105 transition-transform duration-200"
+                          variant={getRealBottleStatus(bottle).variant}
+                          className={`text-xs font-medium group-hover:scale-105 transition-transform duration-200 ${getRealBottleStatus(bottle).className}`}
                         >
-                          {bottle.status}
+                          {getRealBottleStatus(bottle).label}
                         </Badge>
                         {bottle.quantity > 1 && (
                           <Badge variant="secondary" className="text-xs font-medium group-hover:scale-105 transition-transform duration-200">

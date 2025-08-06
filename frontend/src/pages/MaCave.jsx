@@ -11,9 +11,11 @@ import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import MaCaveFilters from "../components/cave/MaCaveFilters";
 import MaCaveGrid from "../components/cave/MaCaveGrid";
 import MaCaveStats from "../components/cave/MaCaveStats";
-import { Wine, Plus } from "lucide-react";
+import { Wine, Plus, Package, Archive } from "lucide-react";
 import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
 import { Link } from "react-router-dom";
+import { filterBottlesByView, BOTTLE_VIEWS, calculateBottleStatsByView } from "../utils/bottleFilters";
 
 /**
  * Page principale de la cave à vin avec gestion complète de la collection
@@ -36,6 +38,7 @@ const MaCave = () => {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [currentView, setCurrentView] = useState(BOTTLE_VIEWS.STOCK);
 
   if (loading) {
     return <LoadingState />;
@@ -62,8 +65,9 @@ const MaCave = () => {
     ...Array.from(new Set(bottles.map((b) => b.productor).filter(Boolean))),
   ];
 
-  // Filter bottles
-  const filteredBottles = bottles.filter((bottle) => {
+  // Apply view filter first, then search/category filters  
+  const viewFilteredBottles = filterBottlesByView(bottles, currentView);
+  const filteredBottles = viewFilteredBottles.filter((bottle) => {
     const matchesSearch = [
       bottle.name,
       bottle.productor,
@@ -141,6 +145,39 @@ const MaCave = () => {
       />
 
       <MaCaveStats bottles={filteredBottles} />
+
+      {/* Sélecteur de vue */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 rounded-lg shadow-sm">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-sm font-medium text-gray-700">Vue d'affichage</h3>
+          <div className="flex gap-2">
+            <Button
+              variant={currentView === BOTTLE_VIEWS.STOCK ? "default" : "outline"}
+              size="sm"
+              onClick={() => setCurrentView(BOTTLE_VIEWS.STOCK)}
+              className="flex items-center gap-2"
+            >
+              <Package className="w-4 h-4" />
+              Stock actuel ({calculateBottleStatsByView(bottles).inStock.totalQuantity})
+            </Button>
+            <Button
+              variant={currentView === BOTTLE_VIEWS.COLLECTION ? "default" : "outline"}
+              size="sm"
+              onClick={() => setCurrentView(BOTTLE_VIEWS.COLLECTION)}
+              className="flex items-center gap-2"
+            >
+              <Archive className="w-4 h-4" />
+              Collection complète ({calculateBottleStatsByView(bottles).collection.count})
+            </Button>
+          </div>
+        </div>
+        <div className="text-sm text-gray-500">
+          {currentView === BOTTLE_VIEWS.STOCK ? 
+            "Affichage des bouteilles disponibles en stock" : 
+            "Affichage de toutes les bouteilles (stock + consommées)"
+          }
+        </div>
+      </div>
 
       <MaCaveFilters
         searchTerm={searchTerm}

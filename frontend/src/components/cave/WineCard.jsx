@@ -10,6 +10,7 @@ import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { apiService } from "../../services/api";
 import { getWineColorClass } from "../../utils/wineColors";
+import { getBottleDisplayStatus } from "../../utils/bottleFilters";
 
 /**
  * Carte interactive d'affichage d'une bouteille de vin
@@ -53,6 +54,7 @@ import { getWineColorClass } from "../../utils/wineColors";
  */
 const WineCard = ({ bottle, onClick }) => {
   const navigate = useNavigate();
+  const displayStatus = getBottleDisplayStatus(bottle);
 
   /**
    * Gère la suppression d'une bouteille avec confirmation utilisateur
@@ -104,7 +106,7 @@ const WineCard = ({ bottle, onClick }) => {
 
   return (
     <Card 
-      className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] bg-white/95 backdrop-blur-sm border-0 shadow-lg overflow-hidden transform-gpu will-change-transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className={`group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] bg-white/95 backdrop-blur-sm border-0 shadow-lg overflow-hidden transform-gpu will-change-transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${displayStatus.opacity}`}
       onClick={handleCardClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -129,10 +131,10 @@ const WineCard = ({ bottle, onClick }) => {
           {/* Badges status et quantité */}
           <div className="flex flex-col items-end space-y-2">
             <Badge 
-              variant={bottle.status === "Bue" ? "destructive" : "default"}
+              variant={displayStatus.status === 'consumed' ? "destructive" : "default"}
               className="shadow-sm font-medium group-hover:shadow-md group-hover:scale-105 transition-all duration-200"
             >
-              {bottle.status}
+              {displayStatus.status === 'consumed' ? 'Consommée' : 'En cave'}
             </Badge>
             {bottle.quantity > 1 && (
               <Badge variant="secondary" className="shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200">
@@ -165,13 +167,23 @@ const WineCard = ({ bottle, onClick }) => {
               <Calendar className="w-4 h-4" aria-hidden="true" />
               <span className="font-medium">{bottle.year || "N/A"}</span>
             </div>
-            <Badge 
-              variant="outline" 
-              className={`text-xs border-2 ${getWineColorClass(bottle.color, 'badge')} font-medium`}
-              aria-label={`Vin ${bottle.color}`}
-            >
-              {bottle.color}
-            </Badge>
+            <div className="flex items-center space-x-2">
+              <Badge 
+                variant="outline" 
+                className={`text-xs border-2 ${getWineColorClass(bottle.color, 'badge')} font-medium`}
+                aria-label={`Vin ${bottle.color}`}
+              >
+                {bottle.color}
+              </Badge>
+              {/* Badge de statut de stock */}
+              <Badge 
+                variant={displayStatus.badgeVariant}
+                className="text-xs font-medium"
+                aria-label={displayStatus.label}
+              >
+                {displayStatus.status === 'consumed' ? '0 ❌' : `${bottle.quantity || 0} 📦`}
+              </Badge>
+            </div>
           </div>
 
           {/* Région */}

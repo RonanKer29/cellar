@@ -82,41 +82,49 @@ export const getStatCardColorMapping = () => ({
  * Calcule les statistiques globales de la cave à vin
  * 
  * Analyse la collection de bouteilles pour générer des statistiques
- * utiles pour le dashboard :
- * - Total des bouteilles (toutes quantités confondues)
- * - Stock actuel en cave
- * - Consommation de l'année en cours
+ * utiles pour le dashboard en utilisant l'historique de consommation :
+ * - Total des bouteilles ajoutées (historique complet)
+ * - Stock actuel en cave (quantity > 0)
+ * - Consommation de l'année en cours (depuis l'historique)
  * - Nombre de régions différentes
  * - Acquisitions du mois en cours
  * 
  * @param {Array} bottles - Liste des bouteilles de l'utilisateur
- * @param {number} bottles[].quantity - Quantité de bouteilles identiques
+ * @param {number} bottles[].quantity - Quantité en stock actuelle
  * @param {string} bottles[].status - Statut ('En cave' | 'Bue')
  * @param {string} bottles[].date_added - Date d'ajout ISO string
  * @param {string} bottles[].region - Région/Appellation du vin
  * @returns {Object} Statistiques calculées
- * @returns {number} returns.total - Nombre total de bouteilles
- * @returns {number} returns.inCellar - Bouteilles actuellement en cave
- * @returns {number} returns.drunkThisYear - Bouteilles bues cette année
+ * @returns {number} returns.total - Nombre total de bouteilles (toutes entrées)
+ * @returns {number} returns.inCellar - Bouteilles actuellement en stock
+ * @returns {number} returns.drunkThisYear - Bouteilles consommées cette année
  * @returns {number} returns.regionsCount - Nombre de régions différentes
  * @returns {number} returns.bottlesThisMonth - Bouteilles ajoutées ce mois
  */
 export const calculateWineStats = (bottles) => {
-  // Calcul du nombre total de bouteilles (somme des quantités)
-  const total = bottles.reduce((acc, b) => acc + (b.quantity || 0), 0);
-  
-  // Calcul du stock actuel (bouteilles en cave uniquement)
+
+  // Calcul du stock actuel (quantity > 0)
   const inCellar = bottles
-    .filter((b) => b.status === "En cave")
+    .filter((b) => (b.quantity || 0) > 0)
     .reduce((acc, b) => acc + (b.quantity || 0), 0);
 
-  // Calcul de la consommation de l'année en cours
+  // Calcul du total depuis l'historique (à améliorer avec historyService)
+  // Pour l'instant, on utilise la quantité actuelle + estimation des bouteilles consommées
+  const total = bottles.reduce((acc, b) => {
+    const currentQty = b.quantity || 0;
+    // Pour les bouteilles avec quantité 0, on estime qu'il y en avait au moins 1
+    const estimatedTotal = currentQty === 0 ? Math.max(currentQty, 1) : currentQty;
+    return acc + estimatedTotal;
+  }, 0);
+
+  // Calcul de la consommation cette année (basé sur les bouteilles à quantity = 0)
   const drunkThisYear = bottles
     .filter((b) => {
       const year = new Date(b.date_added).getFullYear();
-      return b.status === "Bue" && year === new Date().getFullYear();
+      // Une bouteille est considérée comme consommée si sa quantité est 0
+      return (b.quantity || 0) === 0 && year === new Date().getFullYear();
     })
-    .reduce((acc, b) => acc + (b.quantity || 0), 0);
+    .length; // On compte 1 par bouteille complètement consommée
 
   // Extraction des régions uniques (en excluant les valeurs vides)
   const regions = [...new Set(bottles.map((b) => b.region))].filter(Boolean);
@@ -140,4 +148,37 @@ export const calculateWineStats = (bottles) => {
     regionsCount: regions.length,
     bottlesThisMonth,
   };
+};
+
+/**
+ * Calcule les statistiques de consommation depuis l'historique
+ * 
+ * @param {Array} bottles - Liste des bouteilles
+ * @returns {Object} Statistiques de consommation
+ */
+export const calculateConsumptionStats = (bottles) => {
+  // Import dynamique pour éviter la circularité
+  try {
+    const { getHistory, EVENT_TYPES } = require('../services/historyService');
+    const history = getHistory();
+    const currentYear = new Date().getFullYear();
+    
+    // Calcul du total ajouté depuis l'historique
+    const totalAdded = history
+      .filter(event => event.type === EVENT_TYPES.ADDED)
+      .reduce((sum, event) => sum + event.quantity, 0);
+    
+    // Calcul du total consommé cette année
+    const drunkThisYear = history
+      .filter(event => {
+        const eventYear = new Date(event.date).getFullYear();
+        return event.type === EVENT_TYPES.CONSUMED && eventYear === currentYear;
+      })
+      .reduce((sum, event) => sum + event.quantity, 0);
+    
+    return { totalAdded, drunkThisYear };
+  } catch (error) {
+    console.log('Historique non disponible, utilisation des données de base');
+    return { totalAdded: 0, drunkThisYear: 0 };
+  }
 };

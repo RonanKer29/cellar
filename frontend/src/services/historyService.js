@@ -163,8 +163,8 @@ export const migrateFromBottles = (bottles) => {
       });
     }
     
-    // Si la bouteille est marquée comme "Bue", ajouter un événement de consommation
-    if (bottle.status === "Bue") {
+    // Si la bouteille est marquée comme "Bue" ou a une quantité de 0, ajouter un événement de consommation
+    if (bottle.status === "Bue" || (bottle.quantity || 0) === 0) {
       const consumeKey = `${bottle.id}-${EVENT_TYPES.CONSUMED}`;
       if (!existingIds.has(consumeKey)) {
         addHistoryEvent({
@@ -174,7 +174,8 @@ export const migrateFromBottles = (bottles) => {
           bottleProductor: bottle.productor,
           bottleYear: bottle.year,
           bottleColor: bottle.color,
-          quantity: bottle.quantity,
+          // Pour les bouteilles consommées avec quantity = 0, on estime qu'au moins 1 a été consommée
+          quantity: Math.max(bottle.quantity || 0, 1),
           date: bottle.date_added // On utilise date_added comme approximation
         });
       }

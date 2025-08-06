@@ -160,7 +160,7 @@ const BottleDetail = () => {
     try {
       const newQuantity = bottle.quantity - quantityConsumed;
 
-      // Enregistrer l'événement de consommation dans l'historique
+      // Enregistrer l'événement de consommation dans l'historique AVANT la mise à jour
       addHistoryEvent({
         type: EVENT_TYPES.CONSUMED,
         bottleId: parseInt(id),
@@ -171,25 +171,28 @@ const BottleDetail = () => {
         quantity: quantityConsumed
       });
 
-      if (newQuantity === 0) {
-        // All bottles consumed - mark as "Bue" and update quantity
-        await apiService.patchBottle(id, { 
-          status: "Bue", 
-          quantity: 0 
-        });
-        setBottle({ ...bottle, status: "Bue", quantity: 0 });
-      } else {
-        // Partial consumption - just reduce quantity, keep status as "En cave"
-        await apiService.patchBottle(id, { quantity: newQuantity });
-        setBottle({ ...bottle, quantity: newQuantity });
-      }
+      // Toujours mettre à jour seulement la quantité
+      // Le statut reste "En cave" même à 0 pour garder la traçabilité
+      await apiService.patchBottle(id, { quantity: newQuantity });
+      
+      // Mettre à jour l'état local
+      const updatedBottle = { ...bottle, quantity: newQuantity };
+      setBottle(updatedBottle);
 
       // Recharger l'historique
       const updatedHistory = getBottleHistory(id);
       setBottleHistory(updatedHistory);
       
+      // Message de confirmation
+      if (newQuantity === 0) {
+        console.log(`✅ Toutes les bouteilles de "${bottle.name}" ont été consommées. Elles restent visibles dans votre collection pour la traçabilité.`);
+      } else {
+        console.log(`✅ ${quantityConsumed} bouteille(s) consommée(s). Il reste ${newQuantity} bouteille(s) en stock.`);
+      }
+      
     } catch (error) {
       console.error("Erreur lors du marquage comme bu:", error);
+      alert("Une erreur s'est produite lors de l'enregistrement. Veuillez réessayer.");
     } finally {
       setIsConsuming(false);
       setShowConsumedModal(false);
@@ -387,11 +390,11 @@ const BottleDetail = () => {
                   <div className="absolute top-2 right-2">
                     <Badge
                       variant={
-                        bottle.status === "Bue" ? "destructive" : "default"
+                        (bottle.quantity || 0) === 0 ? "destructive" : "default"
                       }
                       className="shadow-lg"
                     >
-                      {bottle.status}
+                      {(bottle.quantity || 0) === 0 ? "Consommée" : "En cave"}
                     </Badge>
                   </div>
                 </div>
@@ -747,12 +750,12 @@ const BottleDetail = () => {
 
                   <Button
                     onClick={handleMarkAsDrunk}
-                    disabled={bottle.status === "Bue" || bottle.quantity === 0}
-                    variant={bottle.status === "Bue" || bottle.quantity === 0 ? "secondary" : "default"}
+                    disabled={(bottle.quantity || 0) === 0}
+                    variant={(bottle.quantity || 0) === 0 ? "secondary" : "default"}
                     className="flex-1 h-12"
                   >
                     <Wine className="w-4 h-4 mr-2" />
-                    {bottle.status === "Bue" || bottle.quantity === 0
+                    {(bottle.quantity || 0) === 0
                       ? "Déjà dégusté"
                       : bottle.quantity > 1 
                         ? "Marquer comme bu"
