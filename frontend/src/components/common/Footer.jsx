@@ -175,12 +175,12 @@ const Footer = () => {
                   href="mailto:contact@macave.fr"
                   className="hover:text-purple-600 transition-colors"
                 >
-                  contact@macave.fr
+                  ...
                 </a>
               </div>
               <div className="flex items-center space-x-3 text-gray-600 text-sm">
                 <Phone className="w-4 h-4 text-purple-600" />
-                <span>+33 1 23 45 67 89</span>
+                <span>...</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-600 text-sm">
                 <MapPin className="w-4 h-4 text-purple-600" />

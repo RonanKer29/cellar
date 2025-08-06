@@ -761,7 +761,7 @@ const BottleDetail = () => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button
                     onClick={() => navigate(`/bouteille/${id}/edit`)}
-                    className="flex-1 h-12"
+                    className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-all duration-200 hover:shadow-xl border-0"
                     variant="default"
                   >
                     <Edit className="w-4 h-4 mr-2" />
@@ -772,7 +772,11 @@ const BottleDetail = () => {
                     onClick={handleMarkAsDrunk}
                     disabled={(bottle.quantity || 0) === 0}
                     variant={(bottle.quantity || 0) === 0 ? "secondary" : "default"}
-                    className="flex-1 h-12"
+                    className={`flex-1 h-12 shadow-lg transition-all duration-200 hover:shadow-xl border-0 ${
+                      (bottle.quantity || 0) === 0 
+                        ? "bg-gray-400 hover:bg-gray-500 text-white" 
+                        : "bg-purple-600 hover:bg-purple-700 text-white"
+                    }`}
                   >
                     <Wine className="w-4 h-4 mr-2" />
                     {(bottle.quantity || 0) === 0
@@ -785,7 +789,7 @@ const BottleDetail = () => {
                   <Button
                     onClick={handleDelete}
                     variant="destructive"
-                    className="flex-1 h-12"
+                    className="flex-1 h-12 bg-red-600 hover:bg-red-700 text-white shadow-lg transition-all duration-200 hover:shadow-xl border-0"
                   >
                     <Minus className="w-4 h-4 mr-2" />
                     Supprimer

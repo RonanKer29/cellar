@@ -700,36 +700,124 @@ const EditWine = () => {
 
           {/* Sidebar - 1/3 de la largeur sur desktop */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-6">
-              {/* Conseils de modification */}
-              <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200/50">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold text-blue-800 flex items-center gap-2">
-                    <Wine className="w-5 h-5" />
-                    Conseils de modification
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm text-blue-700">
-                  <div className="space-y-2">
-                    <p className="font-medium">✏️ Mise à jour</p>
-                    <p className="text-blue-600">
-                      Modifiez uniquement les champs nécessaires. Les autres
-                      informations seront conservées.
-                    </p>
+            <div className="sticky top-6 space-y-4">
+              {/* Progression du formulaire */}
+              <Card className="border-0 shadow-sm bg-white">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="p-1.5 bg-green-100 rounded-lg">
+                      <Save className="w-4 h-4 text-green-600" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-900">
+                      Progression des modifications
+                    </span>
                   </div>
-                  <div className="space-y-2">
-                    <p className="font-medium">🏷️ Informations importantes</p>
-                    <p className="text-blue-600">
-                      Le nom, millésime et producteur sont toujours requis pour
-                      identifier votre bouteille.
-                    </p>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Champs modifiés</span>
+                      <span className="font-semibold text-gray-900">
+                        {Object.values({
+                          name: form.name,
+                          year: form.year,
+                          productor: form.productor,
+                          country: form.country,
+                          region: form.region,
+                          color: form.color,
+                          quantity: form.quantity
+                        }).filter((value) => value && value.toString().trim()).length}/7
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${(Object.values({
+                            name: form.name,
+                            year: form.year,
+                            productor: form.productor,
+                            country: form.country,
+                            region: form.region,
+                            color: form.color,
+                            quantity: form.quantity
+                          }).filter((value) => value && value.toString().trim()).length / 7) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-4">
+                      <div className={`flex items-center gap-2 text-xs ${form.name ? "text-green-600" : "text-gray-400"}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full ${form.name ? "bg-green-500" : "bg-gray-300"}`}></div>
+                        Nom
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${form.year ? "text-green-600" : "text-gray-400"}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full ${form.year ? "bg-green-500" : "bg-gray-300"}`}></div>
+                        Millésime
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${form.productor ? "text-green-600" : "text-gray-400"}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full ${form.productor ? "bg-green-500" : "bg-gray-300"}`}></div>
+                        Producteur
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${form.country ? "text-green-600" : "text-gray-400"}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full ${form.country ? "bg-green-500" : "bg-gray-300"}`}></div>
+                        Pays
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${form.region ? "text-green-600" : "text-gray-400"}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full ${form.region ? "bg-green-500" : "bg-gray-300"}`}></div>
+                        Région
+                      </div>
+                      <div className={`flex items-center gap-2 text-xs ${form.color ? "text-green-600" : "text-gray-400"}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full ${form.color ? "bg-green-500" : "bg-gray-300"}`}></div>
+                        Couleur
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="font-medium">💡 Photo</p>
-                    <p className="text-blue-600">
-                      Vous pouvez changer la photo ou la supprimer si elle ne
-                      correspond plus.
-                    </p>
+                </CardContent>
+              </Card>
+
+              {/* Guide et conseils */}
+              <Card className="border-0 shadow-sm bg-white">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="p-1.5 bg-blue-100 rounded-lg">
+                      <Wine className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-900">
+                      Guide de modification
+                    </span>
+                  </div>
+                  <div className="space-y-4 text-sm">
+                    <div className="flex gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span className="text-xs font-semibold text-indigo-600">1</span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 mb-1">Champs obligatoires</p>
+                        <p className="text-gray-600 text-xs leading-relaxed">
+                          Nom, millésime et producteur sont toujours requis pour identifier votre bouteille.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span className="text-xs font-semibold text-indigo-600">2</span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 mb-1">Photo</p>
+                        <p className="text-gray-600 text-xs leading-relaxed">
+                          Vous pouvez changer la photo ou la supprimer si elle ne correspond plus.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span className="text-xs font-semibold text-indigo-600">3</span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 mb-1">Sauvegarde</p>
+                        <p className="text-gray-600 text-xs leading-relaxed">
+                          Seuls les champs modifiés seront mis à jour, le reste restera inchangé.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -756,41 +844,30 @@ const EditWine = () => {
                     <span className="text-emerald-600">{form.status}</span>
                   </div>
                   <div className="flex justify-between items-center p-2 bg-emerald-100 rounded-lg">
-                    <span className="font-medium">Quantité</span>
                     <span className="text-emerald-600">
-                      {form.quantity} bouteille{form.quantity > 1 ? "s" : ""}
+                      {form.quantity} bouteille{form.quantity > 1 ? "s" : ""} en stock
                     </span>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Actions rapides */}
-              <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200/50">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold text-amber-800 flex items-center gap-2">
-                    <Star className="w-5 h-5" />
-                    Actions rapides
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(`/bouteille/${id}`)}
-                    className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
-                  >
-                    Voir la fiche complète
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate("/ma-cave")}
-                    className="w-full text-amber-700 border-amber-300 hover:bg-amber-100"
-                  >
-                    Retour à ma cave
-                  </Button>
+                  <div className="mt-3 pt-3 border-t border-emerald-200">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/bouteille/${id}`)}
+                      className="w-full text-emerald-700 border-emerald-300 hover:bg-emerald-100 mb-2"
+                    >
+                      Voir la fiche complète
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate("/ma-cave")}
+                      className="w-full text-emerald-700 border-emerald-300 hover:bg-emerald-100"
+                    >
+                      Retour à ma cave
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
