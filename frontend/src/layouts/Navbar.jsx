@@ -102,8 +102,8 @@ const Navbar = () => {
           <ProfileCard />
         </div>
         <NavItems />
-        <div className="mt-auto pt-4 border-t border-gray-100">
-          <div className="hidden lg:block">
+        <div className="mt-auto">
+          <div className="hidden lg:block pt-4 border-t border-gray-100">
             <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl p-4 text-white">
               <h3 className="font-semibold text-sm mb-2">Upgrade to Pro</h3>
               <p className="text-xs opacity-90 mb-3">

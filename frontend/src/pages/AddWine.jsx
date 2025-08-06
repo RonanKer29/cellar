@@ -151,9 +151,9 @@ const AddWine = () => {
           actions={headerActions}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Formulaire principal - 2/3 de la largeur sur desktop */}
-          <div className="lg:col-span-2">
+        <div className="flex flex-col xl:flex-row gap-8">
+          {/* Formulaire principal - 3/4 de la largeur sur xl */}
+          <div className="xl:w-3/4">
             <Card className="shadow-lg border-0 bg-white/95 backdrop-blur-sm">
               <CardHeader className="pb-6">
                 <CardTitle className="text-xl font-bold text-slate-900">
@@ -384,8 +384,8 @@ const AddWine = () => {
             </Card>
           </div>
 
-          {/* Panneau d'aide et conseils - 1/3 de la largeur sur desktop */}
-          <div className="lg:col-span-1">
+          {/* Panneau d'aide et conseils - 1/4 de la largeur sur xl */}
+          <div className="xl:w-1/4">
             <div className="sticky top-6 space-y-4">
               {/* Mode complet upgrade */}
               <Card className="border-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 text-white shadow-lg">

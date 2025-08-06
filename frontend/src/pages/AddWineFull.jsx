@@ -178,9 +178,9 @@ const AddWineFull = () => {
           actions={headerActions}
         />
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        <div className="flex flex-col xl:flex-row gap-8">
           {/* Formulaire principal - 3/4 de la largeur sur xl */}
-          <div className="xl:col-span-3">
+          <div className="xl:w-3/4">
             <div className="space-y-8">
             {/* Error Message */}
             {error && (
@@ -582,7 +582,7 @@ const AddWineFull = () => {
         </div>
 
         {/* Panneau d'aide - 1/4 de la largeur sur xl */}
-        <div className="xl:col-span-1">
+        <div className="xl:w-1/4">
           <div className="sticky top-6 space-y-4">
             {/* Mode rapide downgrade */}
             <Card className="border-0 bg-gradient-to-br from-gray-600 via-slate-700 to-gray-800 text-white shadow-lg">
