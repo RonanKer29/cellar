@@ -5,12 +5,12 @@
 
 import React, { useState, useEffect } from "react";
 import { Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Combobox } from "@/components/ui/combobox";
-import { Card, CardContent } from "@/components/ui/card";
-import { GRAPE_VARIETIES } from "@/data/wine-data";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Combobox } from "../ui/combobox";
+import { Card, CardContent } from "../ui/card";
+import { GRAPE_VARIETIES } from "../../data/wine-data";
 
 /**
  * Composant avancé de saisie des cépages avec gestion des pourcentages
@@ -19,6 +19,7 @@ import { GRAPE_VARIETIES } from "@/data/wine-data";
  * @param {Object} props - Les propriétés du composant
  * @param {string} [props.value=""] - Valeur actuelle au format string "Cépage1 (50%), Cépage2 (30%)"
  * @param {Function} props.onChange - Fonction de callback lors du changement de valeur
+ * @param {Function} [props.onValidationChange] - Fonction de callback pour les changements de validation
  * 
  * @example
  * // Utilisation basique
@@ -36,7 +37,7 @@ import { GRAPE_VARIETIES } from "@/data/wine-data";
  * 
  * @returns {JSX.Element} Interface dynamique de saisie des cépages avec validation
  */
-const GrapeVarietyInput = ({ value = "", onChange }) => {
+const GrapeVarietyInput = ({ value = "", onChange, onValidationChange }) => {
   /**
    * Parse une chaîne de caractères de cépages en tableau d'objets
    * Gère les formats: "Cépage", "Cépage (X%)", "Cépage1, Cépage2 (X%)"
@@ -75,12 +76,63 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
   }, [value]);
 
   /**
+   * Vérifie si la composition des cépages est valide
+   * @param {Array<Object>} varieties - Liste des cépages à vérifier
+   * @returns {Object} Objet avec les informations de validation
+   */
+  const validateGrapeComposition = (varieties) => {
+    const hasPercentages = varieties.some(grape => grape.percentage && grape.percentage.trim());
+    
+    if (!hasPercentages) {
+      // Pas de pourcentages = valide (optionnel)
+      return {
+        isValid: true,
+        hasPercentages: false,
+        totalPercentage: 0,
+        message: ""
+      };
+    }
+
+    // Si au moins un pourcentage est renseigné, tous doivent l'être et total = 100%
+    const grapesMissingPercentage = varieties.filter(grape => 
+      grape.variety.trim() && (!grape.percentage || !grape.percentage.trim())
+    );
+
+    if (grapesMissingPercentage.length > 0) {
+      return {
+        isValid: false,
+        hasPercentages: true,
+        totalPercentage: 0,
+        message: "Si vous renseignez des pourcentages, tous les cépages doivent avoir leur pourcentage."
+      };
+    }
+
+    const totalPercentage = varieties.reduce((total, grape) => {
+      const percentage = parseFloat(grape.percentage) || 0;
+      return total + percentage;
+    }, 0);
+
+    return {
+      isValid: totalPercentage === 100,
+      hasPercentages: true,
+      totalPercentage,
+      message: totalPercentage !== 100 ? "Le total des pourcentages doit être égal à 100%." : ""
+    };
+  };
+
+  /**
    * Met à jour la liste des cépages et synchronise avec le parent
    * Convertit le format objet en string pour la compatibilité backend
    * @param {Array<Object>} newVarieties - Nouvelle liste des cépages
    */
   const updateGrapeVarieties = (newVarieties) => {
     setGrapeVarieties(newVarieties);
+    
+    // Validation
+    const validation = validateGrapeComposition(newVarieties);
+    if (onValidationChange) {
+      onValidationChange(validation);
+    }
     
     // Convertir en format string pour la compatibilité backend
     const grapeString = newVarieties
@@ -143,6 +195,7 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
   };
 
   const totalPercentage = getTotalPercentage();
+  const validation = validateGrapeComposition(grapeVarieties);
 
   return (
     <div className="space-y-4">
@@ -150,15 +203,13 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
         <Label className="text-sm font-medium text-gray-700">
           Cépages et pourcentages
         </Label>
-        {totalPercentage > 0 && (
+        {validation.hasPercentages && (
           <span className={`text-sm font-medium px-2 py-1 rounded ${
-            totalPercentage === 100 
+            validation.isValid
               ? "text-green-700 bg-green-100" 
-              : totalPercentage > 100 
-                ? "text-red-700 bg-red-100"
-                : "text-orange-700 bg-orange-100"
+              : "text-red-700 bg-red-100"
           }`}>
-            Total: {totalPercentage}%
+            Total: {validation.totalPercentage}%
           </span>
         )}
       </div>
@@ -228,10 +279,25 @@ const GrapeVarietyInput = ({ value = "", onChange }) => {
         Ajouter un cépage
       </Button>
 
-      {totalPercentage > 100 && (
-        <p className="text-sm text-red-600">
-          ⚠️ Le total des pourcentages dépasse 100%
-        </p>
+      {validation.hasPercentages && !validation.isValid && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-700 font-medium">
+            ⚠️ {validation.message}
+          </p>
+          {validation.hasPercentages && (
+            <p className="text-xs text-red-600 mt-1">
+              Enregistrement impossible tant que le total n'est pas égal à 100%.
+            </p>
+          )}
+        </div>
+      )}
+
+      {validation.hasPercentages && validation.isValid && (
+        <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-sm text-green-700 font-medium">
+            ✅ Composition parfaite ! Total des cépages : 100%
+          </p>
+        </div>
       )}
     </div>
   );

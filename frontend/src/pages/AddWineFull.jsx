@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
-import { Wine, Upload, X, Star, Calendar, MapPin, DollarSign, FileText, Camera, Zap } from "lucide-react";
+import { Wine, Upload, X, Star, Calendar, MapPin, DollarSign, FileText, Camera, Zap, BarChart3 } from "lucide-react";
 import ErrorState from "../components/common/ErrorState";
 import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
@@ -41,6 +41,7 @@ const AddWineFull = () => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
+  const [grapeValidation, setGrapeValidation] = useState({ isValid: true });
   const navigate = useNavigate();
   const fileInput = useRef(null);
   
@@ -64,6 +65,10 @@ const AddWineFull = () => {
     setForm((prev) => ({ ...prev, grape: grapeString }));
   };
 
+  const handleGrapeValidationChange = (validation) => {
+    setGrapeValidation(validation);
+  };
+
   const removeImage = () => {
     setPreview(null);
     setForm((prev) => ({ ...prev, image: null }));
@@ -74,6 +79,13 @@ const AddWineFull = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Vérifier la validation des cépages
+    if (!grapeValidation.isValid) {
+      setError("Veuillez corriger la composition des cépages avant d'enregistrer.");
+      return;
+    }
+    
     setLoading(true);
     setError("");
 
@@ -342,6 +354,7 @@ const AddWineFull = () => {
                     <GrapeVarietyInput
                       value={form.grape}
                       onChange={handleGrapeChange}
+                      onValidationChange={handleGrapeValidationChange}
                     />
                   </div>
                 </CardContent>
@@ -540,8 +553,8 @@ const AddWineFull = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
                       type="submit"
-                      disabled={loading}
-                      className="flex-1 h-12 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl"
+                      disabled={loading || !grapeValidation.isValid}
+                      className="flex-1 h-12 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {loading ? (
                         <div className="flex items-center justify-center space-x-2">
@@ -570,86 +583,208 @@ const AddWineFull = () => {
 
         {/* Panneau d'aide - 1/4 de la largeur sur xl */}
         <div className="xl:col-span-1">
-          <div className="sticky top-6 space-y-8">
-            {/* Guide d'utilisation */}
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200/50 shadow-md">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-semibold text-purple-800 flex items-center gap-2">
-                  <Wine className="w-5 h-5" />
-                  Mode complet
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-purple-700">
-                <div className="space-y-2">
-                  <p className="font-medium">📝 Informations détaillées</p>
-                  <p className="text-purple-600">Renseignez toutes les données pour un suivi précis de vos bouteilles.</p>
+          <div className="sticky top-6 space-y-4">
+            {/* Mode rapide downgrade */}
+            <Card className="border-0 bg-gradient-to-br from-gray-600 via-slate-700 to-gray-800 text-white shadow-lg">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-white/20 rounded-lg">
+                      <Zap className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-semibold">Mode Simple</span>
+                  </div>
+                  <div className="px-2 py-1 bg-white/20 rounded-full text-xs font-medium">
+                    Rapide
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <p className="font-medium">💰 Informations financières</p>
-                  <p className="text-purple-600">Prix d'achat et valeur estimée pour suivre l'évolution de votre collection.</p>
+                <h3 className="font-bold text-base mb-2">Saisie rapide disponible</h3>
+                <p className="text-white/90 text-sm mb-4 leading-relaxed">
+                  Ajoutez vos vins plus rapidement avec les champs essentiels uniquement.
+                </p>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => navigate("/ajouter-vin")}
+                  className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 font-medium transition-all"
+                >
+                  Passer au mode rapide
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Progression avancée */}
+            <Card className="border-0 shadow-sm bg-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-1.5 bg-blue-100 rounded-lg">
+                    <BarChart3 className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-900">Progression avancée</span>
                 </div>
-                <div className="space-y-2">
-                  <p className="font-medium">⭐ Notes de dégustation</p>
-                  <p className="text-purple-600">Notez vos impressions et évaluations pour vos futures dégustations.</p>
-                </div>
-                <div className="space-y-2">
-                  <p className="font-medium">📸 Photo</p>
-                  <p className="text-purple-600">Ajoutez une photo pour identifier visuellement vos bouteilles.</p>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Sections complétées</span>
+                    <span className="font-semibold text-gray-900">
+                      {[
+                        form.name && form.year && form.productor && form.country,
+                        form.price || form.shopName || form.purchaseDate,
+                        form.description || form.rating,
+                        form.image
+                      ].filter(Boolean).length}/4
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${([
+                          form.name && form.year && form.productor && form.country,
+                          form.price || form.shopName || form.purchaseDate,
+                          form.description || form.rating,
+                          form.image
+                        ].filter(Boolean).length / 4) * 100}%`
+                      }}
+                    ></div>
+                  </div>
+                  
+                  <div className="space-y-3 mt-4">
+                    <div className={`flex items-center justify-between p-2 rounded-lg ${
+                      form.name && form.year && form.productor && form.country ? 'bg-green-50' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          form.name && form.year && form.productor && form.country ? 'bg-green-500' : 'bg-gray-300'
+                        }`}></div>
+                        <span className="text-sm font-medium text-gray-900">Informations de base</span>
+                      </div>
+                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        form.name && form.year && form.productor && form.country
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-red-100 text-red-700'
+                      }`}>
+                        Requis
+                      </div>
+                    </div>
+                    
+                    <div className={`flex items-center justify-between p-2 rounded-lg ${
+                      form.price || form.shopName || form.purchaseDate ? 'bg-blue-50' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          form.price || form.shopName || form.purchaseDate ? 'bg-blue-500' : 'bg-gray-300'
+                        }`}></div>
+                        <span className="text-sm font-medium text-gray-900">Informations d'achat</span>
+                      </div>
+                      <div className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                        Optionnel
+                      </div>
+                    </div>
+                    
+                    <div className={`flex items-center justify-between p-2 rounded-lg ${
+                      form.description || form.rating ? 'bg-purple-50' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          form.description || form.rating ? 'bg-purple-500' : 'bg-gray-300'
+                        }`}></div>
+                        <span className="text-sm font-medium text-gray-900">Notes de dégustation</span>
+                      </div>
+                      <div className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                        Optionnel
+                      </div>
+                    </div>
+                    
+                    <div className={`flex items-center justify-between p-2 rounded-lg ${
+                      form.image ? 'bg-orange-50' : 'bg-gray-50'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          form.image ? 'bg-orange-500' : 'bg-gray-300'
+                        }`}></div>
+                        <span className="text-sm font-medium text-gray-900">Photo</span>
+                      </div>
+                      <div className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                        Recommandé
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Conseils pratiques */}
-            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200/50 shadow-md">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-semibold text-blue-800">
-                  Conseils pratiques
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-blue-700">
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5">•</span>
-                  <p>Utilisez des photos claires et bien éclairées</p>
+            {/* Guide expert */}
+            <Card className="border-0 shadow-sm bg-white">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-1.5 bg-indigo-100 rounded-lg">
+                    <Wine className="w-4 h-4 text-indigo-600" />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-900">Guide expert</span>
                 </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5">•</span>
-                  <p>Les notes de dégustation vous aideront à vous souvenir</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5">•</span>
-                  <p>Conservez vos tickets d'achat pour les prix exacts</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5">•</span>
-                  <p>Tous les champs sont optionnels (sauf les requis *)</p>
+                <div className="space-y-4 text-sm">
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-semibold text-indigo-600">💰</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 mb-1">Valeur financière</p>
+                      <p className="text-gray-600 text-xs leading-relaxed">
+                        Renseignez le prix d'achat pour suivre l'évolution de votre investissement.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-semibold text-indigo-600">📝</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 mb-1">Notes personnelles</p>
+                      <p className="text-gray-600 text-xs leading-relaxed">
+                        Vos impressions et évaluations vous aideront lors de futures dégustations.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-semibold text-indigo-600">📸</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 mb-1">Photo de qualité</p>
+                      <p className="text-gray-600 text-xs leading-relaxed">
+                        Une photo claire facilite l'identification et valorise votre collection.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Progression */}
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200/50 shadow-md">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-semibold text-green-800">
-                  Progression
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-green-700">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span>Informations de base</span>
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Requis</span>
+            {/* Statistiques de collection */}
+            <Card className="border-0 shadow-sm bg-gradient-to-br from-emerald-50 to-green-100">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-1.5 bg-emerald-200 rounded-lg">
+                    <BarChart3 className="w-4 h-4 text-emerald-700" />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Informations d'achat</span>
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Optionnel</span>
+                  <span className="text-sm font-semibold text-emerald-900">Votre collection</span>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="text-center p-2 bg-white/60 rounded-lg">
+                    <div className="font-bold text-lg text-emerald-800">-</div>
+                    <div className="text-emerald-600 text-xs">Bouteilles</div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Notes de dégustation</span>
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Optionnel</span>
+                  <div className="text-center p-2 bg-white/60 rounded-lg">
+                    <div className="font-bold text-lg text-emerald-800">-</div>
+                    <div className="text-emerald-600 text-xs">Valeur €</div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Photo</span>
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Optionnel</span>
+                  <div className="text-center p-2 bg-white/60 rounded-lg">
+                    <div className="font-bold text-lg text-emerald-800">-</div>
+                    <div className="text-emerald-600 text-xs">Régions</div>
+                  </div>
+                  <div className="text-center p-2 bg-white/60 rounded-lg">
+                    <div className="font-bold text-lg text-emerald-800">-</div>
+                    <div className="text-emerald-600 text-xs">Millésimes</div>
                   </div>
                 </div>
               </CardContent>
