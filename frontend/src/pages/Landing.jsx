@@ -81,7 +81,11 @@ const Landing = () => {
               <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-2 rounded-lg group-hover:shadow-lg transition-all duration-200 group-hover:scale-105">
                 <Wine className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+              <span
+                className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight group-hover:opacity-80 transition-opacity"
+              >
                 Tchin!
               </span>
             </Link>
@@ -268,7 +272,11 @@ const Landing = () => {
                 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6"
               >
                 Pourquoi choisir{" "}
-                <span className="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                <span
+                  className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+                >
                   Tchin!
                 </span>{" "}
                 ?
@@ -400,7 +408,11 @@ const Landing = () => {
                 aria-hidden="true"
               />
             </div>
-            <span className="text-lg sm:text-xl font-bold group-hover:text-pink-200 transition-colors">
+            <span
+              className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+            >
               Tchin!
             </span>
           </Link>

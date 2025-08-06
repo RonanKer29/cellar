@@ -31,7 +31,11 @@ const Navbar = () => {
               <Wine className="text-white w-5 h-5" />
             </div>
           </Link>
-          <h1 className="text-lg font-extrabold bg-gradient-to-r from-pink-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+          <h1
+            className="font-veronica text-3xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+          >
             Tchin!
           </h1>
         </div>
@@ -54,7 +58,11 @@ const Navbar = () => {
                     <Wine className="text-white w-8 h-8" aria-hidden="true" />
                   </div>
                   <div>
-                    <SheetTitle className="text-xl font-extrabold bg-gradient-to-r from-pink-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+                    <SheetTitle
+                      className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+                    >
                       Tchin!
                     </SheetTitle>
                     <p className="text-sm text-gray-500 mt-1">Dashboard</p>

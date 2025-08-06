@@ -64,7 +64,13 @@ const Login = () => {
           <div className="inline-flex bg-gradient-to-br from-pink-600 to-purple-600 p-4 rounded-2xl shadow-lg mb-4">
             <Wine className="text-white w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tchin!</h1>
+          <h1
+            className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight mb-2"
+          >
+            Tchin!
+          </h1>
           <p className="text-gray-600">Connectez-vous à votre compte</p>
         </div>
 

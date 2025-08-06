@@ -37,7 +37,11 @@ const Footer = () => {
               <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-xl">
                 <Wine className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h3
+                className="font-veronica text-3xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+              >
                 Tchin!
               </h3>
             </div>
@@ -216,7 +220,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <div className="text-gray-600 text-sm">
-              © {currentYear} Tchin!. Tous droits réservés.
+              © {currentYear} Tchin! Tous droits réservés.
             </div>
             <div className="flex items-center space-x-2 text-gray-600 text-sm">
               <span>Fait avec</span>
