@@ -27,11 +27,13 @@ const Navbar = () => {
       <div className="sm:hidden sticky top-0 z-50 flex justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
         <div className="flex items-center space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">
-            <div className="inline-flex bg-pink-600 p-2 rounded-lg">
+            <div className="inline-flex bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
               <Wine className="text-white w-5 h-5" />
             </div>
           </Link>
-          <h1 className="text-lg font-bold text-gray-800">Ma Cave à vin</h1>
+          <h1 className="text-lg font-extrabold bg-gradient-to-r from-pink-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+            Tchin!
+          </h1>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
@@ -48,12 +50,12 @@ const Navbar = () => {
                   onClick={() => setIsOpen(false)}
                   aria-label="Retourner au tableau de bord"
                 >
-                  <div className="inline-flex bg-pink-600 p-3 rounded-xl group-hover:bg-pink-700 group-hover:shadow-lg transition-all duration-200">
+                  <div className="inline-flex bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 p-3 rounded-xl group-hover:shadow-lg transition-all duration-200 hover:scale-105">
                     <Wine className="text-white w-8 h-8" aria-hidden="true" />
                   </div>
                   <div>
-                    <SheetTitle className="text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors">
-                      Ma Cave à vin
+                    <SheetTitle className="text-xl font-extrabold bg-gradient-to-r from-pink-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
+                      Tchin!
                     </SheetTitle>
                     <p className="text-sm text-gray-500 mt-1">Dashboard</p>
                   </div>
@@ -88,13 +90,20 @@ const Navbar = () => {
       <aside className="hidden sm:flex flex-col w-[90px] lg:w-[240px] xl:w-[300px] px-4 py-6 bg-white border-r shadow-sm shrink-0 h-screen">
         <div className="mb-6 flex items-center justify-center lg:justify-start space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">
-            <div className="inline-flex bg-pink-600 p-3 rounded-xl shadow-lg">
+            <div className="inline-flex bg-gradient-to-br from-pink-500 to-purple-600 p-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
               <Wine className="text-white w-8 h-8 lg:w-10 lg:h-10" />
             </div>
           </Link>
           <div className="hidden lg:block">
-            <h1 className="text-xl font-bold text-gray-800">Ma Cave à vin</h1>
-            <p className="text-sm text-gray-500">Dashboard</p>
+            <Link to="/dashboard" aria-label="Retourner au tableau de bord">
+              <h1
+                className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight transition-all duration-200 hover:scale-105"
+              >
+                Tchin!
+              </h1>
+            </Link>
           </div>
         </div>
         <div className="border-b mb-4 opacity-20"></div>

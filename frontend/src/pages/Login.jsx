@@ -9,16 +9,22 @@ import { Wine, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 /**
  * Page de connexion utilisateur avec formulaire d'authentification
  * Gère la saisie des identifiants, la validation et la redirection après connexion
- * 
+ *
  * @example
  * // Rendu de la page de connexion
  * <Login />
- * 
+ *
  * @returns {JSX.Element} Interface de connexion avec formulaire et validation
  */
 const Login = () => {
@@ -34,10 +40,10 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    
+
     try {
       const result = await login(username, password);
-      
+
       if (result.success) {
         navigate("/");
       } else {
@@ -58,13 +64,15 @@ const Login = () => {
           <div className="inline-flex bg-gradient-to-br from-pink-600 to-purple-600 p-4 rounded-2xl shadow-lg mb-4">
             <Wine className="text-white w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Ma Cave à vin</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tchin!</h1>
           <p className="text-gray-600">Connectez-vous à votre compte</p>
         </div>
 
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl font-bold text-center">Connexion</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Connexion
+            </CardTitle>
             <CardDescription className="text-center">
               Entrez vos identifiants pour accéder à votre cave
             </CardDescription>
@@ -76,9 +84,12 @@ const Login = () => {
                   {error}
                 </div>
               )}
-              
+
               <div className="space-y-2">
-                <label htmlFor="username" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="username"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Nom d'utilisateur
                 </label>
                 <Input
@@ -94,7 +105,10 @@ const Login = () => {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Mot de passe
                 </label>
                 <div className="relative">
@@ -114,7 +128,11 @@ const Login = () => {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={isLoading}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -143,9 +161,7 @@ const Login = () => {
         </Card>
 
         <div className="text-center mt-8">
-          <p className="text-xs text-gray-500">
-            Version 1.0 • Made with ❤️
-          </p>
+          <p className="text-xs text-gray-500">Version 1.0 • Made with ❤️</p>
         </div>
       </div>
     </div>

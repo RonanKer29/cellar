@@ -7,18 +7,31 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --font-sans: "Inter", sans-serif;
-}
+/* 3. Déclaration de la police dans @font-face au sein de @layer base */
+@layer base {
+  @font-face {
+    font-family: "VeronicaScript";
+    src: url("/fonts/Veronica-Script.woff") format("woff"),
+      url("/fonts/Veronica-Script.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
 
-/* 3. Ensuite l’assurance que le body utilise la famille sans serif */
-body {
-  font-family: var(--font-sans);
-}
+  @theme {
+    --font-veronica: "VeronicaScript", var(--font-sans);
+  }
 
-/* * {
-  border: red solid 1px;
-} */
+  body {
+    font-family: var(--font-sans);
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -125,13 +138,4 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
 }

@@ -4,7 +4,13 @@ import { Wine, Eye, EyeOff, CheckCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -25,42 +31,43 @@ const Signup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear specific error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.username.trim()) {
       newErrors.username = "Le nom d'utilisateur est requis";
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = "L'email est requis";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "L'email n'est pas valide";
     }
-    
+
     if (!formData.password) {
       newErrors.password = "Le mot de passe est requis";
     } else if (formData.password.length < 8) {
-      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères";
+      newErrors.password =
+        "Le mot de passe doit contenir au moins 8 caractères";
     }
-    
+
     if (formData.password !== formData.password_confirm) {
       newErrors.password_confirm = "Les mots de passe ne correspondent pas";
     }
-    
+
     return newErrors;
   };
 
@@ -68,20 +75,22 @@ const Signup = () => {
     e.preventDefault();
     setErrors({});
     setSuccessMessage("");
-    
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       const result = await register(formData);
-      
+
       if (result.success) {
-        setSuccessMessage("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
+        setSuccessMessage(
+          "Compte créé avec succès ! Vous pouvez maintenant vous connecter."
+        );
         setTimeout(() => {
           navigate("/login");
         }, 2000);
@@ -107,13 +116,15 @@ const Signup = () => {
           <div className="inline-flex bg-gradient-to-br from-pink-600 to-purple-600 p-4 rounded-2xl shadow-lg mb-4">
             <Wine className="text-white w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Ma Cave à vin</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tchin!</h1>
           <p className="text-gray-600">Créez votre compte</p>
         </div>
 
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl font-bold text-center">Inscription</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Inscription
+            </CardTitle>
             <CardDescription className="text-center">
               Remplissez le formulaire pour créer votre compte
             </CardDescription>
@@ -135,7 +146,10 @@ const Signup = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label htmlFor="first_name" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="first_name"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Prénom
                   </label>
                   <Input
@@ -154,7 +168,10 @@ const Signup = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="last_name" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="last_name"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     Nom
                   </label>
                   <Input
@@ -172,9 +189,12 @@ const Signup = () => {
                   )}
                 </div>
               </div>
-              
+
               <div className="space-y-2">
-                <label htmlFor="username" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="username"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Nom d'utilisateur *
                 </label>
                 <Input
@@ -194,7 +214,10 @@ const Signup = () => {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email *
                 </label>
                 <Input
@@ -214,7 +237,10 @@ const Signup = () => {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Mot de passe *
                 </label>
                 <div className="relative">
@@ -235,7 +261,11 @@ const Signup = () => {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={isLoading}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {errors.password && (
@@ -244,7 +274,10 @@ const Signup = () => {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password_confirm" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password_confirm"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Confirmer le mot de passe *
                 </label>
                 <div className="relative">
@@ -265,11 +298,17 @@ const Signup = () => {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={isLoading}
                   >
-                    {showPasswordConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPasswordConfirm ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {errors.password_confirm && (
-                  <p className="text-red-500 text-xs">{errors.password_confirm}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors.password_confirm}
+                  </p>
                 )}
               </div>
 
@@ -297,9 +336,7 @@ const Signup = () => {
         </Card>
 
         <div className="text-center mt-8">
-          <p className="text-xs text-gray-500">
-            Version 1.0 • Made with ❤️
-          </p>
+          <p className="text-xs text-gray-500">Version 1.0 • Made with ❤️</p>
         </div>
       </div>
     </div>
