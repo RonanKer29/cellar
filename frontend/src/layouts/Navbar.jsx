@@ -94,8 +94,79 @@ const Navbar = () => {
         </Sheet>
       </div>
 
+      {/* Medium screen sticky navbar */}
+      <div className="hidden sm:flex lg:hidden sticky top-0 z-50 justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
+        <div className="flex items-center space-x-3">
+          <Link to="/dashboard" aria-label="Retourner au tableau de bord">
+            <div className="inline-flex bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
+              <Wine className="text-white w-5 h-5" />
+            </div>
+          </Link>
+          <h1
+            className="font-veronica text-3xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+          >
+            Tchin!
+          </h1>
+        </div>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="sm" className="p-2">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-80 p-0">
+            <div className="flex flex-col h-full">
+              <SheetHeader className="p-6 border-b bg-gradient-to-r from-pink-50 to-purple-50">
+                <Link
+                  to="/dashboard"
+                  className="flex items-center space-x-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 rounded-lg"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Retourner au tableau de bord"
+                >
+                  <div className="inline-flex bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 p-3 rounded-xl group-hover:shadow-lg transition-all duration-200 hover:scale-105">
+                    <Wine className="text-white w-8 h-8" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <SheetTitle
+                      className="font-veronica text-5xl font-light
+               bg-gradient-to-r from-pink-500 to-purple-600
+               bg-clip-text text-transparent tracking-tight"
+                    >
+                      Tchin!
+                    </SheetTitle>
+                    <p className="text-sm text-gray-500 mt-1">Dashboard</p>
+                  </div>
+                </Link>
+              </SheetHeader>
+              <div className="flex-1 p-6">
+                <ProfileCard />
+                <NavItems isMobile={true} onClick={() => setIsOpen(false)} />
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 hover:from-pink-100 hover:to-purple-100 text-gray-600 hover:text-gray-800 border border-pink-200/50 hover:border-pink-300/50 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+                    aria-label="Se déconnecter de l'application"
+                  >
+                    <LogOut className="w-4 h-4" aria-hidden="true" />
+                    Se déconnecter
+                  </Button>
+                </div>
+              </div>
+              <div className="p-6 border-t bg-gray-50">
+                <p className="text-xs text-gray-500 text-center">
+                  Version 1.0 • Made with ❤️
+                </p>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+
       {/* Desktop sidebar */}
-      <aside className="hidden sm:flex flex-col w-[90px] lg:w-[240px] xl:w-[300px] px-4 py-6 bg-white border-r shadow-sm shrink-0 h-screen">
+      <aside className="hidden lg:flex flex-col w-[90px] lg:w-[240px] xl:w-[300px] px-4 py-6 bg-white border-r shadow-sm shrink-0 h-screen">
         <div className="mb-6 flex items-center justify-center lg:justify-start space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">
             <div className="inline-flex bg-gradient-to-br from-pink-500 to-purple-600 p-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">

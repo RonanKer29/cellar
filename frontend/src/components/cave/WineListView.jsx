@@ -267,13 +267,13 @@ const WineListView = ({ bottles, onWineClick }) => {
         </table>
       </div>
 
-      {/* Mobile Card View */}
+      {/* Mobile Card View - Compact Design */}
       <CardContent className="block lg:hidden p-0">
         <div className="divide-y divide-slate-100">
           {bottles.map((bottle) => (
             <div 
               key={bottle.id} 
-              className="p-5 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent cursor-pointer transition-all duration-300 group hover:shadow-sm transform-gpu focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+              className="p-3 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent cursor-pointer transition-all duration-300 group hover:shadow-sm transform-gpu focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
               onClick={() => handleCardClick(bottle)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -285,115 +285,111 @@ const WineListView = ({ bottles, onWineClick }) => {
               role="button"
               aria-label={`Voir les détails de ${bottle.name}, ${bottle.color} ${bottle.year || ''} de ${bottle.productor || 'producteur inconnu'}`}
             >
-              <div className="flex items-start space-x-4">
-                {/* Icône du vin avec gradient */}
-                <div className={`p-3 rounded-2xl flex-shrink-0 bg-gradient-to-br ${getColorGradient(bottle.color)} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}>
-                  <Wine className="w-6 h-6 text-white drop-shadow-sm group-hover:rotate-12 transition-transform duration-300" />
+              <div className="flex items-center space-x-3">
+                {/* Icône du vin compact */}
+                <div className={`p-2 rounded-xl flex-shrink-0 bg-gradient-to-br ${getColorGradient(bottle.color)} shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300`}>
+                  <Wine className="w-5 h-5 text-white drop-shadow-sm group-hover:rotate-12 transition-transform duration-300" />
                 </div>
                 
+                {/* Contenu principal */}
                 <div className="flex-1 min-w-0">
-                  {/* Header avec titre et actions */}
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-gray-900 text-lg leading-tight group-hover:text-blue-600 transition-colors truncate">
-                        {bottle.name}
-                      </h3>
-                      <div className="flex items-center space-x-2 mt-2 flex-wrap">
+                  <div className="flex items-start justify-between">
+                    {/* Informations principales */}
+                    <div className="flex-1 min-w-0 pr-2">
+                      {/* Titre et année sur la même ligne */}
+                      <div className="flex items-baseline space-x-2 mb-1">
+                        <h3 className="font-bold text-gray-900 text-base leading-tight group-hover:text-blue-600 transition-colors truncate flex-1">
+                          {bottle.name}
+                        </h3>
+                        {bottle.year && (
+                          <span className="text-sm font-medium text-gray-600 flex-shrink-0">{bottle.year}</span>
+                        )}
+                      </div>
+                      
+                      {/* Informations secondaires compactes */}
+                      <div className="flex items-center space-x-1 text-xs text-gray-600 mb-2">
+                        {bottle.productor && (
+                          <span className="truncate">{bottle.productor}</span>
+                        )}
+                        {bottle.region && bottle.productor && (
+                          <span className="text-gray-400">•</span>
+                        )}
+                        {bottle.region && (
+                          <span className="truncate">{bottle.region}</span>
+                        )}
+                      </div>
+                      
+                      {/* Badges compacts */}
+                      <div className="flex items-center space-x-1 flex-wrap">
                         <Badge 
                           variant="outline" 
-                          className={`text-xs border-2 ${getWineColorClass(bottle.color, 'badge')} font-medium group-hover:scale-105 transition-transform duration-200`}
+                          className={`text-xs border ${getWineColorClass(bottle.color, 'badge')} font-medium px-2 py-0.5`}
                         >
                           {bottle.color}
                         </Badge>
                         <Badge 
                           variant={getRealBottleStatus(bottle).variant}
-                          className={`text-xs font-medium group-hover:scale-105 transition-transform duration-200 ${getRealBottleStatus(bottle).className}`}
+                          className={`text-xs font-medium px-2 py-0.5 ${getRealBottleStatus(bottle).className}`}
                         >
                           {getRealBottleStatus(bottle).label}
                         </Badge>
                         {bottle.quantity > 1 && (
-                          <Badge variant="secondary" className="text-xs font-medium group-hover:scale-105 transition-transform duration-200">
-                            <Package className="w-3 h-3 mr-1 group-hover:animate-pulse" />
+                          <Badge variant="secondary" className="text-xs font-medium px-2 py-0.5">
                             {bottle.quantity}x
                           </Badge>
                         )}
                       </div>
                     </div>
                     
-                    {/* Actions */}
-                    <div className="flex space-x-1 ml-3" onClick={(e) => e.stopPropagation()}>
-                      <Link to={`/bouteille/${bottle.id}/edit`}>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 hover:scale-110 transition-all duration-200 hover:shadow-md"
-                        >
-                          <Edit className="w-4 h-4 hover:rotate-12 transition-transform duration-200" />
-                        </Button>
-                      </Link>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => handleDelete(bottle)}
-                        className="text-gray-600 hover:text-red-600 hover:bg-red-50 hover:scale-110 transition-all duration-200 hover:shadow-md"
-                      >
-                        <Trash2 className="w-4 h-4 hover:animate-pulse transition-all duration-200" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Informations détaillées */}
-                  <div className="grid grid-cols-1 gap-3 mt-4">
-                    {/* Millésime et Prix */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <Calendar className="w-4 h-4" />
-                        <span className="font-medium">{bottle.year || "N/A"}</span>
-                      </div>
+                    {/* Colonne de droite - Prix et Actions */}
+                    <div className="flex flex-col items-end space-y-2 flex-shrink-0">
+                      {/* Prix */}
                       {bottle.price && (
-                        <div className="flex items-center space-x-2 text-sm">
-                          <Euro className="w-4 h-4 text-gray-400" />
-                          <span className="font-semibold text-gray-900">{bottle.price} €</span>
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-gray-900">{bottle.price} €</div>
                           {bottle.quantity > 1 && (
-                            <span className="text-xs text-gray-500 ml-1">
-                              ({(bottle.price * bottle.quantity).toFixed(2)} € total)
-                            </span>
+                            <div className="text-xs text-gray-500">
+                              {(bottle.price * bottle.quantity).toFixed(2)} € total
+                            </div>
                           )}
                         </div>
                       )}
+                      
+                      {/* Note étoiles compacte */}
+                      {bottle.rating && (
+                        <div className="flex items-center space-x-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-3 h-3 ${
+                                star <= bottle.rating ? "text-yellow-400 fill-current" : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Actions compactes */}
+                      <div className="flex space-x-1" onClick={(e) => e.stopPropagation()}>
+                        <Link to={`/bouteille/${bottle.id}/edit`}>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-7 w-7 p-0 text-gray-600 hover:text-blue-600 hover:bg-blue-50 hover:scale-110 transition-all duration-200"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                          </Button>
+                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDelete(bottle)}
+                          className="h-7 w-7 p-0 text-gray-600 hover:text-red-600 hover:bg-red-50 hover:scale-110 transition-all duration-200"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
                     </div>
-
-                    {/* Région */}
-                    {bottle.region && (
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4 flex-shrink-0" />
-                        <span className="font-medium truncate">{bottle.region}</span>
-                        {bottle.country && bottle.country !== bottle.region && (
-                          <span className="text-gray-400 text-xs">• {bottle.country}</span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Producteur */}
-                    {bottle.productor && (
-                      <div className="text-sm text-gray-600">
-                        <span className="font-medium">{bottle.productor}</span>
-                      </div>
-                    )}
-
-                    {/* Note */}
-                    {bottle.rating && (
-                      <div className="flex items-center justify-center py-2">
-                        {renderStarRating(bottle.rating)}
-                      </div>
-                    )}
-
-                    {/* Description courte */}
-                    {(bottle.description || bottle.tasting_note) && (
-                      <div className="text-xs text-gray-500 line-clamp-2 bg-gray-50 p-3 rounded-lg border mt-2 group-hover:bg-gray-100 group-hover:border-gray-300 transition-all duration-200">
-                        {bottle.description || bottle.tasting_note}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>

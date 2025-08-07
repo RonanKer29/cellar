@@ -28,58 +28,59 @@ const ColorfulPageHeader = ({
 }) => {
   const navigate = useNavigate();
 
-  // Définition des thèmes de couleurs
+  // Définition des thèmes de couleurs UX-friendly
   const themes = {
     blue: {
-      gradient: "bg-gradient-to-br from-blue-50 to-sky-100",
-      border: "border-blue-200/50",
-      iconBg: "bg-blue-100",
-      iconColor: "text-blue-600",
+      gradient: "bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50",
+      iconBg: "bg-gradient-to-br from-blue-500 to-indigo-600",
+      iconColor: "text-white",
       titleColor: "text-gray-900",
-      subtitleColor: "text-blue-700/80"
+      subtitleColor: "text-gray-600",
+      accent: "bg-blue-100"
     },
     green: {
-      gradient: "bg-gradient-to-br from-emerald-50 to-teal-100",
-      border: "border-emerald-200/50",
-      iconBg: "bg-emerald-100",
-      iconColor: "text-emerald-600",
+      gradient: "bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50",
+      iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+      iconColor: "text-white",
       titleColor: "text-gray-900",
-      subtitleColor: "text-emerald-700/80"
+      subtitleColor: "text-gray-600",
+      accent: "bg-emerald-100"
     },
     purple: {
-      gradient: "bg-gradient-to-br from-purple-50 to-violet-100",
-      border: "border-purple-200/50",
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-600",
+      gradient: "bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50",
+      iconBg: "bg-gradient-to-br from-purple-500 to-pink-600",
+      iconColor: "text-white",
       titleColor: "text-gray-900",
-      subtitleColor: "text-purple-700/80"
+      subtitleColor: "text-gray-600",
+      accent: "bg-purple-100"
     },
     indigo: {
-      gradient: "bg-gradient-to-br from-indigo-50 to-blue-100",
-      border: "border-indigo-200/50",
-      iconBg: "bg-indigo-100",
-      iconColor: "text-indigo-600",
+      gradient: "bg-gradient-to-r from-indigo-50 via-blue-50 to-cyan-50",
+      iconBg: "bg-gradient-to-br from-indigo-500 to-blue-600",
+      iconColor: "text-white",
       titleColor: "text-gray-900",
-      subtitleColor: "text-indigo-700/80"
+      subtitleColor: "text-gray-600",
+      accent: "bg-indigo-100"
     }
   };
 
   const currentTheme = themes[theme] || themes.blue;
 
   return (
-    <div className={`relative overflow-hidden rounded-xl border ${currentTheme.border} ${currentTheme.gradient} shadow-sm mb-6`}>
-      {/* Motifs décoratifs subtils */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-white/30 rounded-full -translate-y-16 translate-x-16 blur-2xl"></div>
-      <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/20 rounded-full translate-y-12 -translate-x-12 blur-xl"></div>
+    <div className={`${currentTheme.gradient} border-b border-gray-200/50 mb-6`}>
+      {/* Subtle decorative elements */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100/30 to-purple-100/20 rounded-full -translate-y-16 translate-x-16 blur-2xl"></div>
       
-      <div className="relative z-10 p-6 sm:p-8">
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6">
         {showBackButton && (
           <button
             onClick={() => navigate(backTo)}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors mb-6"
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-all duration-300 mb-4 group"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium">Retour</span>
+            <div className="p-1.5 rounded-lg bg-white/80 hover:bg-white shadow-sm border border-gray-200 group-hover:border-gray-300 transition-all duration-300">
+              <ArrowLeft className="w-4 h-4" />
+            </div>
+            <span className="text-sm font-medium">Retour</span>
           </button>
         )}
         
@@ -87,16 +88,18 @@ const ColorfulPageHeader = ({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center space-x-4 mb-4 sm:mb-0">
             {Icon && (
-              <div className={`w-14 h-14 sm:w-16 sm:h-16 ${currentTheme.iconBg} rounded-xl flex items-center justify-center`}>
-                <Icon className={`w-7 h-7 sm:w-8 sm:h-8 ${currentTheme.iconColor}`} />
+              <div className="relative flex-shrink-0">
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 ${currentTheme.iconBg} rounded-xl flex items-center justify-center shadow-lg`}>
+                  <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${currentTheme.iconColor}`} />
+                </div>
               </div>
             )}
-            <div>
-              <h1 className={`text-2xl sm:text-3xl font-bold ${currentTheme.titleColor} leading-tight`}>
+            <div className="flex-1 min-w-0">
+              <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold ${currentTheme.titleColor} leading-tight tracking-tight`}>
                 {title}
               </h1>
               {subtitle && (
-                <p className={`text-base sm:text-lg ${currentTheme.subtitleColor} font-medium mt-1`}>
+                <p className={`text-sm sm:text-base ${currentTheme.subtitleColor} font-medium mt-1 max-w-2xl`}>
                   {subtitle}
                 </p>
               )}
@@ -104,15 +107,17 @@ const ColorfulPageHeader = ({
           </div>
           
           {actions && (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               {actions}
             </div>
           )}
         </div>
         
         {bottomContent && (
-          <div className="mt-6 pt-6 border-t border-white/30">
-            {bottomContent}
+          <div className="mt-4 pt-4 border-t border-gray-200/60">
+            <div className="[&_.badge]:text-xs [&_.badge]:px-2 [&_.badge]:py-1">
+              {bottomContent}
+            </div>
           </div>
         )}
       </div>

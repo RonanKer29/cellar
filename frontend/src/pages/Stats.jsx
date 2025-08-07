@@ -53,13 +53,13 @@ const Stats = () => {
   const headerBottomContent = (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
       <div className="flex items-center space-x-4">
-        <Badge variant="secondary" className="text-sm flex items-center space-x-1">
+        <Badge variant="secondary" className="badge text-xs px-2 py-1 flex items-center space-x-1">
           <TrendingUp className="w-3 h-3" />
           <span>{bottles.length} bouteilles analysées</span>
         </Badge>
       </div>
       
-      <div className="flex items-center space-x-2 text-sm text-indigo-600/70">
+      <div className="flex items-center space-x-2 text-sm text-gray-600">
         <Calendar className="w-4 h-4" />
         <span>Dernière mise à jour: {currentDate}</span>
       </div>

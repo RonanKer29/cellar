@@ -124,11 +124,11 @@ const MaCave = () => {
   const headerBottomContent = (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
       <div className="flex items-center space-x-4">
-        <Badge variant="secondary" className="text-sm">
+        <Badge variant="secondary" className="badge text-xs px-2 py-1">
           {filteredBottles.length} sur {bottles.length} bouteilles
         </Badge>
         {filteredBottles.length !== bottles.length && (
-          <span className="text-sm text-emerald-600/70">Filtres appliqués</span>
+          <span className="text-sm text-gray-600">Filtres appliqués</span>
         )}
       </div>
     </div>
