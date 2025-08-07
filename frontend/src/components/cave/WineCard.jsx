@@ -3,7 +3,7 @@
  * Présente les informations essentielles avec design interactif et actions rapides
  */
 
-import { Wine, MapPin, Calendar, Euro, Edit, Trash2, Star, Package } from "lucide-react";
+import { Wine, MapPin, Calendar, Euro, Edit, Trash2, Star, Package, Clock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { apiService } from "../../services/api";
 import { getWineColorClass } from "../../utils/wineColors";
 import { getBottleDisplayStatus } from "../../utils/bottleFilters";
-import { addHistoryEvent, EVENT_TYPES } from "../../services/historyService";
+import { addHistoryEvent, EVENT_TYPES, getBottleHistory } from "../../services/historyService";
 
 /**
  * Carte interactive d'affichage d'une bouteille de vin
@@ -56,6 +56,11 @@ import { addHistoryEvent, EVENT_TYPES } from "../../services/historyService";
 const WineCard = ({ bottle, onClick }) => {
   const navigate = useNavigate();
   const displayStatus = getBottleDisplayStatus(bottle);
+  
+  // Récupérer l'historique de cette bouteille pour les infos de consommation
+  const bottleHistory = getBottleHistory(bottle.id);
+  const consumedEvent = bottleHistory.find(event => event.type === EVENT_TYPES.CONSUMED);
+  const consumedDate = consumedEvent ? new Date(consumedEvent.date).toLocaleDateString('fr-FR') : null;
 
   /**
    * Gère la suppression d'une bouteille avec confirmation utilisateur
@@ -231,6 +236,14 @@ const WineCard = ({ bottle, onClick }) => {
             </div>
           )}
         </div>
+
+        {/* Date de dégustation pour les bouteilles consommées */}
+        {displayStatus.status === 'consumed' && consumedDate && (
+          <div className="flex items-center space-x-2 text-xs text-purple-600 bg-purple-50 p-2 rounded-lg border border-purple-200">
+            <Clock className="w-3 h-3" />
+            <span className="font-medium">Dégustée le {consumedDate}</span>
+          </div>
+        )}
 
         {/* Description courte */}
         {(bottle.description || bottle.tasting_note) && (

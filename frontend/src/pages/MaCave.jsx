@@ -11,7 +11,7 @@ import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import MaCaveFilters from "../components/cave/MaCaveFilters";
 import MaCaveGrid from "../components/cave/MaCaveGrid";
 import MaCaveStats from "../components/cave/MaCaveStats";
-import { Wine, Plus, Package, Archive } from "lucide-react";
+import { Wine, Plus, Package, Archive, BookOpen, WineIcon } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router-dom";
@@ -146,36 +146,72 @@ const MaCave = () => {
 
       <MaCaveStats bottles={filteredBottles} />
 
-      {/* Sélecteur de vue */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 rounded-lg shadow-sm">
-        <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-medium text-gray-700">Vue d'affichage</h3>
-          <div className="flex gap-2">
-            <Button
-              variant={currentView === BOTTLE_VIEWS.STOCK ? "default" : "outline"}
-              size="sm"
+      {/* Onglets de navigation */}
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+            <button
               onClick={() => setCurrentView(BOTTLE_VIEWS.STOCK)}
-              className="flex items-center gap-2"
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                currentView === BOTTLE_VIEWS.STOCK
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
             >
-              <Package className="w-4 h-4" />
-              Stock actuel ({calculateBottleStatsByView(bottles).inStock.totalQuantity})
-            </Button>
-            <Button
-              variant={currentView === BOTTLE_VIEWS.COLLECTION ? "default" : "outline"}
-              size="sm"
+              <div className="flex items-center space-x-2">
+                <WineIcon className="w-4 h-4" />
+                <span>En Cave</span>
+                <Badge variant={currentView === BOTTLE_VIEWS.STOCK ? "default" : "secondary"} className="ml-2">
+                  {calculateBottleStatsByView(bottles).inStock.totalQuantity}
+                </Badge>
+              </div>
+            </button>
+            <button
+              onClick={() => setCurrentView(BOTTLE_VIEWS.CONSUMED)}
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                currentView === BOTTLE_VIEWS.CONSUMED
+                  ? 'border-purple-500 text-purple-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <Wine className="w-4 h-4" />
+                <span>Dégustées</span>
+                <Badge variant={currentView === BOTTLE_VIEWS.CONSUMED ? "default" : "secondary"} className="ml-2">
+                  {calculateBottleStatsByView(bottles).consumed.count}
+                </Badge>
+              </div>
+            </button>
+            <button
               onClick={() => setCurrentView(BOTTLE_VIEWS.COLLECTION)}
-              className="flex items-center gap-2"
+              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                currentView === BOTTLE_VIEWS.COLLECTION
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
             >
-              <Archive className="w-4 h-4" />
-              Collection complète ({calculateBottleStatsByView(bottles).collection.count})
-            </Button>
-          </div>
+              <div className="flex items-center space-x-2">
+                <BookOpen className="w-4 h-4" />
+                <span>Collection</span>
+                <Badge variant={currentView === BOTTLE_VIEWS.COLLECTION ? "default" : "secondary"} className="ml-2">
+                  {calculateBottleStatsByView(bottles).collection.count}
+                </Badge>
+              </div>
+            </button>
+          </nav>
         </div>
-        <div className="text-sm text-gray-500">
-          {currentView === BOTTLE_VIEWS.STOCK ? 
-            "Affichage des bouteilles disponibles en stock" : 
-            "Affichage de toutes les bouteilles (stock + consommées)"
-          }
+        <div className="px-6 py-4">
+          <p className="text-sm text-gray-600">
+            {currentView === BOTTLE_VIEWS.STOCK && 
+              "Bouteilles actuellement disponibles dans votre cave"
+            }
+            {currentView === BOTTLE_VIEWS.CONSUMED && 
+              "Historique des bouteilles que vous avez dégustées"
+            }
+            {currentView === BOTTLE_VIEWS.COLLECTION && 
+              "Vue complète de toute votre collection avec historique"
+            }
+          </p>
         </div>
       </div>
 

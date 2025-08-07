@@ -28,8 +28,8 @@ export const filterBottlesByView = (bottles, view = BOTTLE_VIEWS.STOCK) => {
       return bottles.filter(bottle => (bottle.quantity || 0) > 0);
       
     case BOTTLE_VIEWS.CONSUMED:
-      // Seulement les bouteilles complètement consommées
-      return bottles.filter(bottle => (bottle.quantity || 0) === 0);
+      // Seulement les bouteilles complètement consommées (quantity = 0 OU status = 'Bue')
+      return bottles.filter(bottle => (bottle.quantity || 0) === 0 || bottle.status === 'Bue');
       
     case BOTTLE_VIEWS.COLLECTION:
       // Toutes les bouteilles de la collection (pour traçabilité)
