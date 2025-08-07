@@ -46,7 +46,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { apiService } from "../../services/api";
-import { addHistoryEvent, EVENT_TYPES, getBottleHistory } from "../../services/historyService";
+import {
+  addHistoryEvent,
+  EVENT_TYPES,
+  getBottleHistory,
+} from "../../services/historyService";
 
 const getColorClass = (color) => {
   switch (color) {
@@ -95,18 +99,18 @@ const BottleDetail = () => {
       try {
         const data = await apiService.getBottle(id);
         setBottle(data);
-        
+
         // Charger l'historique de cette bouteille
         const history = getBottleHistory(id);
         setBottleHistory(history);
-        
+
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching bottle:', error);
+        console.error("Error fetching bottle:", error);
         setLoading(false);
       }
     };
-    
+
     fetchBottle();
   }, [id]);
 
@@ -133,27 +137,33 @@ const BottleDetail = () => {
         bottleProductor: bottle.productor,
         bottleYear: bottle.year,
         bottleColor: bottle.color,
-        quantity: quantityToRemove
+        quantity: quantityToRemove,
       });
 
       if (newQuantity === 0) {
         // Suppression complète de la bouteille
         await apiService.deleteBottle(id);
-        console.log(`✅ Bouteille "${bottle.name}" supprimée définitivement de la collection.`);
+        console.log(
+          `✅ Bouteille "${bottle.name}" supprimée définitivement de la collection.`
+        );
         navigate("/");
       } else {
         // Suppression partielle - réduction de la quantité
         await apiService.patchBottle(id, { quantity: newQuantity });
         setBottle({ ...bottle, quantity: newQuantity });
-        console.log(`✅ ${quantityToRemove} bouteille(s) de "${bottle.name}" supprimée(s). Il reste ${newQuantity} bouteille(s).`);
-        
+        console.log(
+          `✅ ${quantityToRemove} bouteille(s) de "${bottle.name}" supprimée(s). Il reste ${newQuantity} bouteille(s).`
+        );
+
         // Recharger l'historique pour afficher l'événement de suppression
         const updatedHistory = getBottleHistory(id);
         setBottleHistory(updatedHistory);
       }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
-      alert("Une erreur s'est produite lors de la suppression. Veuillez réessayer.");
+      alert(
+        "Une erreur s'est produite lors de la suppression. Veuillez réessayer."
+      );
     } finally {
       setIsDeleting(false);
       setShowDeleteModal(false);
@@ -188,13 +198,13 @@ const BottleDetail = () => {
         bottleProductor: bottle.productor,
         bottleYear: bottle.year,
         bottleColor: bottle.color,
-        quantity: quantityConsumed
+        quantity: quantityConsumed,
       });
 
       // Toujours mettre à jour seulement la quantité
       // Le statut reste "En cave" même à 0 pour garder la traçabilité
       await apiService.patchBottle(id, { quantity: newQuantity });
-      
+
       // Mettre à jour l'état local
       const updatedBottle = { ...bottle, quantity: newQuantity };
       setBottle(updatedBottle);
@@ -202,17 +212,22 @@ const BottleDetail = () => {
       // Recharger l'historique
       const updatedHistory = getBottleHistory(id);
       setBottleHistory(updatedHistory);
-      
+
       // Message de confirmation
       if (newQuantity === 0) {
-        console.log(`✅ Toutes les bouteilles de "${bottle.name}" ont été consommées. Elles restent visibles dans votre collection pour la traçabilité.`);
+        console.log(
+          `✅ Toutes les bouteilles de "${bottle.name}" ont été consommées. Elles restent visibles dans votre collection pour la traçabilité.`
+        );
       } else {
-        console.log(`✅ ${quantityConsumed} bouteille(s) consommée(s). Il reste ${newQuantity} bouteille(s) en stock.`);
+        console.log(
+          `✅ ${quantityConsumed} bouteille(s) consommée(s). Il reste ${newQuantity} bouteille(s) en stock.`
+        );
       }
-      
     } catch (error) {
       console.error("Erreur lors du marquage comme bu:", error);
-      alert("Une erreur s'est produite lors de l'enregistrement. Veuillez réessayer.");
+      alert(
+        "Une erreur s'est produite lors de l'enregistrement. Veuillez réessayer."
+      );
     } finally {
       setIsConsuming(false);
       setShowConsumedModal(false);
@@ -515,7 +530,6 @@ const BottleDetail = () => {
                             €{bottle.price}
                           </p>
                         </div>
-                        <DollarSign className="w-8 h-8 text-emerald-600" />
                       </div>
                     </CardContent>
                   </Card>
@@ -696,14 +710,19 @@ const BottleDetail = () => {
                 <CardContent>
                   <div className="space-y-3">
                     {bottleHistory.map((event, index) => (
-                      <div key={event.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                        <div className={`p-2 rounded-full ${
-                          event.type === EVENT_TYPES.CONSUMED 
-                            ? "bg-purple-100 text-purple-600" 
-                            : event.type === EVENT_TYPES.ADDED
-                            ? "bg-green-100 text-green-600"
-                            : "bg-red-100 text-red-600"
-                        }`}>
+                      <div
+                        key={event.id}
+                        className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg"
+                      >
+                        <div
+                          className={`p-2 rounded-full ${
+                            event.type === EVENT_TYPES.CONSUMED
+                              ? "bg-purple-100 text-purple-600"
+                              : event.type === EVENT_TYPES.ADDED
+                              ? "bg-green-100 text-green-600"
+                              : "bg-red-100 text-red-600"
+                          }`}
+                        >
                           {event.type === EVENT_TYPES.CONSUMED ? (
                             <Wine className="w-4 h-4" />
                           ) : event.type === EVENT_TYPES.ADDED ? (
@@ -714,39 +733,45 @@ const BottleDetail = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900">
-                            {event.type === EVENT_TYPES.CONSUMED 
-                              ? `${event.quantity} bouteille${event.quantity > 1 ? 's' : ''} dégustée${event.quantity > 1 ? 's' : ''}`
+                            {event.type === EVENT_TYPES.CONSUMED
+                              ? `${event.quantity} bouteille${
+                                  event.quantity > 1 ? "s" : ""
+                                } dégustée${event.quantity > 1 ? "s" : ""}`
                               : event.type === EVENT_TYPES.ADDED
-                              ? `${event.quantity} bouteille${event.quantity > 1 ? 's' : ''} ajoutée${event.quantity > 1 ? 's' : ''} en cave`
-                              : `${event.quantity} bouteille${event.quantity > 1 ? 's' : ''} supprimée${event.quantity > 1 ? 's' : ''}`
-                            }
+                              ? `${event.quantity} bouteille${
+                                  event.quantity > 1 ? "s" : ""
+                                } ajoutée${
+                                  event.quantity > 1 ? "s" : ""
+                                } en cave`
+                              : `${event.quantity} bouteille${
+                                  event.quantity > 1 ? "s" : ""
+                                } supprimée${event.quantity > 1 ? "s" : ""}`}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {new Date(event.date).toLocaleDateString('fr-FR', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
+                            {new Date(event.date).toLocaleDateString("fr-FR", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
                             })}
                           </p>
                         </div>
-                        <Badge 
+                        <Badge
                           variant={
-                            event.type === EVENT_TYPES.CONSUMED 
-                              ? "destructive" 
-                              : event.type === EVENT_TYPES.ADDED 
-                              ? "default" 
+                            event.type === EVENT_TYPES.CONSUMED
+                              ? "destructive"
+                              : event.type === EVENT_TYPES.ADDED
+                              ? "default"
                               : "secondary"
                           }
                           className="text-xs"
                         >
-                          {event.type === EVENT_TYPES.CONSUMED 
-                            ? "Consommé" 
-                            : event.type === EVENT_TYPES.ADDED 
-                            ? "Ajouté" 
-                            : "Supprimé"
-                          }
+                          {event.type === EVENT_TYPES.CONSUMED
+                            ? "Consommé"
+                            : event.type === EVENT_TYPES.ADDED
+                            ? "Ajouté"
+                            : "Supprimé"}
                         </Badge>
                       </div>
                     ))}
@@ -771,19 +796,21 @@ const BottleDetail = () => {
                   <Button
                     onClick={handleMarkAsDrunk}
                     disabled={(bottle.quantity || 0) === 0}
-                    variant={(bottle.quantity || 0) === 0 ? "secondary" : "default"}
+                    variant={
+                      (bottle.quantity || 0) === 0 ? "secondary" : "default"
+                    }
                     className={`flex-1 h-12 shadow-lg transition-all duration-200 hover:shadow-xl border-0 ${
-                      (bottle.quantity || 0) === 0 
-                        ? "bg-gray-400 hover:bg-gray-500 text-white" 
+                      (bottle.quantity || 0) === 0
+                        ? "bg-gray-400 hover:bg-gray-500 text-white"
                         : "bg-purple-600 hover:bg-purple-700 text-white"
                     }`}
                   >
                     <Wine className="w-4 h-4 mr-2" />
                     {(bottle.quantity || 0) === 0
                       ? "Déjà dégusté"
-                      : bottle.quantity > 1 
-                        ? "Marquer comme bu"
-                        : "Marquer comme bu"}
+                      : bottle.quantity > 1
+                      ? "Marquer comme bu"
+                      : "Marquer comme bu"}
                   </Button>
 
                   <Button
@@ -809,7 +836,9 @@ const BottleDetail = () => {
               <div className="p-2 bg-red-100 rounded-full">
                 <Trash2 className="w-5 h-5 text-red-600" />
               </div>
-              <span className="text-xl font-bold">Supprimer des bouteilles</span>
+              <span className="text-xl font-bold">
+                Supprimer des bouteilles
+              </span>
             </DialogTitle>
             <DialogDescription className="text-base pt-2">
               Vous avez{" "}
@@ -826,7 +855,10 @@ const BottleDetail = () => {
 
           <div className="space-y-4 py-4">
             <div className="space-y-3">
-              <Label htmlFor="quantity" className="text-sm font-semibold text-gray-700">
+              <Label
+                htmlFor="quantity"
+                className="text-sm font-semibold text-gray-700"
+              >
                 Quantité à supprimer
               </Label>
               <div className="flex items-center justify-center space-x-3 bg-gray-50 p-4 rounded-lg">
@@ -903,11 +935,14 @@ const BottleDetail = () => {
                     <Package className="w-4 h-4 text-blue-700" />
                   </div>
                   <div>
-                    <p className="text-gray-800 font-semibold text-sm">Stock restant</p>
+                    <p className="text-gray-800 font-semibold text-sm">
+                      Stock restant
+                    </p>
                     <p className="text-gray-700 text-xs">
                       Il restera{" "}
                       <span className="font-bold text-blue-700">
-                        {(bottle?.quantity || 1) - quantityToRemove} bouteille(s)
+                        {(bottle?.quantity || 1) - quantityToRemove}{" "}
+                        bouteille(s)
                       </span>{" "}
                       dans votre collection.
                     </p>
@@ -946,7 +981,9 @@ const BottleDetail = () => {
                   <span className="font-semibold">
                     {quantityToRemove === bottle?.quantity
                       ? "Supprimer définitivement"
-                      : `Supprimer ${quantityToRemove} bouteille${quantityToRemove > 1 ? 's' : ''}`}
+                      : `Supprimer ${quantityToRemove} bouteille${
+                          quantityToRemove > 1 ? "s" : ""
+                        }`}
                   </span>
                 </>
               )}
@@ -980,7 +1017,10 @@ const BottleDetail = () => {
 
           <div className="space-y-4 py-4">
             <div className="space-y-3">
-              <Label htmlFor="consumedQuantity" className="text-sm font-semibold text-gray-700">
+              <Label
+                htmlFor="consumedQuantity"
+                className="text-sm font-semibold text-gray-700"
+              >
                 Quantité à déguster
               </Label>
               <div className="flex items-center justify-center space-x-3 bg-purple-50 p-4 rounded-lg">
@@ -1057,11 +1097,14 @@ const BottleDetail = () => {
                     <Package className="w-4 h-4 text-green-700" />
                   </div>
                   <div>
-                    <p className="text-gray-800 font-semibold text-sm">Stock restant</p>
+                    <p className="text-gray-800 font-semibold text-sm">
+                      Stock restant
+                    </p>
                     <p className="text-gray-700 text-xs">
                       Il restera{" "}
                       <span className="font-bold text-green-700">
-                        {(bottle?.quantity || 1) - quantityToConsume} bouteille(s)
+                        {(bottle?.quantity || 1) - quantityToConsume}{" "}
+                        bouteille(s)
                       </span>{" "}
                       en cave après dégustation.
                     </p>
@@ -1098,7 +1141,9 @@ const BottleDetail = () => {
                 <>
                   <Wine className="w-4 h-4" />
                   <span className="font-semibold">
-                    Marquer {quantityToConsume} bouteille{quantityToConsume > 1 ? 's' : ''} comme bu{quantityToConsume > 1 ? 'es' : 'e'}
+                    Marquer {quantityToConsume} bouteille
+                    {quantityToConsume > 1 ? "s" : ""} comme bu
+                    {quantityToConsume > 1 ? "es" : "e"}
                   </span>
                 </>
               )}

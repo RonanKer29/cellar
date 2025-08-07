@@ -73,22 +73,24 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             {/* Logo - Cliquable pour retourner à l'accueil */}
-            <Link
-              to="/"
-              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 rounded-lg"
-              aria-label="Retourner à l'accueil de Ma Cave à Vin"
-            >
-              <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-2 rounded-lg group-hover:shadow-lg transition-all duration-200 group-hover:scale-105">
-                <Wine className="h-6 w-6 text-white" aria-hidden="true" />
-              </div>
-              <span
-                className="font-veronica text-5xl font-light
+            <div className="flex items-center justify-center lg:justify-start space-x-3">
+              <Link to="/" aria-label="Retourner au tableau de bord">
+                <div className="inline-flex bg-gradient-to-br from-pink-500 to-purple-600 p-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
+                  <Wine className="text-white w-8 h-8 lg:w-10 lg:h-10" />
+                </div>
+              </Link>
+              <div className="hidden lg:block">
+                <Link to="/" aria-label="Retourner au tableau de bord">
+                  <h1
+                    className="font-veronica text-5xl font-light
                bg-gradient-to-r from-pink-500 to-purple-600
-               bg-clip-text text-transparent tracking-tight group-hover:opacity-80 transition-opacity"
-              >
-                Tchin!
-              </span>
-            </Link>
+               bg-clip-text text-transparent tracking-tight transition-all duration-200 hover:scale-105"
+                  >
+                    Tchin!
+                  </h1>
+                </Link>
+              </div>
+            </div>
 
             {/* Navigation Desktop */}
             <div className="hidden md:flex items-center gap-4">
