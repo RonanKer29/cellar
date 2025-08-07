@@ -189,16 +189,6 @@ const StatsOverview = ({ bottles }) => {
 
   return (
     <div className="space-y-8">
-      {/* Header moderne */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Vue d'ensemble
-        </h2>
-        <p className="text-gray-600">
-          Tableau de bord complet de votre collection
-        </p>
-      </div>
-
       {/* StatCards principales */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {mainStats.map((stat, index) => (

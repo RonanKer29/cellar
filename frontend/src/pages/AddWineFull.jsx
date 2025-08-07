@@ -4,15 +4,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Combobox } from "@/components/ui/combobox";
-import { Wine, Upload, X, Star, Calendar, MapPin, DollarSign, FileText, Camera, Zap, BarChart3 } from "lucide-react";
+import {
+  Wine,
+  Upload,
+  X,
+  Star,
+  Calendar,
+  MapPin,
+  DollarSign,
+  FileText,
+  Camera,
+  Zap,
+  BarChart3,
+} from "lucide-react";
 import ErrorState from "../components/common/ErrorState";
 import ColorfulPageHeader from "../components/common/ColorfulPageHeader";
 import GrapeVarietyInput from "../components/wine/GrapeVarietyInput";
 import { WINE_COLORS, WINE_STATUS } from "../utils/constants";
-import { COUNTRIES, getRegionsByCountry, getAllRegions } from "../data/wine-data";
+import {
+  COUNTRIES,
+  getRegionsByCountry,
+  getAllRegions,
+} from "../data/wine-data";
 import { apiService } from "../services/api";
 import { addHistoryEvent, EVENT_TYPES } from "../services/historyService";
 
@@ -44,8 +72,10 @@ const AddWineFull = () => {
   const [grapeValidation, setGrapeValidation] = useState({ isValid: true });
   const navigate = useNavigate();
   const fileInput = useRef(null);
-  
-  const availableRegions = form.country ? getRegionsByCountry(form.country) : getAllRegions();
+
+  const availableRegions = form.country
+    ? getRegionsByCountry(form.country)
+    : getAllRegions();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -56,11 +86,11 @@ const AddWineFull = () => {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
-  
+
   const handleSelectChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleGrapeChange = (grapeString) => {
     setForm((prev) => ({ ...prev, grape: grapeString }));
   };
@@ -79,13 +109,15 @@ const AddWineFull = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Vérifier la validation des cépages
     if (!grapeValidation.isValid) {
-      setError("Veuillez corriger la composition des cépages avant d'enregistrer.");
+      setError(
+        "Veuillez corriger la composition des cépages avant d'enregistrer."
+      );
       return;
     }
-    
+
     setLoading(true);
     setError("");
 
@@ -99,7 +131,7 @@ const AddWineFull = () => {
       });
 
       const createdBottle = await apiService.createBottle(formData);
-      
+
       // Enregistrer l'événement d'ajout dans l'historique
       addHistoryEvent({
         type: EVENT_TYPES.ADDED,
@@ -108,9 +140,9 @@ const AddWineFull = () => {
         bottleProductor: form.productor,
         bottleYear: form.year,
         bottleColor: form.color,
-        quantity: form.quantity
+        quantity: form.quantity,
       });
-      
+
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -167,20 +199,20 @@ const AddWineFull = () => {
 
   return (
     <div className="p-4 pb-16 space-y-6">
-        <ColorfulPageHeader
-          title="Ajouter un vin complet"
-          subtitle="Renseignez toutes les informations de votre bouteille"
-          icon={Wine}
-          theme="green"
-          showBackButton={true}
-          backTo="/"
-          actions={headerActions}
-        />
+      <ColorfulPageHeader
+        title="Ajouter un vin complet"
+        subtitle="Renseignez toutes les informations de votre bouteille"
+        icon={Wine}
+        theme="green"
+        showBackButton={true}
+        backTo="/"
+        actions={headerActions}
+      />
 
-        <div className="flex flex-col xl:flex-row gap-8">
-          {/* Formulaire principal - 3/4 de la largeur sur xl */}
-          <div className="xl:w-3/4">
-            <div className="space-y-8">
+      <div className="flex flex-col xl:flex-row gap-8">
+        {/* Formulaire principal - 3/4 de la largeur sur xl */}
+        <div className="xl:w-3/4">
+          <div className="space-y-8">
             {/* Error Message */}
             {error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
@@ -205,7 +237,10 @@ const AddWineFull = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Nom du vin */}
                     <div className="lg:col-span-2 space-y-2">
-                      <Label htmlFor="name" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="name"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         Nom du vin *
                       </Label>
                       <Input
@@ -221,7 +256,10 @@ const AddWineFull = () => {
 
                     {/* Millésime */}
                     <div className="space-y-2">
-                      <Label htmlFor="year" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="year"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         Millésime *
                       </Label>
                       <Input
@@ -245,7 +283,9 @@ const AddWineFull = () => {
                       </Label>
                       <Select
                         value={form.color}
-                        onValueChange={(value) => handleSelectChange("color", value)}
+                        onValueChange={(value) =>
+                          handleSelectChange("color", value)
+                        }
                       >
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Sélectionner une couleur" />
@@ -262,7 +302,10 @@ const AddWineFull = () => {
 
                     {/* Producteur */}
                     <div className="space-y-2">
-                      <Label htmlFor="productor" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="productor"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         Producteur *
                       </Label>
                       <Input
@@ -285,7 +328,11 @@ const AddWineFull = () => {
                         options={COUNTRIES}
                         value={form.country}
                         onValueChange={(value) => {
-                          setForm(prev => ({ ...prev, country: value, region: "" }));
+                          setForm((prev) => ({
+                            ...prev,
+                            country: value,
+                            region: "",
+                          }));
                         }}
                         placeholder="Sélectionner un pays..."
                         searchPlaceholder="Rechercher un pays..."
@@ -301,7 +348,9 @@ const AddWineFull = () => {
                       <Combobox
                         options={availableRegions}
                         value={form.region}
-                        onValueChange={(value) => handleSelectChange("region", value)}
+                        onValueChange={(value) =>
+                          handleSelectChange("region", value)
+                        }
                         placeholder="Sélectionner une région..."
                         searchPlaceholder="Rechercher une région..."
                         allowCustom={true}
@@ -310,7 +359,10 @@ const AddWineFull = () => {
 
                     {/* Quantité */}
                     <div className="space-y-2">
-                      <Label htmlFor="quantity" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="quantity"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         Quantité *
                       </Label>
                       <Input
@@ -332,7 +384,9 @@ const AddWineFull = () => {
                       </Label>
                       <Select
                         value={form.status}
-                        onValueChange={(value) => handleSelectChange("status", value)}
+                        onValueChange={(value) =>
+                          handleSelectChange("status", value)
+                        }
                       >
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Sélectionner un statut" />
@@ -371,7 +425,10 @@ const AddWineFull = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Prix d'achat */}
                     <div className="space-y-2">
-                      <Label htmlFor="price" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="price"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         Prix d'achat (€)
                       </Label>
                       <Input
@@ -389,7 +446,10 @@ const AddWineFull = () => {
 
                     {/* Valeur estimée */}
                     <div className="space-y-2">
-                      <Label htmlFor="estimated_value" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="estimated_value"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         Valeur estimée (€)
                       </Label>
                       <Input
@@ -407,7 +467,10 @@ const AddWineFull = () => {
 
                     {/* Lieu d'achat */}
                     <div className="space-y-2">
-                      <Label htmlFor="purchase_place" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="purchase_place"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         <MapPin className="w-4 h-4 inline mr-1" />
                         Lieu d'achat
                       </Label>
@@ -423,7 +486,10 @@ const AddWineFull = () => {
 
                     {/* Date d'achat */}
                     <div className="space-y-2">
-                      <Label htmlFor="purchase_date" className="text-sm font-medium text-slate-700">
+                      <Label
+                        htmlFor="purchase_date"
+                        className="text-sm font-medium text-slate-700"
+                      >
                         <Calendar className="w-4 h-4 inline mr-1" />
                         Date d'achat
                       </Label>
@@ -459,7 +525,10 @@ const AddWineFull = () => {
 
                   {/* Description */}
                   <div className="space-y-2">
-                    <Label htmlFor="description" className="text-sm font-medium text-slate-700">
+                    <Label
+                      htmlFor="description"
+                      className="text-sm font-medium text-slate-700"
+                    >
                       Description / Notes personnelles
                     </Label>
                     <Textarea
@@ -475,7 +544,10 @@ const AddWineFull = () => {
 
                   {/* Note de dégustation */}
                   <div className="space-y-2">
-                    <Label htmlFor="tasting_note" className="text-sm font-medium text-slate-700">
+                    <Label
+                      htmlFor="tasting_note"
+                      className="text-sm font-medium text-slate-700"
+                    >
                       Note de dégustation
                     </Label>
                     <Textarea
@@ -584,7 +656,7 @@ const AddWineFull = () => {
         <div className="xl:w-1/4">
           <div className="sticky top-6 space-y-4">
             {/* Mode rapide downgrade */}
-            <Card className="border-0 bg-gradient-to-br from-gray-600 via-slate-700 to-gray-800 text-white shadow-lg">
+            <Card className="border-0 bg-gradient-to-br from-gray-400 via-slate-500 to-gray-500 text-white shadow-lg">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -597,9 +669,12 @@ const AddWineFull = () => {
                     Rapide
                   </div>
                 </div>
-                <h3 className="font-bold text-base mb-2">Saisie rapide disponible</h3>
+                <h3 className="font-bold text-base mb-2">
+                  Saisie rapide disponible
+                </h3>
                 <p className="text-white/90 text-sm mb-4 leading-relaxed">
-                  Ajoutez vos vins plus rapidement avec les champs essentiels uniquement.
+                  Ajoutez vos vins plus rapidement avec les champs essentiels
+                  uniquement.
                 </p>
                 <Button
                   variant="secondary"
@@ -619,89 +694,148 @@ const AddWineFull = () => {
                   <div className="p-1.5 bg-blue-100 rounded-lg">
                     <BarChart3 className="w-4 h-4 text-blue-600" />
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">Progression avancée</span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    Progression avancée
+                  </span>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Sections complétées</span>
                     <span className="font-semibold text-gray-900">
-                      {[
-                        form.name && form.year && form.productor && form.country,
-                        form.price || form.shopName || form.purchaseDate,
-                        form.description || form.rating,
-                        form.image
-                      ].filter(Boolean).length}/4
+                      {
+                        [
+                          form.name &&
+                            form.year &&
+                            form.productor &&
+                            form.country,
+                          form.price || form.shopName || form.purchaseDate,
+                          form.description || form.rating,
+                          form.image,
+                        ].filter(Boolean).length
+                      }
+                      /4
                     </span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-300"
                       style={{
-                        width: `${([
-                          form.name && form.year && form.productor && form.country,
-                          form.price || form.shopName || form.purchaseDate,
-                          form.description || form.rating,
-                          form.image
-                        ].filter(Boolean).length / 4) * 100}%`
+                        width: `${
+                          ([
+                            form.name &&
+                              form.year &&
+                              form.productor &&
+                              form.country,
+                            form.price || form.shopName || form.purchaseDate,
+                            form.description || form.rating,
+                            form.image,
+                          ].filter(Boolean).length /
+                            4) *
+                          100
+                        }%`,
                       }}
                     ></div>
                   </div>
-                  
+
                   <div className="space-y-3 mt-4">
-                    <div className={`flex items-center justify-between p-2 rounded-lg ${
-                      form.name && form.year && form.productor && form.country ? 'bg-green-50' : 'bg-gray-50'
-                    }`}>
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${
-                          form.name && form.year && form.productor && form.country ? 'bg-green-500' : 'bg-gray-300'
-                        }`}></div>
-                        <span className="text-sm font-medium text-gray-900">Informations de base</span>
-                      </div>
-                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <div
+                      className={`flex items-center justify-between p-2 rounded-lg ${
                         form.name && form.year && form.productor && form.country
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}>
+                          ? "bg-green-50"
+                          : "bg-gray-50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            form.name &&
+                            form.year &&
+                            form.productor &&
+                            form.country
+                              ? "bg-green-500"
+                              : "bg-gray-300"
+                          }`}
+                        ></div>
+                        <span className="text-sm font-medium text-gray-900">
+                          Informations de base
+                        </span>
+                      </div>
+                      <div
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          form.name &&
+                          form.year &&
+                          form.productor &&
+                          form.country
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
                         Requis
                       </div>
                     </div>
-                    
-                    <div className={`flex items-center justify-between p-2 rounded-lg ${
-                      form.price || form.shopName || form.purchaseDate ? 'bg-blue-50' : 'bg-gray-50'
-                    }`}>
+
+                    <div
+                      className={`flex items-center justify-between p-2 rounded-lg ${
+                        form.price || form.shopName || form.purchaseDate
+                          ? "bg-blue-50"
+                          : "bg-gray-50"
+                      }`}
+                    >
                       <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${
-                          form.price || form.shopName || form.purchaseDate ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}></div>
-                        <span className="text-sm font-medium text-gray-900">Informations d'achat</span>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            form.price || form.shopName || form.purchaseDate
+                              ? "bg-blue-500"
+                              : "bg-gray-300"
+                          }`}
+                        ></div>
+                        <span className="text-sm font-medium text-gray-900">
+                          Informations d'achat
+                        </span>
                       </div>
                       <div className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
                         Optionnel
                       </div>
                     </div>
-                    
-                    <div className={`flex items-center justify-between p-2 rounded-lg ${
-                      form.description || form.rating ? 'bg-purple-50' : 'bg-gray-50'
-                    }`}>
+
+                    <div
+                      className={`flex items-center justify-between p-2 rounded-lg ${
+                        form.description || form.rating
+                          ? "bg-purple-50"
+                          : "bg-gray-50"
+                      }`}
+                    >
                       <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${
-                          form.description || form.rating ? 'bg-purple-500' : 'bg-gray-300'
-                        }`}></div>
-                        <span className="text-sm font-medium text-gray-900">Notes de dégustation</span>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            form.description || form.rating
+                              ? "bg-purple-500"
+                              : "bg-gray-300"
+                          }`}
+                        ></div>
+                        <span className="text-sm font-medium text-gray-900">
+                          Notes de dégustation
+                        </span>
                       </div>
                       <div className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
                         Optionnel
                       </div>
                     </div>
-                    
-                    <div className={`flex items-center justify-between p-2 rounded-lg ${
-                      form.image ? 'bg-orange-50' : 'bg-gray-50'
-                    }`}>
+
+                    <div
+                      className={`flex items-center justify-between p-2 rounded-lg ${
+                        form.image ? "bg-orange-50" : "bg-gray-50"
+                      }`}
+                    >
                       <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${
-                          form.image ? 'bg-orange-500' : 'bg-gray-300'
-                        }`}></div>
-                        <span className="text-sm font-medium text-gray-900">Photo</span>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            form.image ? "bg-orange-500" : "bg-gray-300"
+                          }`}
+                        ></div>
+                        <span className="text-sm font-medium text-gray-900">
+                          Photo
+                        </span>
                       </div>
                       <div className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
                         Recommandé
@@ -719,39 +853,56 @@ const AddWineFull = () => {
                   <div className="p-1.5 bg-indigo-100 rounded-lg">
                     <Wine className="w-4 h-4 text-indigo-600" />
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">Guide expert</span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    Guide expert
+                  </span>
                 </div>
                 <div className="space-y-4 text-sm">
                   <div className="flex gap-3">
                     <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-semibold text-indigo-600">💰</span>
+                      <span className="text-xs font-semibold text-indigo-600">
+                        💰
+                      </span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900 mb-1">Valeur financière</p>
+                      <p className="font-medium text-gray-900 mb-1">
+                        Valeur financière
+                      </p>
                       <p className="text-gray-600 text-xs leading-relaxed">
-                        Renseignez le prix d'achat pour suivre l'évolution de votre investissement.
+                        Renseignez le prix d'achat pour suivre l'évolution de
+                        votre investissement.
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-3">
                     <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-semibold text-indigo-600">📝</span>
+                      <span className="text-xs font-semibold text-indigo-600">
+                        📝
+                      </span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900 mb-1">Notes personnelles</p>
+                      <p className="font-medium text-gray-900 mb-1">
+                        Notes personnelles
+                      </p>
                       <p className="text-gray-600 text-xs leading-relaxed">
-                        Vos impressions et évaluations vous aideront lors de futures dégustations.
+                        Vos impressions et évaluations vous aideront lors de
+                        futures dégustations.
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-3">
                     <div className="flex-shrink-0 w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-semibold text-indigo-600">📸</span>
+                      <span className="text-xs font-semibold text-indigo-600">
+                        📸
+                      </span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900 mb-1">Photo de qualité</p>
+                      <p className="font-medium text-gray-900 mb-1">
+                        Photo de qualité
+                      </p>
                       <p className="text-gray-600 text-xs leading-relaxed">
-                        Une photo claire facilite l'identification et valorise votre collection.
+                        Une photo claire facilite l'identification et valorise
+                        votre collection.
                       </p>
                     </div>
                   </div>
@@ -766,7 +917,9 @@ const AddWineFull = () => {
                   <div className="p-1.5 bg-emerald-200 rounded-lg">
                     <BarChart3 className="w-4 h-4 text-emerald-700" />
                   </div>
-                  <span className="text-sm font-semibold text-emerald-900">Votre collection</span>
+                  <span className="text-sm font-semibold text-emerald-900">
+                    Votre collection
+                  </span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div className="text-center p-2 bg-white/60 rounded-lg">
@@ -790,7 +943,7 @@ const AddWineFull = () => {
             </Card>
           </div>
         </div>
-        </div>
+      </div>
     </div>
   );
 };
