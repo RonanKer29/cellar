@@ -27,17 +27,19 @@ const Navbar = () => {
       <div className="sm:hidden sticky top-0 z-50 flex justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
         <div className="flex items-center space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">
-            <div className="inline-flex bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
+            <div className="inline-flex bg-gradient-to-br from-pink-500 to-purple-600 p-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
               <Wine className="text-white w-5 h-5" />
             </div>
           </Link>
-          <h1
-            className="font-veronica text-3xl font-light
+          <Link to="/dashboard" aria-label="Retourner au tableau de bord">
+            <h1
+              className="font-veronica text-3xl font-light
                bg-gradient-to-r from-pink-500 to-purple-600
-               bg-clip-text text-transparent tracking-tight"
-          >
-            Tchin!
-          </h1>
+               bg-clip-text text-transparent tracking-tight transition-all duration-200 hover:scale-105"
+            >
+              Tchin!
+            </h1>
+          </Link>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
@@ -98,17 +100,19 @@ const Navbar = () => {
       <div className="hidden sm:flex lg:hidden sticky top-0 z-50 justify-between items-center px-4 py-3 bg-white border-b shadow-sm">
         <div className="flex items-center space-x-3">
           <Link to="/dashboard" aria-label="Retourner au tableau de bord">
-            <div className="inline-flex bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 p-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
+            <div className="inline-flex bg-gradient-to-br from-pink-500 to-purple-600 p-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
               <Wine className="text-white w-5 h-5" />
             </div>
           </Link>
-          <h1
-            className="font-veronica text-3xl font-light
+          <Link to="/dashboard" aria-label="Retourner au tableau de bord">
+            <h1
+              className="font-veronica text-3xl font-light
                bg-gradient-to-r from-pink-500 to-purple-600
-               bg-clip-text text-transparent tracking-tight"
-          >
-            Tchin!
-          </h1>
+               bg-clip-text text-transparent tracking-tight transition-all duration-200 hover:scale-105"
+            >
+              Tchin!
+            </h1>
+          </Link>
         </div>
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>

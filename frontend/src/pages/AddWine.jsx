@@ -139,8 +139,7 @@ const AddWine = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-7xl mx-auto pt-6 pb-28 px-4 sm:px-6 lg:px-8">
+    <div className="p-4 pb-16 space-y-6">
         <ColorfulPageHeader
           title="Ajouter un vin"
           subtitle="Mode rapide – informations essentielles"
@@ -600,7 +599,6 @@ const AddWine = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };
