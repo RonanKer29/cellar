@@ -22,4 +22,3 @@ factory-boy==3.3.1
 
 # Security dependencies for file validation
 python-magic==0.4.27
-pillow-simd==10.0.1
