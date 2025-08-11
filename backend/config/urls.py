@@ -34,18 +34,18 @@ router.register(r"bottles", BottleViewSet, basename='bottle')
 urlpatterns = [
     # Interface d'administration Django
     path('admin/', admin.site.urls),
-    
-    # API REST pour les bouteilles
+
+    # API REST pour les bouteilles -
     path('api/', include(router.urls)),
-    
+
     # Endpoints d'authentification JWT
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
+
     # Endpoints de gestion utilisateur
     path('api/register/', register_user, name='register'),
     path('api/profile/', get_user_profile, name='user_profile'),
-    
+
     # Health check endpoint
     path('api/health/', health_check, name='health_check'),
 ]
