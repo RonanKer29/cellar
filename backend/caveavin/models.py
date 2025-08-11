@@ -139,16 +139,22 @@ class Bottle(models.Model):
     def save(self, *args, **kwargs):
         """Override save pour compresser l'image automatiquement."""
         if self.image:
-            # Vérifier la taille de l'image
-            image_size_mb = get_image_size_mb(self.image)
-            
-            # Compresser si l'image fait plus de 1MB
-            if image_size_mb > 1.0:
-                self.image = compress_image(
-                    self.image,
-                    max_width=800,
-                    max_height=600,
-                    quality=85
-                )
+            try:
+                # Vérifier si le fichier image existe et est accessible
+                if hasattr(self.image, 'size') and self.image.size:
+                    # Vérifier la taille de l'image
+                    image_size_mb = get_image_size_mb(self.image)
+                    
+                    # Compresser si l'image fait plus de 1MB
+                    if image_size_mb > 1.0:
+                        self.image = compress_image(
+                            self.image,
+                            max_width=800,
+                            max_height=600,
+                            quality=85
+                        )
+            except (FileNotFoundError, IOError, OSError):
+                # Fichier image manquant ou inaccessible - continuer sans compression
+                pass
         
         super().save(*args, **kwargs)
