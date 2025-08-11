@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # Development frontend
     'http://127.0.0.1:5173',  # Development frontend alternative
+    'https://tchin.vercel.app',  # Production frontend
 ]
 
 # Add production domains from environment variables
