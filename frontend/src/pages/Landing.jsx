@@ -41,144 +41,146 @@ const Landing = () => {
   const features = [
     {
       icon: <Wine className="h-8 w-8" />,
-      title: "Gestion Intelligente",
+      title: "Catalogue Complet",
       description:
-        "Cataloguez vos vins avec toutes les informations importantes : millésime, région, cépages, notes de dégustation détaillées.",
+        "Enregistrez vos bouteilles avec nom, millésime, producteur, région, couleur et vos notes personnelles.",
       color: "from-rose-500 to-pink-600"
     },
     {
       icon: <BarChart3 className="h-8 w-8" />,
-      title: "Analytics Avancés",
+      title: "Statistiques Simples",
       description:
-        "Tableaux de bord interactifs, tendances de consommation, ROI de votre collection et insights personnalisés.",
+        "Visualisez votre collection : nombre de bouteilles par région, couleur, et valeur totale estimée.",
       color: "from-purple-500 to-violet-600"
     },
     {
       icon: <Filter className="h-8 w-8" />,
-      title: "Recherche IA",
+      title: "Recherche & Filtres",
       description:
-        "Recherche sémantique intelligente, filtres multiples, recommandations personnalisées basées sur vos goûts.",
+        "Trouvez rapidement vos vins grâce aux filtres par nom, région, couleur, année ou statut.",
       color: "from-blue-500 to-indigo-600"
     },
     {
       icon: <Camera className="h-8 w-8" />,
-      title: "Scan & Photo",
+      title: "Photos de Bouteilles",
       description:
-        "Reconnaissance automatique d'étiquettes, compression d'images optimisée, galerie organisée par collection.",
+        "Ajoutez des photos de vos bouteilles pour les reconnaître facilement dans votre cave.",
       color: "from-emerald-500 to-teal-600"
     },
     {
       icon: <Shield className="h-8 w-8" />,
-      title: "Sécurité Premium",
+      title: "Données Sécurisées",
       description:
-        "Chiffrement de bout en bout, sauvegardes automatiques, authentification à deux facteurs incluse.",
+        "Vos données sont protégées et sauvegardées. Accès sécurisé avec authentification utilisateur.",
       color: "from-amber-500 to-orange-600"
     },
     {
       icon: <Smartphone className="h-8 w-8" />,
-      title: "Multi-Plateformes",
+      title: "Interface Responsive",
       description:
-        "Applications mobiles natives, synchronisation cloud instantanée, mode hors ligne disponible.",
+        "Gérez votre cave sur ordinateur, tablette et mobile avec une interface adaptée à chaque écran.",
       color: "from-cyan-500 to-blue-600"
     },
   ];
 
   const benefits = [
-    "Ne perdez plus jamais de vue vos meilleures bouteilles",
-    "Optimisez vos achats grâce aux analytics prédictifs",
-    "Partagez vos découvertes avec une communauté d'experts",
-    "Suivez l'évolution de la valeur de votre patrimoine viticole",
-    "Recevez des alertes pour les moments de dégustation optimaux",
-    "Gérez plusieurs caves et emplacements de stockage",
+    "Cataloguez facilement toute votre collection de vins",
+    "Retrouvez rapidement vos bouteilles grâce aux filtres",
+    "Gardez vos notes de dégustation et photos organisées",
+    "Suivez quelles bouteilles vous avez déjà consommées",
+    "Interface simple et intuitive sur tous vos appareils",
+    "Données sécurisées et sauvegardées automatiquement",
   ];
 
   const stats = [
     { 
-      label: "Utilisateurs actifs", 
-      value: "12,500+",
-      description: "Collectionneurs font confiance à Tchin"
+      label: "Projet Open Source", 
+      value: "100%",
+      description: "Code disponible et transparence totale"
     },
     { 
-      label: "Bouteilles cataloguées", 
-      value: "180,000+",
-      description: "Bouteilles gérées sur la plateforme"
+      label: "Gratuit", 
+      value: "∞",
+      description: "Toutes les fonctionnalités sans limite"
     },
     { 
-      label: "Régions viticoles", 
-      value: "250+",
-      description: "Appellations et domaines référencés"
+      label: "Simplicité", 
+      value: "★★★★★",
+      description: "Interface intuitive et facile à utiliser"
     },
   ];
 
   const testimonials = [
     {
-      name: "Marie Dubois",
-      role: "Sommelière & Collectionneuse",
-      image: "👩‍🍳",
-      content: "Tchin a révolutionné ma façon de gérer ma cave. L'interface est intuitive et les analytics m'aident à optimiser mes achats.",
+      name: "Jean-Michel",
+      role: "Collectionneur amateur",
+      image: "🍷",
+      content: "Interface simple et claire, parfait pour cataloguer ma petite collection de 50 bouteilles. J'aime pouvoir ajouter mes notes de dégustation.",
       rating: 5
     },
     {
-      name: "Pierre Martin",
-      role: "Amateur passionné",
-      image: "👨‍💼", 
-      content: "Depuis que j'utilise Tchin, j'ai découvert des pépites dans ma collection que j'avais oubliées. Un outil indispensable !",
-      rating: 5
+      name: "Claire",
+      role: "Passionnée de vin",
+      image: "🍇", 
+      content: "Très pratique pour ne pas oublier ce que j'ai dans ma cave. Les photos m'aident à retrouver mes bouteilles facilement.",
+      rating: 4
     },
     {
-      name: "Sophie Chen",
-      role: "Investisseur vin",
-      image: "👩‍💻",
-      content: "Le suivi de valorisation est précis et les prédictions m'ont fait gagner 15% sur mes investissements cette année.",
+      name: "David",
+      role: "Amateur débutant",
+      image: "🥂",
+      content: "Application gratuite et facile à utiliser. Idéale pour débuter et apprendre à organiser sa collection de vins.",
       rating: 5
     },
   ];
 
   const pricingPlans = [
     {
-      name: "Découverte",
-      price: "Gratuit",
+      name: "Gratuit",
+      price: "0€",
       period: "",
-      description: "Parfait pour commencer",
+      description: "Idéal pour débuter",
       features: [
-        "Jusqu'à 50 bouteilles",
-        "Photos et notes de base",
-        "Recherche simple",
-        "Support communautaire"
+        "Collection illimitée de bouteilles",
+        "Photos et notes personnelles",
+        "Recherche et filtres",
+        "Statistiques de base",
+        "Interface responsive",
+        "Données sécurisées"
       ],
       cta: "Commencer gratuitement",
-      popular: false
-    },
-    {
-      name: "Collectionneur",
-      price: "9€",
-      period: "/mois",
-      description: "Pour les passionnés",
-      features: [
-        "Bouteilles illimitées",
-        "Analytics avancés",
-        "Multi-caves",
-        "Export PDF",
-        "Support prioritaire",
-        "API d'intégration"
-      ],
-      cta: "Essai gratuit 14 jours",
       popular: true
     },
     {
-      name: "Professionnel",
-      price: "29€",
-      period: "/mois",
-      description: "Pour les professionnels",
+      name: "Premium",
+      price: "À venir",
+      period: "",
+      description: "Fonctionnalités avancées (bientôt)",
       features: [
-        "Tout du plan Collectionneur",
-        "Gestion d'équipe",
-        "Rapports personnalisés",
-        "Intégrations avancées",
-        "Support dédié",
-        "SLA 99.9%"
+        "Tout du plan Gratuit",
+        "Export de données",
+        "Sauvegarde cloud avancée",
+        "Support prioritaire",
+        "Fonctionnalités collaboratives",
+        "API d'accès"
       ],
-      cta: "Contacter les ventes",
+      cta: "Bientôt disponible",
+      popular: false
+    },
+    {
+      name: "Professionnel",
+      price: "Sur devis",
+      period: "",
+      description: "Pour cavistes et professionnels",
+      features: [
+        "Solution sur-mesure",
+        "Gestion multi-utilisateurs",
+        "Intégration systèmes",
+        "Formation personnalisée",
+        "Support dédié",
+        "SLA garanti"
+      ],
+      cta: "Nous contacter",
       popular: false
     }
   ];
@@ -283,34 +285,28 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto relative">
-          {/* Floating Elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-bounce delay-300"></div>
-            <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-gradient-to-r from-rose-400 to-orange-400 rounded-full animate-bounce delay-700"></div>
-            <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full animate-bounce delay-1000"></div>
-          </div>
 
           <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <Badge className="mb-8 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 hover:from-purple-200 hover:to-pink-200 text-sm sm:text-base border-0 px-4 py-2 shadow-lg">
               <Sparkles className="mr-2 h-4 w-4" />
-              Plateforme #1 pour collectionneurs de vin
+              Application gratuite de gestion de cave à vin
             </Badge>
             
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
               Votre cave digitale
               <br />
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent animate-pulse">
-                  intelligente
+                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  organisée
                 </span>
                 <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 rounded-full"></div>
               </span>
             </h1>
             
             <p className="text-xl sm:text-2xl lg:text-3xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed font-light">
-              Transformez votre passion en expertise grâce à l'IA.
+              Cataloguez et organisez votre collection de vins.
               <br className="hidden sm:block" />
-              <span className="text-gray-800 font-medium">Analytics, prédictions, recommandations.</span>
+              <span className="text-gray-800 font-medium">Simple, gratuit, et accessible partout.</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 max-w-lg mx-auto sm:max-w-none">
@@ -327,7 +323,7 @@ const Landing = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full sm:w-auto border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
               >
                 <span role="img" aria-label="Play" className="mr-2">▶️</span>
                 Voir la démo
@@ -338,15 +334,15 @@ const Landing = () => {
             <div className="flex flex-wrap justify-center items-center gap-8 mb-16 text-gray-500 text-sm">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <span>Gratuit pendant 14 jours</span>
+                <span>100% gratuit</span>
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-blue-500" />
                 <span>Données sécurisées</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                <span>4.9/5 sur 1200+ avis</span>
+                <Sparkles className="h-5 w-5 text-purple-500" />
+                <span>Open Source</span>
               </div>
             </div>
           </div>
@@ -451,26 +447,37 @@ const Landing = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white rounded-2xl">
+              <Card key={index} className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white rounded-3xl overflow-hidden relative">
+                {/* Gradient accent */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500"></div>
+                
                 <CardContent className="p-8">
-                  {/* Stars */}
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                    ))}
+                  {/* Quote icon */}
+                  <div className="mb-6 flex justify-between items-start">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center">
+                      <span className="text-2xl">"</span>
+                    </div>
+                    {/* Stars */}
+                    <div className="flex gap-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
                   </div>
                   
                   {/* Quote */}
-                  <blockquote className="text-gray-700 mb-6 leading-relaxed italic">
-                    "{testimonial.content}"
+                  <blockquote className="text-gray-700 mb-8 leading-relaxed text-base font-medium">
+                    {testimonial.content}
                   </blockquote>
                   
                   {/* Author */}
                   <div className="flex items-center">
-                    <div className="text-3xl mr-4">{testimonial.image}</div>
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-lg mr-4 shadow-lg">
+                      {testimonial.image}
+                    </div>
                     <div>
-                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                      <div className="text-sm text-gray-600">{testimonial.role}</div>
+                      <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
+                      <div className="text-sm text-gray-500 font-medium">{testimonial.role}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -509,10 +516,10 @@ const Landing = () => {
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <Badge className="bg-yellow-400 text-yellow-900 border-0 px-4 py-1 shadow-lg">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-yellow-900 border-0 px-3 py-1 shadow-lg font-semibold text-xs">
                       <Sparkles className="mr-1 h-3 w-3" />
-                      Populaire
+                      POPULAIRE
                     </Badge>
                   </div>
                 )}
@@ -551,11 +558,14 @@ const Landing = () => {
 
                   <Link to="/signup" className="block">
                     <Button 
-                      className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
+                      className={`w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-200 transform hover:scale-[1.02] ${
                         plan.popular 
-                          ? 'bg-white text-purple-600 hover:bg-gray-50 shadow-lg hover:shadow-xl' 
-                          : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl'
+                          ? 'bg-white text-purple-600 hover:bg-gray-50 shadow-xl hover:shadow-2xl' 
+                          : plan.name === 'Premium'
+                          ? 'bg-gray-100 text-gray-500 cursor-not-allowed shadow-md'
+                          : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl'
                       }`}
+                      disabled={plan.name === 'Premium'}
                     >
                       {plan.cta}
                     </Button>
@@ -567,20 +577,20 @@ const Landing = () => {
           
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">
-              Toutes les formules incluent une garantie satisfait ou remboursé de 30 jours
+              Application entièrement gratuite et open source
             </p>
             <div className="flex justify-center items-center gap-8 text-sm text-gray-500">
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-green-500" />
-                <span>Sécurisé SSL</span>
+                <span>Données sécurisées</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-blue-500" />
-                <span>Support 24/7</span>
+                <span>Sans publicité</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-yellow-500" />
-                <span>99.9% uptime</span>
+                <Sparkles className="h-4 w-4 text-purple-500" />
+                <span>Code ouvert</span>
               </div>
             </div>
           </div>
@@ -615,8 +625,8 @@ const Landing = () => {
           </h2>
           
           <p className="text-xl lg:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
-            Rejoignez plus de <strong className="text-white">12,500 collectionneurs</strong> qui utilisent déjà Tchin 
-            pour maximiser la valeur de leur cave
+            Rejoignez les amateurs de vin qui organisent déjà leur collection 
+            avec <strong className="text-white">Tchin</strong>
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 max-w-lg mx-auto sm:max-w-none">
@@ -633,7 +643,7 @@ const Landing = () => {
             <Button
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 text-lg px-10 py-4 rounded-xl backdrop-blur-sm transition-all duration-200"
+              className="w-full sm:w-auto border-2 border-white/40 text-white hover:bg-white/20 hover:border-white/60 text-lg px-10 py-4 rounded-xl backdrop-blur-sm transition-all duration-200 font-semibold"
             >
               Planifier une démo
             </Button>
@@ -642,19 +652,19 @@ const Landing = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-purple-100 text-sm max-w-2xl mx-auto">
             <div className="flex flex-col items-center">
               <CheckCircle2 className="h-5 w-5 text-green-400 mb-1" />
-              <span>14 jours gratuits</span>
+              <span>100% gratuit</span>
             </div>
             <div className="flex flex-col items-center">
               <Shield className="h-5 w-5 text-blue-400 mb-1" />
-              <span>100% sécurisé</span>
+              <span>Données sécurisées</span>
             </div>
             <div className="flex flex-col items-center">
-              <Users className="h-5 w-5 text-pink-400 mb-1" />
-              <span>12,500+ utilisateurs</span>
+              <Sparkles className="h-5 w-5 text-pink-400 mb-1" />
+              <span>Open Source</span>
             </div>
             <div className="flex flex-col items-center">
-              <Star className="h-5 w-5 text-yellow-400 mb-1" />
-              <span>4.9/5 étoiles</span>
+              <Smartphone className="h-5 w-5 text-yellow-400 mb-1" />
+              <span>Multi-plateformes</span>
             </div>
           </div>
         </div>
@@ -729,12 +739,8 @@ const Landing = () => {
               
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2 text-sm text-gray-400">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                  <span>4.9/5 sur 1,200+ avis</span>
+                  <Sparkles className="h-4 w-4 text-purple-400" />
+                  <span>Projet Open Source</span>
                 </div>
               </div>
             </div>
