@@ -5,6 +5,12 @@ Ce module définit les modèles Django pour la gestion de cave à vin.
 from django.db import models
 from django.contrib.auth.models import User
 from .utils import compress_image, get_image_size_mb
+from .validators import (
+    validate_image_file, 
+    validate_wine_year, 
+    validate_quantity, 
+    validate_price
+)
 
 
 class Bottle(models.Model):
@@ -71,23 +77,23 @@ class Bottle(models.Model):
     ]
 
     name = models.CharField("Nom du vin", max_length=200)
-    year = models.IntegerField("Millésime")
+    year = models.IntegerField("Millésime", validators=[validate_wine_year])
     productor = models.CharField("Producteur", max_length=100)
     country = models.CharField("Pays", max_length=50)
     region = models.CharField("Région/Appellation", max_length=100, blank=True, null=True)
     color = models.CharField("Couleur", max_length=20, choices=COLOR_CHOICES, default=RED)
     grape = models.CharField("Cépage(s)", max_length=100, blank=True, null=True)
-    quantity = models.PositiveIntegerField("Quantité", default=1)
+    quantity = models.PositiveIntegerField("Quantité", default=1, validators=[validate_quantity])
     status = models.CharField("Statut", max_length=20, choices=STATUS_CHOICES, default=IN_CELLAR)
     date_added = models.DateField("Date d'ajout", auto_now_add=True)
     purchase_date = models.DateField("Date d'achat", blank=True, null=True)
     purchase_place = models.CharField("Lieu d'achat", max_length=150, blank=True, null=True)
-    price = models.DecimalField("Prix d'achat (€)", max_digits=7, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField("Prix d'achat (€)", max_digits=7, decimal_places=2, blank=True, null=True, validators=[validate_price])
     estimated_value = models.DecimalField("Valeur estimée (€)", max_digits=7, decimal_places=2, blank=True, null=True)
     description = models.TextField("Description / Notes", blank=True, null=True)
     tasting_note = models.TextField("Note de dégustation", blank=True, null=True)
     rating = models.PositiveIntegerField("Note (sur 5)", blank=True, null=True)
-    image = models.ImageField("Photo de la bouteille", upload_to='bottles/', blank=True, null=True)
+    image = models.ImageField("Photo de la bouteille", upload_to='bottles/', blank=True, null=True, validators=[validate_image_file])
 
     def __str__(self):
         """Représentation textuelle de la bouteille.

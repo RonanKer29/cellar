@@ -67,6 +67,21 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   /**
+   * Vérifie si la session a expiré (2 jours d'inactivité)
+   * 
+   * @returns {boolean} true si la session a expiré
+   */
+  const isSessionExpired = () => {
+    const loginTime = localStorage.getItem('loginTime');
+    if (!loginTime) return true;
+    
+    const currentTime = new Date().getTime();
+    const sessionDuration = 2 * 24 * 60 * 60 * 1000; // 2 jours en millisecondes
+    
+    return (currentTime - parseInt(loginTime)) > sessionDuration;
+  };
+
+  /**
    * Vérifie le statut d'authentification au chargement de l'application
    * 
    * Tente de récupérer les données utilisateur avec le token stocké.
@@ -77,6 +92,13 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = async () => {
     const token = localStorage.getItem('access');
     if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    // Vérifier si la session a expiré
+    if (isSessionExpired()) {
+      logout();
       setIsLoading(false);
       return;
     }
@@ -119,6 +141,7 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
+        localStorage.setItem('loginTime', new Date().getTime().toString());
         setIsAuthenticated(true);
         
         // Get user profile data after successful login
@@ -188,6 +211,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    localStorage.removeItem('loginTime');
     setIsAuthenticated(false);
     setUser(null);
     // Rediriger vers la page d'accueil au lieu de /login
@@ -249,7 +273,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkAuthStatus();
-  }, []);
+
+    // Vérifier l'expiration de session toutes les 5 minutes
+    const intervalId = setInterval(() => {
+      if (isAuthenticated && isSessionExpired()) {
+        console.log('Session expired - logging out');
+        logout();
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(intervalId);
+  }, [isAuthenticated]);
 
   // Valeur du contexte exposée aux composants enfants
   const value = {

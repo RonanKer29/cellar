@@ -101,8 +101,8 @@ REST_FRAMEWORK = {
 
 # JWT Settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Réduit de 60 à 15 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=6),    # Réduit de 7 jours à 6 heures
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
@@ -118,9 +118,11 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'config.middleware.SecurityHeadersMiddleware',      # Headers de sécurité
+    'config.middleware.APIRateLimitMiddleware',         # Rate limiting
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files
-    'config.media_middleware.MediaServeMiddleware',  # For media files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',       # For static files
+    'config.media_middleware.MediaServeMiddleware',     # For media files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

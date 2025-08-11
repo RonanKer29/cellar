@@ -22,6 +22,21 @@ class ApiService {
   }
 
   /**
+   * Vérifie si la session a expiré (2 jours d'inactivité)
+   * 
+   * @returns {boolean} true si la session a expiré
+   */
+  isSessionExpired() {
+    const loginTime = localStorage.getItem('loginTime');
+    if (!loginTime) return true;
+    
+    const currentTime = new Date().getTime();
+    const sessionDuration = 2 * 24 * 60 * 60 * 1000; // 2 jours en millisecondes
+    
+    return (currentTime - parseInt(loginTime)) > sessionDuration;
+  }
+
+  /**
    * Méthode principale pour effectuer des requêtes HTTP vers l'API
    * 
    * Gère automatiquement :
@@ -29,6 +44,7 @@ class ApiService {
    * - La sérialisation JSON des données
    * - Le rafraîchissement automatique des tokens expirés
    * - La gestion des erreurs HTTP
+   * - La vérification de l'expiration de session
    * 
    * @param {string} endpoint - Point de terminaison de l'API (ex: '/bottles/')
    * @param {Object} options - Options de la requête fetch
@@ -40,6 +56,15 @@ class ApiService {
    */
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+
+    // Vérifier l'expiration de session avant toute requête
+    if (this.isSessionExpired()) {
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      localStorage.removeItem('loginTime');
+      window.location.href = '/';
+      throw new Error('Session expired');
+    }
 
     // Récupérer le token JWT depuis localStorage
     const token = localStorage.getItem("access");
