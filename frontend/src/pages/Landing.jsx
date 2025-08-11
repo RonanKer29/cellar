@@ -507,22 +507,23 @@ const Landing = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {pricingPlans.map((plan, index) => (
-              <Card 
-                key={index} 
-                className={`relative border-0 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden ${
-                  plan.popular 
-                    ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white transform scale-105' 
-                    : 'bg-white hover:scale-105'
-                }`}
-              >
+              <div key={index} className="relative">
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                     <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-yellow-900 border-0 px-3 py-1 shadow-lg font-semibold text-xs">
                       <Sparkles className="mr-1 h-3 w-3" />
                       POPULAIRE
                     </Badge>
                   </div>
                 )}
+                
+                <Card 
+                  className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden ${
+                    plan.popular 
+                      ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white transform scale-105' 
+                      : 'bg-white hover:scale-105'
+                  }`}
+                >
                 
                 <CardContent className="p-8 text-center">
                   <h3 className={`text-2xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
@@ -571,7 +572,8 @@ const Landing = () => {
                     </Button>
                   </Link>
                 </CardContent>
-              </Card>
+                </Card>
+              </div>
             ))}
           </div>
           
