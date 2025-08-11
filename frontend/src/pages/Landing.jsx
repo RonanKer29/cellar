@@ -642,8 +642,7 @@ const Landing = () => {
             </Link>
             <Button
               size="lg"
-              variant="outline"
-              className="w-full sm:w-auto border-2 border-white/40 text-white hover:bg-white/20 hover:border-white/60 text-lg px-10 py-4 rounded-xl backdrop-blur-sm transition-all duration-200 font-semibold"
+              className="w-full sm:w-auto bg-transparent border-2 border-white/50 text-white hover:bg-white/15 hover:border-white/70 text-lg px-10 py-4 rounded-xl backdrop-blur-sm transition-all duration-200 font-semibold shadow-lg hover:shadow-white/10 transform hover:scale-105"
             >
               Planifier une démo
             </Button>
