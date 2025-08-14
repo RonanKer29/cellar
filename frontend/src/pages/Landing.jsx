@@ -44,42 +44,42 @@ const Landing = () => {
       title: "Catalogue Complet",
       description:
         "Enregistrez vos bouteilles avec nom, millésime, producteur, région, couleur et vos notes personnelles.",
-      color: "from-rose-500 to-pink-600"
+      color: "from-rose-500 to-pink-600",
     },
     {
       icon: <BarChart3 className="h-8 w-8" />,
       title: "Statistiques Simples",
       description:
         "Visualisez votre collection : nombre de bouteilles par région, couleur, et valeur totale estimée.",
-      color: "from-purple-500 to-violet-600"
+      color: "from-purple-500 to-violet-600",
     },
     {
       icon: <Filter className="h-8 w-8" />,
       title: "Recherche & Filtres",
       description:
         "Trouvez rapidement vos vins grâce aux filtres par nom, région, couleur, année ou statut.",
-      color: "from-blue-500 to-indigo-600"
+      color: "from-blue-500 to-indigo-600",
     },
     {
       icon: <Camera className="h-8 w-8" />,
       title: "Photos de Bouteilles",
       description:
         "Ajoutez des photos de vos bouteilles pour les reconnaître facilement dans votre cave.",
-      color: "from-emerald-500 to-teal-600"
+      color: "from-emerald-500 to-teal-600",
     },
     {
       icon: <Shield className="h-8 w-8" />,
       title: "Données Sécurisées",
       description:
         "Vos données sont protégées et sauvegardées. Accès sécurisé avec authentification utilisateur.",
-      color: "from-amber-500 to-orange-600"
+      color: "from-amber-500 to-orange-600",
     },
     {
       icon: <Smartphone className="h-8 w-8" />,
       title: "Interface Responsive",
       description:
         "Gérez votre cave sur ordinateur, tablette et mobile avec une interface adaptée à chaque écran.",
-      color: "from-cyan-500 to-blue-600"
+      color: "from-cyan-500 to-blue-600",
     },
   ];
 
@@ -93,20 +93,20 @@ const Landing = () => {
   ];
 
   const stats = [
-    { 
-      label: "Projet Open Source", 
+    {
+      label: "Projet Open Source",
       value: "100%",
-      description: "Code disponible et transparence totale"
+      description: "Code disponible et transparence totale",
     },
-    { 
-      label: "Gratuit", 
+    {
+      label: "Gratuit",
       value: "∞",
-      description: "Toutes les fonctionnalités sans limite"
+      description: "Toutes les fonctionnalités sans limite",
     },
-    { 
-      label: "Simplicité", 
+    {
+      label: "Simplicité",
       value: "★★★★★",
-      description: "Interface intuitive et facile à utiliser"
+      description: "Interface intuitive et facile à utiliser",
     },
   ];
 
@@ -115,22 +115,25 @@ const Landing = () => {
       name: "Jean-Michel",
       role: "Collectionneur amateur",
       image: "🍷",
-      content: "Interface simple et claire, parfait pour cataloguer ma petite collection de 50 bouteilles. J'aime pouvoir ajouter mes notes de dégustation.",
-      rating: 5
+      content:
+        "Interface simple et claire, parfait pour cataloguer ma petite collection de 50 bouteilles. J'aime pouvoir ajouter mes notes de dégustation.",
+      rating: 5,
     },
     {
       name: "Claire",
       role: "Passionnée de vin",
-      image: "🍇", 
-      content: "Très pratique pour ne pas oublier ce que j'ai dans ma cave. Les photos m'aident à retrouver mes bouteilles facilement.",
-      rating: 4
+      image: "🍇",
+      content:
+        "Très pratique pour ne pas oublier ce que j'ai dans ma cave. Les photos m'aident à retrouver mes bouteilles facilement.",
+      rating: 4,
     },
     {
       name: "David",
       role: "Amateur débutant",
       image: "🥂",
-      content: "Application gratuite et facile à utiliser. Idéale pour débuter et apprendre à organiser sa collection de vins.",
-      rating: 5
+      content:
+        "Application gratuite et facile à utiliser. Idéale pour débuter et apprendre à organiser sa collection de vins.",
+      rating: 5,
     },
   ];
 
@@ -146,10 +149,10 @@ const Landing = () => {
         "Recherche et filtres",
         "Statistiques de base",
         "Interface responsive",
-        "Données sécurisées"
+        "Données sécurisées",
       ],
       cta: "Commencer gratuitement",
-      popular: true
+      popular: true,
     },
     {
       name: "Premium",
@@ -162,10 +165,10 @@ const Landing = () => {
         "Sauvegarde cloud avancée",
         "Support prioritaire",
         "Fonctionnalités collaboratives",
-        "API d'accès"
+        "API d'accès",
       ],
       cta: "Bientôt disponible",
-      popular: false
+      popular: false,
     },
     {
       name: "Professionnel",
@@ -178,11 +181,11 @@ const Landing = () => {
         "Intégration systèmes",
         "Formation personnalisée",
         "Support dédié",
-        "SLA garanti"
+        "SLA garanti",
       ],
       cta: "Nous contacter",
-      popular: false
-    }
+      popular: false,
+    },
   ];
 
   return (
@@ -285,13 +288,18 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="relative py-20 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto relative">
-
-          <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div
+            className={`text-center transition-all duration-1000 ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
+          >
             <Badge className="mb-8 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 hover:from-purple-200 hover:to-pink-200 text-sm sm:text-base border-0 px-4 py-2 shadow-lg">
               <Sparkles className="mr-2 h-4 w-4" />
               Application gratuite de gestion de cave à vin
             </Badge>
-            
+
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
               Votre cave digitale
               <br />
@@ -302,13 +310,15 @@ const Landing = () => {
                 <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 rounded-full"></div>
               </span>
             </h1>
-            
+
             <p className="text-xl sm:text-2xl lg:text-3xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed font-light">
               Cataloguez et organisez votre collection de vins.
               <br className="hidden sm:block" />
-              <span className="text-gray-800 font-medium">Simple, gratuit, et accessible partout.</span>
+              <span className="text-gray-800 font-medium">
+                Simple, gratuit, et accessible partout.
+              </span>
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 max-w-lg mx-auto sm:max-w-none">
               <Link to="/signup" className="w-full sm:w-auto">
                 <Button
@@ -325,7 +335,9 @@ const Landing = () => {
                 variant="outline"
                 className="w-full sm:w-auto border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
               >
-                <span role="img" aria-label="Play" className="mr-2">▶️</span>
+                <span role="img" aria-label="Play" className="mr-2">
+                  ▶️
+                </span>
                 Voir la démo
               </Button>
             </div>
@@ -348,10 +360,16 @@ const Landing = () => {
           </div>
 
           {/* Enhanced Stats */}
-          <div className={`grid grid-cols-1 sm:grid-cols-3 gap-8 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-3 gap-8 transition-all duration-1000 delay-300 ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
+          >
             {stats.map((stat, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="text-center p-8 bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/50"
                 style={{ animationDelay: `${index * 200}ms` }}
               >
@@ -361,9 +379,7 @@ const Landing = () => {
                 <div className="text-lg font-semibold text-gray-900 mb-1">
                   {stat.label}
                 </div>
-                <div className="text-sm text-gray-600">
-                  {stat.description}
-                </div>
+                <div className="text-sm text-gray-600">{stat.description}</div>
               </div>
             ))}
           </div>
@@ -387,10 +403,14 @@ const Landing = () => {
               className="text-3xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6"
             >
               Une plateforme
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> complète</span>
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                {" "}
+                complète
+              </span>
             </h2>
             <p className="text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto font-light">
-              Découvrez tous les outils dont vous avez besoin pour transformer votre cave en véritable patrimoine digital
+              Découvrez tous les outils dont vous avez besoin pour transformer
+              votre cave en véritable patrimoine digital
             </p>
           </div>
 
@@ -402,20 +422,26 @@ const Landing = () => {
               >
                 <CardContent className="p-8 text-center relative">
                   {/* Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-                  
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
+                  ></div>
+
                   {/* Icon with gradient background */}
-                  <div className={`mb-6 mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                    {React.cloneElement(feature.icon, { className: "h-8 w-8 text-white" })}
+                  <div
+                    className={`mb-6 mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300`}
+                  >
+                    {React.cloneElement(feature.icon, {
+                      className: "h-8 w-8 text-white",
+                    })}
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors">
                     {feature.title}
                   </h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     {feature.description}
                   </p>
-                  
+
                   {/* Learn More Button */}
                   <div className="flex items-center justify-center text-sm font-medium text-gray-500 group-hover:text-purple-600 transition-colors cursor-pointer">
                     En savoir plus
@@ -438,19 +464,26 @@ const Landing = () => {
             </Badge>
             <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-6">
               Ils nous font
-              <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent"> confiance</span>
+              <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                {" "}
+                confiance
+              </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
-              Découvrez comment Tchin transforme la passion de nos utilisateurs en expertise professionnelle
+              Découvrez comment Tchin transforme la passion de nos utilisateurs
+              en expertise professionnelle
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white rounded-3xl overflow-hidden relative">
+              <Card
+                key={index}
+                className="group border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white rounded-3xl overflow-hidden relative"
+              >
                 {/* Gradient accent */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500"></div>
-                
+
                 <CardContent className="p-8">
                   {/* Quote icon */}
                   <div className="mb-6 flex justify-between items-start">
@@ -460,24 +493,31 @@ const Landing = () => {
                     {/* Stars */}
                     <div className="flex gap-1">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                        <Star
+                          key={i}
+                          className="h-4 w-4 text-yellow-400 fill-current"
+                        />
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Quote */}
                   <blockquote className="text-gray-700 mb-8 leading-relaxed text-base font-medium">
                     {testimonial.content}
                   </blockquote>
-                  
+
                   {/* Author */}
                   <div className="flex items-center">
                     <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-lg mr-4 shadow-lg">
                       {testimonial.image}
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
-                      <div className="text-sm text-gray-500 font-medium">{testimonial.role}</div>
+                      <div className="font-bold text-gray-900 text-lg">
+                        {testimonial.name}
+                      </div>
+                      <div className="text-sm text-gray-500 font-medium">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -498,7 +538,10 @@ const Landing = () => {
             </Badge>
             <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-6">
               Choisissez votre
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> formule</span>
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                {" "}
+                formule
+              </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
               Des plans adaptés à tous les profils, du débutant au professionnel
@@ -509,74 +552,93 @@ const Landing = () => {
             {pricingPlans.map((plan, index) => (
               <div key={index} className="relative">
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10 mt-1">
                     <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-yellow-900 border-0 px-3 py-1 shadow-lg font-semibold text-xs">
                       <Sparkles className="mr-1 h-3 w-3" />
                       POPULAIRE
                     </Badge>
                   </div>
                 )}
-                
-                <Card 
+
+                <Card
                   className={`border-0 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden ${
-                    plan.popular 
-                      ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white transform scale-105' 
-                      : 'bg-white hover:scale-105'
+                    plan.popular
+                      ? "bg-gradient-to-br from-purple-600 to-pink-600 text-white transform scale-105"
+                      : "bg-white hover:scale-105"
                   }`}
                 >
-                
-                <CardContent className="p-8 text-center">
-                  <h3 className={`text-2xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
-                    {plan.name}
-                  </h3>
-                  <p className={`mb-6 ${plan.popular ? 'text-purple-100' : 'text-gray-600'}`}>
-                    {plan.description}
-                  </p>
-                  
-                  <div className="mb-8">
-                    <span className={`text-5xl font-bold ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
-                      {plan.price}
-                    </span>
-                    <span className={`${plan.popular ? 'text-purple-100' : 'text-gray-600'}`}>
-                      {plan.period}
-                    </span>
-                  </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center">
-                        <CheckCircle2 
-                          className={`h-5 w-5 mr-3 flex-shrink-0 ${
-                            plan.popular ? 'text-green-300' : 'text-green-500'
-                          }`} 
-                        />
-                        <span className={`text-sm ${plan.popular ? 'text-purple-50' : 'text-gray-700'}`}>
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link to="/signup" className="block">
-                    <Button 
-                      className={`w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-200 transform hover:scale-[1.02] ${
-                        plan.popular 
-                          ? 'bg-white text-purple-600 hover:bg-gray-50 shadow-xl hover:shadow-2xl' 
-                          : plan.name === 'Premium'
-                          ? 'bg-gray-100 text-gray-500 cursor-not-allowed shadow-md'
-                          : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl'
+                  <CardContent className="p-8 text-center">
+                    <h3
+                      className={`text-2xl font-bold mb-2 ${
+                        plan.popular ? "text-white" : "text-gray-900"
                       }`}
-                      disabled={plan.name === 'Premium'}
                     >
-                      {plan.cta}
-                    </Button>
-                  </Link>
-                </CardContent>
+                      {plan.name}
+                    </h3>
+                    <p
+                      className={`mb-6 ${
+                        plan.popular ? "text-purple-100" : "text-gray-600"
+                      }`}
+                    >
+                      {plan.description}
+                    </p>
+
+                    <div className="mb-8">
+                      <span
+                        className={`text-5xl font-bold ${
+                          plan.popular ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        {plan.price}
+                      </span>
+                      <span
+                        className={`${
+                          plan.popular ? "text-purple-100" : "text-gray-600"
+                        }`}
+                      >
+                        {plan.period}
+                      </span>
+                    </div>
+
+                    <ul className="space-y-3 mb-8">
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center">
+                          <CheckCircle2
+                            className={`h-5 w-5 mr-3 flex-shrink-0 ${
+                              plan.popular ? "text-green-300" : "text-green-500"
+                            }`}
+                          />
+                          <span
+                            className={`text-sm ${
+                              plan.popular ? "text-purple-50" : "text-gray-700"
+                            }`}
+                          >
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Link to="/signup" className="block">
+                      <Button
+                        className={`w-full py-4 px-6 rounded-xl font-bold text-base transition-all duration-200 transform hover:scale-[1.02] ${
+                          plan.popular
+                            ? "bg-white text-purple-600 hover:bg-gray-50 shadow-xl hover:shadow-2xl"
+                            : plan.name === "Premium"
+                            ? "bg-gray-100 text-gray-500 cursor-not-allowed shadow-md"
+                            : "bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl"
+                        }`}
+                        disabled={plan.name === "Premium"}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </Link>
+                  </CardContent>
                 </Card>
               </div>
             ))}
           </div>
-          
+
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">
               Application entièrement gratuite et open source
@@ -608,13 +670,13 @@ const Landing = () => {
         <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-radial from-pink-400/20 to-transparent rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-radial from-purple-400/20 to-transparent rounded-full blur-3xl"></div>
-        
+
         <div className="max-w-4xl mx-auto text-center relative">
           <Badge className="mb-8 bg-white/20 text-white border-0 px-4 py-2 shadow-lg backdrop-blur-sm">
             <Sparkles className="mr-2 h-4 w-4" />
             Offre limitée
           </Badge>
-          
+
           <h2
             id="cta-heading"
             className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
@@ -625,12 +687,12 @@ const Landing = () => {
               dès aujourd'hui
             </span>
           </h2>
-          
+
           <p className="text-xl lg:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto font-light leading-relaxed">
-            Rejoignez les amateurs de vin qui organisent déjà leur collection 
+            Rejoignez les amateurs de vin qui organisent déjà leur collection
             avec <strong className="text-white">Tchin</strong>
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 max-w-lg mx-auto sm:max-w-none">
             <Link to="/signup" className="w-full sm:w-auto">
               <Button
@@ -649,7 +711,7 @@ const Landing = () => {
               Planifier une démo
             </Button>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-purple-100 text-sm max-w-2xl mx-auto">
             <div className="flex flex-col items-center">
               <CheckCircle2 className="h-5 w-5 text-green-400 mb-1" />
@@ -672,7 +734,10 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8" role="contentinfo">
+      <footer
+        className="bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8"
+        role="contentinfo"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand Section */}
@@ -690,8 +755,9 @@ const Landing = () => {
                 </span>
               </Link>
               <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
-                La plateforme de référence pour les collectionneurs de vin. 
-                Gérez, analysez et valorisez votre cave avec intelligence artificielle.
+                La plateforme de référence pour les collectionneurs de vin.
+                Gérez, analysez et valorisez votre cave avec intelligence
+                artificielle.
               </p>
               <div className="flex gap-4 text-gray-400">
                 <Badge className="bg-green-900/50 text-green-400 border-0">
@@ -705,11 +771,46 @@ const Landing = () => {
             <div>
               <h3 className="font-semibold text-white mb-4">Produit</h3>
               <ul className="space-y-3 text-gray-400 text-sm">
-                <li><Link to="/signup" className="hover:text-white transition-colors">Fonctionnalités</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Tarifs</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">API</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Intégrations</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Sécurité</Link></li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Fonctionnalités
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Tarifs
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    API
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Intégrations
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Sécurité
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -717,11 +818,46 @@ const Landing = () => {
             <div>
               <h3 className="font-semibold text-white mb-4">Entreprise</h3>
               <ul className="space-y-3 text-gray-400 text-sm">
-                <li><Link to="/signup" className="hover:text-white transition-colors">À propos</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Blog</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Carrières</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Presse</Link></li>
-                <li><Link to="/signup" className="hover:text-white transition-colors">Contact</Link></li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    À propos
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Carrières
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Presse
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -732,12 +868,27 @@ const Landing = () => {
               <div className="flex flex-col sm:flex-row items-center gap-4 text-sm text-gray-400">
                 <span>© 2025 Tchin. Tous droits réservés.</span>
                 <div className="flex gap-4">
-                  <Link to="/signup" className="hover:text-white transition-colors">Politique de confidentialité</Link>
-                  <Link to="/signup" className="hover:text-white transition-colors">CGU</Link>
-                  <Link to="/signup" className="hover:text-white transition-colors">Cookies</Link>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Politique de confidentialité
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    CGU
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="hover:text-white transition-colors"
+                  >
+                    Cookies
+                  </Link>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2 text-sm text-gray-400">
                   <Sparkles className="h-4 w-4 text-purple-400" />
