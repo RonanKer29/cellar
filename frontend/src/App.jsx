@@ -14,6 +14,7 @@ import BottleDetail from "./components/bottle/BottleDetail";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Analytics } from "@vercel/analytics/react";
 
 const AppContent = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -32,7 +33,11 @@ const AppContent = () => {
   }
 
   // Pour la landing page, on affiche en plein écran sans navbar
-  if (!isAuthenticated && (window.location.pathname === '/' || window.location.pathname === '/landing')) {
+  if (
+    !isAuthenticated &&
+    (window.location.pathname === "/" ||
+      window.location.pathname === "/landing")
+  ) {
     return (
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -54,17 +59,19 @@ const AppContent = () => {
             <Route path="/signup" element={<Signup />} />
 
             {/* Landing page pour les utilisateurs non connectés */}
-            <Route 
-              path="/" 
-              element={isAuthenticated ? (
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              ) : (
-                <Landing />
-              )} 
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? (
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                ) : (
+                  <Landing />
+                )
+              }
             />
-            
+
             {/* Routes protégées - Dashboard */}
             <Route
               path="/dashboard"
@@ -140,9 +147,12 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+      <Analytics />
+    </>
   );
 };
 
