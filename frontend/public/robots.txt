@@ -1,0 +1,47 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://caveavin.com/sitemap.xml
+
+# Disallow private routes
+Disallow: /dashboard
+Disallow: /ma-cave
+Disallow: /stats  
+Disallow: /historique
+Disallow: /ajouter-vin
+Disallow: /bouteille/
+Disallow: /api/
+
+# Allow public pages
+Allow: /
+Allow: /login
+Allow: /signup
+
+# Crawl delay
+Crawl-delay: 1
+
+# SEO optimization
+User-agent: Googlebot
+Allow: /
+Allow: /login  
+Allow: /signup
+Disallow: /dashboard
+Disallow: /ma-cave
+Disallow: /stats
+Disallow: /historique
+Disallow: /ajouter-vin
+Disallow: /bouteille/
+Disallow: /api/
+
+User-agent: Bingbot  
+Allow: /
+Allow: /login
+Allow: /signup
+Disallow: /dashboard
+Disallow: /ma-cave
+Disallow: /stats
+Disallow: /historique
+Disallow: /ajouter-vin
+Disallow: /bouteille/
+Disallow: /api/

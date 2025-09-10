@@ -36,6 +36,15 @@ const Landing = () => {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // SEO: Update page title and meta description dynamically
+    document.title = "CaveAVin - Gestion de Cave à Vin Digitale | Organisez votre Collection";
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute("content", "CaveAVin : L'application gratuite pour gérer votre cave à vin. Cataloguez vos bouteilles, suivez vos dégustations, organisez votre collection avec photos et notes. Simple et sécurisé.");
+    }
   }, []);
 
   const features = [

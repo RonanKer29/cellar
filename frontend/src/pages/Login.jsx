@@ -3,7 +3,7 @@
  * Interface de login sécurisée avec validation et gestion d'erreurs
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Wine, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { updateTitle, updateMetaDescription, seoConfig } from "../utils/seo";
 
 /**
  * Page de connexion utilisateur avec formulaire d'authentification
@@ -35,6 +36,12 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  useEffect(() => {
+    // Update SEO for login page
+    updateTitle(seoConfig.login.title.replace(" - CaveAVin", ""));
+    updateMetaDescription(seoConfig.login.description);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
