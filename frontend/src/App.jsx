@@ -26,7 +26,7 @@ const AppContent = () => {
           <div className="inline-flex bg-gradient-to-br from-pink-600 to-purple-600 p-4 rounded-2xl shadow-lg mb-4 animate-pulse">
             <div className="w-10 h-10 bg-white/20 rounded"></div>
           </div>
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-gray-600">Chargement....</p>
         </div>
       </div>
     );
